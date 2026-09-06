@@ -1846,6 +1846,9 @@
                 </select>
               </div>
               <div class="form-group">
+                <label class="checkbox-label"><input type="checkbox" id="att-name-size-sync-toggle"> 姓名字号跟随全局字号（开启后姓名随上方「全局字体大小」同步缩放；关闭后可用下方滑块单独调整）</label>
+              </div>
+              <div class="form-group" id="att-name-size-group">
                 <label class="form-label">姓名字号: <span id="att-name-size-val" class="range-value">12</span>px</label>
                 <input type="range" id="att-name-size-range" class="form-range" min="8" max="28" step="1">
               </div>
@@ -2882,6 +2885,7 @@
         attNamesColumns: 'auto',
         attNamesPerRow: 'auto',
         attNameSize: 12, // 考勤卡片姓名字号（px）
+        attNameSizeSync: false, // 姓名字号跟随全局字号（开启时忽略 attNameSize，改用 fontSize）
         roster: [],
         attendance: {},
         attendanceStatuses: [],
@@ -3165,6 +3169,7 @@
             attNamesColumns: state.attNamesColumns,
             attNamesPerRow: state.attNamesPerRow,
             attNameSize: state.attNameSize,
+            attNameSizeSync: state.attNameSizeSync,
             attendanceShowNames: state.attendanceShowNames,
             roster: state.roster,
             attendance: state.attendance,
@@ -3412,6 +3417,7 @@
           } else {
             state.attNameSize = Math.max(8, Math.min(28, Math.round(state.attNameSize)));
           }
+          if (typeof state.attNameSizeSync !== 'boolean') state.attNameSizeSync = false;
           if (typeof state.mdEditorTheme === 'undefined') {
             state.mdEditorTheme = 'light';
           }
@@ -3926,7 +3932,8 @@
 
       function applyFontSettings() {
         document.documentElement.style.setProperty('--global-font-size', state.fontSize + 'px');
-        document.documentElement.style.setProperty('--att-name-size', state.attNameSize + 'px');
+        // 考勤姓名字号：开启「跟随全局字号」时随 fontSize 同步；否则使用独立 attNameSize
+        document.documentElement.style.setProperty('--att-name-size', (state.attNameSizeSync ? state.fontSize : state.attNameSize) + 'px');
         // 自定义字体颜色：开启「影响全局」时覆盖根 --text-color；否则仅作用于主内容区（#app），顶栏强制使用主题色避免看不清
         const appEl = document.getElementById('app');
         const topBar = document.getElementById('top-bar');
@@ -6822,6 +6829,7 @@
           data.attNamesColumns = state.attNamesColumns;
           data.attNamesPerRow = state.attNamesPerRow;
           data.attNameSize = state.attNameSize;
+          data.attNameSizeSync = state.attNameSizeSync;
           data.showAttendance = state.showAttendance;
         }
         if (inc.appearance) {
@@ -9111,6 +9119,14 @@
           applyFontSettings();
           saveData();
         };
+        document.getElementById('att-name-size-sync-toggle').onchange = (e) => {
+          state.attNameSizeSync = e.target.checked;
+          // 开启同步时隐藏独立字号滑块（随全局字号）；关闭时恢复滑块
+          document.getElementById('att-name-size-group').style.display = state.attNameSizeSync ? 'none' : '';
+          applyFontSettings();
+          saveData();
+          showToast(state.attNameSizeSync ? '考勤姓名字号已跟随全局字号' : '已开启考勤姓名独立字号设置');
+        };
         document.getElementById('add-att-group').onclick = addAttendanceGroupFromInput;
         document.getElementById('att-group-input').addEventListener('keydown', (e) => {
           if (e.key === 'Enter') addAttendanceGroupFromInput();
@@ -9770,6 +9786,8 @@
         document.getElementById('att-names-per-row').value = ['auto', '3', '4', '5', '6', '8'].includes(state.attNamesPerRow) ? state.attNamesPerRow : 'auto';
         document.getElementById('att-name-size-range').value = state.attNameSize;
         document.getElementById('att-name-size-val').textContent = state.attNameSize;
+        document.getElementById('att-name-size-sync-toggle').checked = !!state.attNameSizeSync;
+        document.getElementById('att-name-size-group').style.display = state.attNameSizeSync ? 'none' : '';
         renderRosterList();
         renderAttGroupList();
         renderStatusList();
