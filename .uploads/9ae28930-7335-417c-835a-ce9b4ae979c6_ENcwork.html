@@ -1950,13 +1950,16 @@
                   <button class="btn btn-primary" id="export-data">导出JSON</button>
                   <button class="btn btn-success" id="export-pdf">导出PDF</button>
                   <button class="btn" id="export-md-data" title="导出当日全部作业为 Markdown 文件（含学科分组 / 置顶 / 完成标记）">导出MD（当日作业）</button>
+                  <button class="btn" id="export-uaf" title="导出UAF：可视化作业板截图 + 内嵌 uaf_payload.csv，可二次导入恢复" style="background: linear-gradient(135deg,#7c4dff,#42a5f5); color:#fff; border:none;">导出UAF</button>
                 </div>
               </div>
               <div class="form-group">
                 <label class="form-label">导入数据</label>
-                <div style="display: flex; gap: 8px;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                   <button class="btn" id="import-data">导入JSON</button>
+                  <button class="btn" id="import-uaf" title="导入UAF：从内嵌 uaf_payload.csv 恢复当日作业" style="background: linear-gradient(135deg,#42a5f5,#7c4dff); color:#fff; border:none;">导入UAF</button>
                   <input type="file" id="import-file" accept=".json" style="display: none;">
+                  <input type="file" id="import-uaf-file" accept=".uaf,.uaf.pdf,.pdf" style="display: none;">
                 </div>
               </div>
             </div>
@@ -2381,7 +2384,7 @@
             <h2 class="section-header"><span class="sec-index">10</span>关于</h2>
             <div class="settings-panel">
               <h3 style="font-size: 18px; margin: 14px 0 12px;">ENcwork -适用于多设备的作业板</h3>
-            <p style="opacity: 0.8; margin-bottom: 8px;">版本：<span id="about-version" style="font-family: var(--font-mono); font-weight: 600;">v4.63</span> · ENcwork EDITION · 更新记录见下方版本日志</p>
+            <p style="opacity: 0.8; margin-bottom: 8px;">版本：<span id="about-version" style="font-family: var(--font-mono); font-weight: 600;">v4.64</span> · ENcwork EDITION · 更新记录见下方版本日志</p>
             <p style="line-height: 1.6; opacity: 0.7;">这是一款专为教室白板和大屏场景打造的班级作业管理工具，集作业发布、考勤统计、考试倒计时于一体。核心亮点包括：智能作业输入支持草稿自动保存与恢复、Ctrl+Enter快捷保存及快捷词插入，让记录高效无虞；考试时间表卡片可自定义科目与时间，并自带倒计时与显示开关，方便全局掌控；考勤系统支持三态统计、姓名多列排布和名单批量导入，适配各种班级规模。视觉上，液态玻璃与动态取色主题提供通透/模糊无级调节，配合卡片边缘泛光等实验性特效，让大屏展示华丽且清晰；同时支持背景自定义、字体上传、Markdown引擎及手动布局，满足个性化需求。从自动备份到多日作业找回，每一处细节都为稳定、流畅的作业展示而生。</p>
             </div>
             <div class="settings-panel">
@@ -2657,8 +2660,14 @@
       // ===== 应用版本与版本日志 =====
       // 版本号规则：新增功能 → +0.1（如 4.10 → 4.20）；修复问题 → +0.01（如 4.20 → 4.21）
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
-      const APP_VERSION = '4.63';
+      const APP_VERSION = '4.64';
       const VERSION_LOG = [
+        {
+          version: '4.64', date: '2026-09-06', items: [
+            { type: 'feature', text: '新增 UAF（Universal Assignment File）格式导入导出：导出为带作业板可视化截图的 PDF 并内嵌 uaf_payload.csv（subject/date/content/tags），导入时自动解析内嵌 CSV 恢复当日作业；纯前端实现，无需额外依赖' },
+            { type: 'feature', text: 'UAF 导出使用浏览器原生 CompressionStream（deflate-raw + zlib 头尾包装），导入兼容 FlateDecode 与未压缩两种 EmbeddedFile 流；支持 .uaf / .uaf.pdf / .pdf 三种扩展名' }
+          ]
+        },
         {
           version: '4.63', date: '2026-09-06', items: [
             { type: 'feature', text: '底板（Dock）新增自定义渐变：开启后用双色线性渐变，支持起始/结束色与角度调节（0=上→下/90=左→右/180=下→上），关闭回退纯色/主题；底板不透明度同样作用于渐变两端' },
@@ -7779,6 +7788,485 @@
         alert('PDF导出功能需要额外的库支持，当前版本暂不支持。建议使用截图功能保存为图片。');
       }
 
+      // ===== UAF (Universal Assignment File) 导入/导出 =====
+      // UAF = PDF 1.7，首页为作业板可视化截图，并内嵌 uaf_payload.csv 附件
+      // CSV 列：subject,date,content,tags（content 可含换行，按 RFC 4180 加双引号转义）
+
+      // UAF v1.0 头部水印（与样例文件一致）
+      const UAF_VERSION_TAG = '使用 UAF v1.0 导出';
+
+      // 将 Uint8Array 数组拼接为一个 Uint8Array
+      function concatBytes(arrays) {
+        const total = arrays.reduce((a, x) => a + x.length, 0);
+        const out = new Uint8Array(total);
+        let off = 0;
+        for (const arr of arrays) { out.set(arr, off); off += arr.length; }
+        return out;
+      }
+
+      // RFC 4180 CSV 单元格转义：含 , " \n \r 时用双引号包裹，内部双引号翻倍
+      function csvEscapeCell(s) {
+        s = s == null ? '' : String(s);
+        if (/[",\r\n]/.test(s)) {
+          return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+      }
+
+      // 由当前作业状态构建 uaf_payload.csv 文本
+      function buildUAFCsv() {
+        const date = state.currentDate;
+        const d = new Date(date);
+        const dateLabel = isNaN(d.getTime()) ? date : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+        const rows = [['subject', 'date', 'content', 'tags']];
+        const dayHws = state.homeworks[date] || {};
+        state.subjects.forEach(sub => {
+          const list = dayHws[sub.id] || [];
+          list.forEach(hw => {
+            // tags 字段：取作业自带 tags（如有），否则留空
+            const tagNames = (Array.isArray(hw.tags) ? hw.tags : []).join('|');
+            rows.push([
+              csvEscapeCell(sub.name),
+              csvEscapeCell(date),
+              csvEscapeCell((hw.content || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n')),
+              csvEscapeCell(tagNames)
+            ].join(','));
+          });
+        });
+        // 在 CSV 末尾追加一行元数据（subject=__uaf_meta__），便于导入时识别日期与水印
+        rows.push(['__uaf_meta__', csvEscapeCell(date), csvEscapeCell(UAF_VERSION_TAG), csvEscapeCell(dateLabel)].join(','));
+        return rows.join('\n');
+      }
+
+      // 简易解析 RFC 4180 CSV（支持引号、引号内换行、双引号转义）
+      function parseUAFCsv(text) {
+        const rows = [];
+        let row = [], cell = '', inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+          const c = text[i];
+          if (inQuotes) {
+            if (c === '"') {
+              if (text[i + 1] === '"') { cell += '"'; i++; }
+              else { inQuotes = false; }
+            } else { cell += c; }
+          } else {
+            if (c === '"') { inQuotes = true; }
+            else if (c === ',') { row.push(cell); cell = ''; }
+            else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+            else if (c === '\r') { /* skip */ }
+            else { cell += c; }
+          }
+        }
+        if (cell.length || row.length) { row.push(cell); rows.push(row); }
+        return rows;
+      }
+
+      // 浏览器原生 deflate-raw 压缩 → 包装为 PDF FlateDecode 兼容的 zlib 格式
+      // zlib 头 0x78 0x9c（默认压缩），尾 4 字节 Adler-32（big-endian）
+      async function compressZlib(bytes) {
+        const cs = new CompressionStream('deflate-raw');
+        const writer = cs.writable.getWriter();
+        writer.write(bytes);
+        writer.close();
+        const reader = cs.readable.getReader();
+        const chunks = [];
+        let total = 0;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value); total += value.length;
+        }
+        const raw = new Uint8Array(total);
+        let off = 0;
+        for (const c of chunks) { raw.set(c, off); off += c.length; }
+        // 包装：2 字节头 + raw + 4 字节 Adler-32
+        const out = new Uint8Array(raw.length + 6);
+        out[0] = 0x78; out[1] = 0x9c;
+        out.set(raw, 2);
+        const adler = adler32(bytes);
+        out[raw.length + 2] = (adler >>> 24) & 0xff;
+        out[raw.length + 3] = (adler >>> 16) & 0xff;
+        out[raw.length + 4] = (adler >>> 8) & 0xff;
+        out[raw.length + 5] = adler & 0xff;
+        return out;
+      }
+
+      // Adler-32 校验（RFC 1950）
+      function adler32(bytes) {
+        let a = 1, b = 0;
+        for (let i = 0; i < bytes.length; i++) {
+          a = (a + bytes[i]) % 65521;
+          b = (b + a) % 65521;
+        }
+        return ((b << 16) | a) >>> 0;
+      }
+
+      // 解压 PDF FlateDecode（zlib 格式）字节流
+      async function decompressZlib(bytes) {
+        // 优先用浏览器原生 DecompressionStream（'deflate' 即 zlib 格式）
+        if (typeof DecompressionStream !== 'undefined') {
+          try {
+            const ds = new DecompressionStream('deflate');
+            const writer = ds.writable.getWriter();
+            writer.write(bytes);
+            writer.close();
+            const reader = ds.readable.getReader();
+            const chunks = [];
+            let total = 0;
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value); total += value.length;
+            }
+            const out = new Uint8Array(total);
+            let off = 0;
+            for (const c of chunks) { out.set(c, off); off += c.length; }
+            return out;
+          } catch (e) { /* 回退 */ }
+        }
+        // 回退：去掉 zlib 头（2 字节）与尾（4 字节），用 deflate-raw
+        if (bytes.length > 6 && (bytes[0] & 0x0f) === 0x08) {
+          const raw = bytes.subarray(2, bytes.length - 4);
+          if (typeof DecompressionStream !== 'undefined') {
+            const ds = new DecompressionStream('deflate-raw');
+            const writer = ds.writable.getWriter();
+            writer.write(raw);
+            writer.close();
+            const reader = ds.readable.getReader();
+            const chunks = [];
+            let total = 0;
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value); total += value.length;
+            }
+            const out = new Uint8Array(total);
+            let off = 0;
+            for (const c of chunks) { out.set(c, off); off += c.length; }
+            return out;
+          }
+        }
+        throw new Error('当前浏览器不支持 zlib 解压，无法读取 UAF 内嵌数据');
+      }
+
+      // 从 JPEG 字节流读取宽高（解析 SOF0/SOF2 标记）
+      function getJpegDims(bytes) {
+        if (bytes[0] !== 0xff || bytes[1] !== 0xd8) return { width: 0, height: 0 };
+        let i = 2;
+        while (i < bytes.length) {
+          if (bytes[i] !== 0xff) { i++; continue; }
+          const marker = bytes[i + 1];
+          // SOF0..SOF15（不含 SOF4/SOF8/SOF12 保留）
+          if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+            const h = (bytes[i + 5] << 8) | bytes[i + 6];
+            const w = (bytes[i + 7] << 8) | bytes[i + 8];
+            return { width: w, height: h };
+          }
+          // 跳过当前段
+          const segLen = (bytes[i + 2] << 8) | bytes[i + 3];
+          i += 2 + segLen;
+        }
+        return { width: 0, height: 0 };
+      }
+
+      // PDF 日期字符串：D:YYYYMMDDHHmmSSZ
+      function pdfDateString() {
+        const d = new Date();
+        const p = n => String(n).padStart(2, '0');
+        return `D:${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}Z`;
+      }
+
+      // 用 html2canvas 捕获作业板为 JPEG（与 takeScreenshot 共用思路，但简化：保留现有特效、仅关闭动画一帧）
+      async function captureBoardForUAF() {
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+        const app = document.getElementById('app');
+        const mainContent = document.getElementById('main-content');
+        const contentScroll = document.getElementById('content-scroll');
+        const bgContainer = document.getElementById('bg-container');
+        const backups = [];
+        const applyTemp = (el, styles) => {
+          if (!el) return;
+          const b = {};
+          Object.keys(styles).forEach(k => { b[k] = el.style[k]; el.style[k] = styles[k]; });
+          backups.push({ el, b });
+        };
+        applyTemp(htmlEl, { overflow: 'visible', height: 'auto' });
+        applyTemp(bodyEl, { overflow: 'visible', height: 'auto' });
+        applyTemp(app, { height: 'auto', overflow: 'visible' });
+        applyTemp(mainContent, { overflow: 'visible', flex: 'none', height: 'auto' });
+        applyTemp(contentScroll, { overflow: 'visible', height: 'auto', paddingBottom: '20px' });
+        const prevAnim = state.animationLevel;
+        state.animationLevel = 'off';
+        try { applyAnimationLevel(); } catch (e) { /* ignore */ }
+        try {
+          await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+          await new Promise(r => setTimeout(r, 280));
+          const w = Math.max(bodyEl.scrollWidth, htmlEl.scrollWidth, window.innerWidth);
+          const h = Math.max(bodyEl.scrollHeight, htmlEl.scrollHeight, window.innerHeight);
+          applyTemp(bgContainer, { height: h + 'px' });
+          let scale = 2;
+          const maxDim = 8192;
+          if (Math.max(w, h) * scale > maxDim) scale = Math.max(1, maxDim / Math.max(w, h));
+          const canvas = await html2canvas(bodyEl, {
+            useCORS: false, backgroundColor: null, logging: false,
+            scale, width: w, height: h, windowWidth: w, windowHeight: h, scrollX: 0, scrollY: 0,
+            onclone: (doc) => {
+              const clean = doc.createElement('style');
+              clean.textContent = '#dock-container,#edit-mode-hint,#toast,.app-toast,.modal-overlay,.dock-tooltip,.edit-handle,.layer-bar{display:none!important;}.edit-mode .subject-card{box-shadow:none!important;}.card::after{animation:none!important;background-position:50% 0!important;}';
+              doc.head.appendChild(clean);
+              doc.querySelectorAll('img').forEach(img => { if (!img.src.startsWith('data:')) img.crossOrigin = 'anonymous'; });
+              if (typeof replaceClonedVideoWithFrame === 'function') replaceClonedVideoWithFrame(doc);
+              if (typeof normalizeClonedColors === 'function') normalizeClonedColors(doc);
+              if (typeof bakeGlassEffects === 'function') bakeGlassEffects(doc);
+            }
+          });
+          // 转 JPEG（体积更小，PDF /DCTDecode 直接嵌入）
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const bin = dataUrl.split(',')[1];
+          const bytes = new Uint8Array(atob(bin).split('').map(c => c.charCodeAt(0)));
+          return bytes;
+        } finally {
+          backups.slice().reverse().forEach(({ el, b }) => { Object.keys(b).forEach(k => { el.style[k] = b[k]; }); });
+          state.animationLevel = prevAnim;
+          try { applyAnimationLevel(); } catch (e) { /* ignore */ }
+        }
+      }
+
+      // 构造 UAF PDF 字节流
+      async function buildUAFPdf(jpegBytes, csvText) {
+        const enc = new TextEncoder();
+        const csvBytes = enc.encode(csvText);
+        const csvCompressed = await compressZlib(csvBytes);
+        const dims = getJpegDims(jpegBytes);
+        const imgW = dims.width || 1280, imgH = dims.height || 720;
+
+        // 页面尺寸：以图像实际像素为准（1:1），保证截图清晰不裁切
+        const pageW = imgW, pageH = imgH;
+        const contentStream = `q\n${pageW} 0 0 ${pageH} 0 0 cm\n/Im1 Do\nQ\n`;
+        const contentBytes = enc.encode(contentStream);
+
+        // 对象表（按 num 升序写入）
+        // 1 Catalog  2 Pages  3 Page  4 Image  5 Content  6 Filespec  7 EmbeddedFile
+        const objBodies = [];
+        objBodies[1] = enc.encode(`<< /Type /Catalog /Pages 2 0 R /EmbeddedFiles << /Names [ (uaf_payload.csv) 6 0 R ] >> >>`);
+        objBodies[2] = enc.encode(`<< /Type /Pages /Kids [ 3 0 R ] /Count 1 >>`);
+        objBodies[3] = enc.encode(`<< /Type /Page /Parent 2 0 R /MediaBox [ 0 0 ${pageW} ${pageH} ] /Resources << /XObject << /Im1 4 0 R >> >> /Contents 5 0 R >>`);
+        // 图像 XObject（JPEG，/DCTDecode）
+        objBodies[4] = concatBytes([
+          enc.encode(`<< /Type /XObject /Subtype /Image /Width ${imgW} /Height ${imgH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`),
+          jpegBytes,
+          enc.encode(`\nendstream`)
+        ]);
+        objBodies[5] = concatBytes([
+          enc.encode(`<< /Length ${contentBytes.length} >>\nstream\n`),
+          contentBytes,
+          enc.encode(`\nendstream`)
+        ]);
+        objBodies[6] = enc.encode(`<< /Type /Filespec /F (uaf_payload.csv) /UF (uaf_payload.csv) /EF << /F 7 0 R >> >>`);
+        const pdfDate = pdfDateString();
+        objBodies[7] = concatBytes([
+          enc.encode(`<< /Type /EmbeddedFile /Subtype /text#2Fcsv /Params << /Size ${csvBytes.length} /CreationDate (${pdfDate}) /ModDate (${pdfDate}) >> /Filter /FlateDecode /Length ${csvCompressed.length} >>\nstream\n`),
+          csvCompressed,
+          enc.encode(`\nendstream`)
+        ]);
+
+        // 组装 PDF
+        const parts = [];
+        const offsets = [];
+        let pos = 0;
+        const header = enc.encode(`%PDF-1.7\n%\xc0\xc1\xc2\xc3\n`);
+        parts.push(header); pos += header.length;
+        for (let n = 1; n <= 7; n++) {
+          offsets[n] = pos;
+          const prefix = enc.encode(`${n} 0 obj\n`);
+          parts.push(prefix); pos += prefix.length;
+          parts.push(objBodies[n]); pos += objBodies[n].length;
+          const suffix = enc.encode(`\nendobj\n`);
+          parts.push(suffix); pos += suffix.length;
+        }
+        const xrefStart = pos;
+        let xref = `xref\n0 8\n0000000000 65535 f \n`;
+        for (let n = 1; n <= 7; n++) {
+          xref += String(offsets[n]).padStart(10, '0') + ' 00000 n \n';
+        }
+        const xrefBytes = enc.encode(xref);
+        parts.push(xrefBytes); pos += xrefBytes.length;
+        const trailer = enc.encode(`trailer\n<< /Size 8 /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`);
+        parts.push(trailer);
+        return concatBytes(parts);
+      }
+
+      // 导出 UAF：截图 + 内嵌 CSV → 下载 .uaf.pdf
+      async function exportUAF() {
+        if (typeof html2canvas === 'undefined') { showToast('当前环境未加载 html2canvas，无法导出 UAF'); return; }
+        if (screenshotBusy) { showToast('截图进行中，请稍候'); return; }
+        screenshotBusy = true;
+        showToast('正在生成 UAF 文件（截图 + 内嵌数据）...', 5000);
+        try {
+          const jpegBytes = await captureBoardForUAF();
+          if (!jpegBytes || jpegBytes.length === 0) { showToast('截图失败，无法生成 UAF'); return; }
+          const csvText = buildUAFCsv();
+          const pdfBytes = await buildUAFPdf(jpegBytes, csvText);
+          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `Classworks-作业-${state.currentDate}.uaf.pdf`;
+          a.click();
+          URL.revokeObjectURL(a.href);
+          showToast('UAF 文件已导出');
+        } catch (e) {
+          console.error('UAF 导出失败:', e);
+          showToast('UAF 导出失败：' + (e && e.message ? e.message : '未知错误'));
+        } finally {
+          screenshotBusy = false;
+        }
+      }
+
+      // 从 PDF 字节流中定位并提取 uaf_payload.csv 内容
+      async function extractUAFCsv(pdfBytes) {
+        // 用 latin1 解码以字节安全地正则匹配
+        const latin = new TextDecoder('latin1').decode(pdfBytes);
+        const findObjNum = (idx) => {
+          // 在 idx 之前查找 "N 0 obj"
+          const end = latin.lastIndexOf(' obj', idx);
+          if (end < 0) return -1;
+          let i = end - 1;
+          while (i >= 0 && /[0-9 ]/.test(latin[i])) i--;
+          const m = latin.substring(i + 1, end).match(/^(\d+)\s+0$/);
+          return m ? parseInt(m[1]) : -1;
+        };
+
+        // 1) 通过 Filespec 路径：找到 /EF << /F N 0 R >> 中 N 指向的 EmbeddedFile
+        //    优先匹配文件名 uaf_payload.csv
+        let embedObjNum = -1;
+        const fsMatch = latin.match(/\/F\s*\(uaf_payload\.csv\)[\s\S]*?\/EF\s*<<\s*\/F\s+(\d+)\s+0\s+R\s*>>/);
+        if (fsMatch) embedObjNum = parseInt(fsMatch[1]);
+        // 兜底：直接扫描所有 /Type /EmbeddedFile 对象
+        const embIdx = latin.indexOf('/Type /EmbeddedFile');
+        if (embedObjNum < 0 && embIdx >= 0) embedObjNum = findObjNum(embIdx);
+        if (embedObjNum < 0) throw new Error('未在文件中找到 uaf_payload.csv 附件');
+
+        // 2) 定位该对象字节区间
+        const objStartRe = new RegExp(`${embedObjNum}\\s+0\\s+obj`);
+        const m = objStartRe.exec(latin);
+        if (!m) throw new Error('无法定位内嵌数据对象');
+        const objStart = m.index + m[0].length;
+        const streamStart = latin.indexOf('stream', objStart);
+        if (streamStart < 0) throw new Error('内嵌数据流损坏');
+        let dataStart = streamStart + 6;
+        if (latin[dataStart] === '\r') dataStart++;
+        if (latin[dataStart] === '\n') dataStart++;
+        const endStream = latin.indexOf('endstream', dataStart);
+        if (endStream < 0) throw new Error('内嵌数据流未结束');
+        let dataEnd = endStream;
+        if (latin[dataEnd - 1] === '\n') dataEnd--;
+        if (latin[dataEnd - 1] === '\r') dataEnd--;
+
+        // 取出原始字节（latin1 charCode 还原）
+        const raw = new Uint8Array(dataEnd - dataStart);
+        for (let i = 0; i < raw.length; i++) raw[i] = latin.charCodeAt(dataStart + i);
+
+        // 3) 判断是否 FlateDecode
+        const objHeader = latin.substring(objStart, streamStart);
+        const isFlate = /\/Filter\s*\/FlateDecode/.test(objHeader);
+
+        let csvBytes;
+        if (isFlate) csvBytes = await decompressZlib(raw);
+        else csvBytes = raw;
+
+        const csvText = new TextDecoder('utf-8').decode(csvBytes);
+        if (csvText.indexOf('subject') < 0 && csvText.indexOf('__uaf_meta__') < 0) {
+          throw new Error('内嵌数据格式不正确');
+        }
+        return csvText;
+      }
+
+      // 导入 UAF：解析 PDF 内嵌 CSV → 写回作业状态
+      async function importUAF(file) {
+        if (!file) return;
+        try {
+          const buf = await file.arrayBuffer();
+          const csvText = await extractUAFCsv(new Uint8Array(buf));
+          const rows = parseUAFCsv(csvText);
+          if (!rows.length || rows[0][0] !== 'subject') { showToast('UAF 内嵌 CSV 格式异常'); return; }
+          const header = rows[0];
+          const idxSubject = header.indexOf('subject');
+          const idxDate = header.indexOf('date');
+          const idxContent = header.indexOf('content');
+          const idxTags = header.indexOf('tags');
+          if (idxSubject < 0 || idxContent < 0) { showToast('UAF 内嵌 CSV 缺少必要列'); return; }
+
+          // 先收集所有日期 → 作业条目，再按日期合并写入
+          const byDate = {};          // date -> [{ subject, content, tags }]
+          let metaDate = null, metaLabel = null;
+          for (let r = 1; r < rows.length; r++) {
+            const row = rows[r];
+            if (!row || row.length === 0) continue;
+            const subj = (row[idxSubject] || '').trim();
+            if (subj === '__uaf_meta__') {
+              metaDate = idxDate >= 0 ? (row[idxDate] || '').trim() : null;
+              metaLabel = idxContent >= 0 ? (row[idxContent] || '').trim() : null;
+              continue;
+            }
+            if (!subj) continue;
+            const dt = idxDate >= 0 ? (row[idxDate] || state.currentDate).trim() : state.currentDate;
+            if (!dt) continue;
+            if (!byDate[dt]) byDate[dt] = [];
+            byDate[dt].push({
+              subject: subj,
+              content: idxContent >= 0 ? row[idxContent] : '',
+              tags: idxTags >= 0 ? (row[idxTags] || '').split('|').map(s => s.trim()).filter(Boolean) : []
+            });
+          }
+
+          // 选择写入目标日期：优先 metaDate，否则用 state.currentDate
+          const targetDate = metaDate || state.currentDate;
+          const items = byDate[targetDate] || [];
+          if (!items.length) { showToast('UAF 文件中无可导入作业'); return; }
+
+          // 学科名 → id 映射；缺失学科自动补建
+          const nameToId = {};
+          state.subjects.forEach(s => { nameToId[s.name] = s.id; });
+          const ensureSubjectId = (name) => {
+            if (nameToId[name]) return nameToId[name];
+            const id = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+            state.subjects.push({ id, name, order: state.subjects.length });
+            nameToId[name] = id;
+            return id;
+          };
+
+          if (!confirm(`检测到 UAF 数据：${metaLabel || targetDate}，共 ${items.length} 条作业。将合并到当前作业板（同名学科追加，不会覆盖已有作业），是否继续？`)) return;
+
+          if (!state.homeworks[targetDate]) state.homeworks[targetDate] = {};
+          let added = 0;
+          items.forEach(it => {
+            const sid = ensureSubjectId(it.subject);
+            const list = state.homeworks[targetDate][sid] || (state.homeworks[targetDate][sid] = []);
+            list.push({
+              id: 'hw_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+              content: it.content,
+              done: false,
+              pinned: false,
+              tags: Array.isArray(it.tags) ? it.tags : []
+            });
+            added++;
+          });
+
+          // 切到目标日期
+          state.currentDate = targetDate;
+          saveData();
+          animateCardsNext = true;
+          updateDateDisplay();
+          renderSubjects();
+          try { applyCardStyle(); } catch (e) { /* ignore */ }
+          showToast(`UAF 导入完成：新增 ${added} 条作业（${targetDate}）`);
+        } catch (e) {
+          console.error('UAF 导入失败:', e);
+          showToast('UAF 导入失败：' + (e && e.message ? e.message : '未知错误'));
+        }
+      }
+
       // 复制今日作业（纯文本）
       function mdToPlain(md) {
         return (md || '')
@@ -9257,6 +9745,19 @@
         document.getElementById('export-data').onclick = exportData;
         document.getElementById('export-pdf').onclick = exportToPDF;
         document.getElementById('export-custom').onclick = exportCustom;
+        // UAF 导出/导入（v4.64）
+        const exportUafBtn = document.getElementById('export-uaf');
+        if (exportUafBtn) exportUafBtn.onclick = exportUAF;
+        const importUafBtn = document.getElementById('import-uaf');
+        if (importUafBtn) importUafBtn.onclick = () => {
+          document.getElementById('import-uaf-file').click();
+        };
+        const importUafFile = document.getElementById('import-uaf-file');
+        if (importUafFile) importUafFile.onchange = (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (file) importUAF(file);
+          e.target.value = '';
+        };
         document.getElementById('import-data').onclick = () => {
           document.getElementById('import-file').click();
         };
