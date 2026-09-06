@@ -2381,7 +2381,7 @@
             <h2 class="section-header"><span class="sec-index">10</span>关于</h2>
             <div class="settings-panel">
               <h3 style="font-size: 18px; margin: 14px 0 12px;">ENcwork -适用于多设备的作业板</h3>
-            <p style="opacity: 0.8; margin-bottom: 8px;">版本：<span id="about-version" style="font-family: var(--font-mono); font-weight: 600;">v4.62</span> · ENcwork EDITION · 更新记录见下方版本日志</p>
+            <p style="opacity: 0.8; margin-bottom: 8px;">版本：<span id="about-version" style="font-family: var(--font-mono); font-weight: 600;">v4.63</span> · ENcwork EDITION · 更新记录见下方版本日志</p>
             <p style="line-height: 1.6; opacity: 0.7;">这是一款专为教室白板和大屏场景打造的班级作业管理工具，集作业发布、考勤统计、考试倒计时于一体。核心亮点包括：智能作业输入支持草稿自动保存与恢复、Ctrl+Enter快捷保存及快捷词插入，让记录高效无虞；考试时间表卡片可自定义科目与时间，并自带倒计时与显示开关，方便全局掌控；考勤系统支持三态统计、姓名多列排布和名单批量导入，适配各种班级规模。视觉上，液态玻璃与动态取色主题提供通透/模糊无级调节，配合卡片边缘泛光等实验性特效，让大屏展示华丽且清晰；同时支持背景自定义、字体上传、Markdown引擎及手动布局，满足个性化需求。从自动备份到多日作业找回，每一处细节都为稳定、流畅的作业展示而生。</p>
             </div>
             <div class="settings-panel">
@@ -2657,8 +2657,16 @@
       // ===== 应用版本与版本日志 =====
       // 版本号规则：新增功能 → +0.1（如 4.10 → 4.20）；修复问题 → +0.01（如 4.20 → 4.21）
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
-      const APP_VERSION = '4.62';
+      const APP_VERSION = '4.63';
       const VERSION_LOG = [
+        {
+          version: '4.63', date: '2026-09-06', items: [
+            { type: 'feature', text: '底板（Dock）新增自定义渐变：开启后用双色线性渐变，支持起始/结束色与角度调节（0=上→下/90=左→右/180=下→上），关闭回退纯色/主题；底板不透明度同样作用于渐变两端' },
+            { type: 'feature', text: '考勤卡片姓名字号可单独调整：新增 8~28px 滑块，仅作用于未出勤学生姓名，不影响其他卡片或全局字号' },
+            { type: 'feature', text: '考勤姓名字号新增「跟随全局字号」开关：开启后随全局字体大小同步缩放并隐藏独立滑块，关闭恢复单独调整，互不丢失' },
+            { type: 'feature', text: '首次进入默认主题改为「清新浅色」（已有用户本地保存的主题不受影响）' }
+          ]
+        },
         {
           version: '4.62', date: '2026-09-06', items: [
             { type: 'feature', text: '时钟/考勤卡片字体颜色：默认跟随主字体颜色同步变化；关闭「全部同步」后可分别为两卡片单独设置颜色' }
