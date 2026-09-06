@@ -609,8 +609,8 @@
     #dock-container { position: fixed; bottom: 18px; left: 3vw; right: 3vw; display: flex; justify-content: center; z-index: var(--z-dock); pointer-events: none; animation: dockRise 0.5s cubic-bezier(.22,.8,.2,1) 0.15s both; }
     @keyframes dockRise { from { transform: translateY(26px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     #dock { pointer-events: auto; position: relative; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; row-gap: 4px; gap: 2px; max-width: 94vw; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--dock-border); box-shadow: var(--shadow-lg); backdrop-filter: blur(var(--dock-blur, 12px)); -webkit-backdrop-filter: blur(var(--dock-blur, 12px));
-      /* 底板：自定义色（--dock-base-bg）或主题色，统一按不透明度混合（--dock-bg-opacity-pct） */
-      background-color: color-mix(in srgb, var(--dock-base-bg, var(--dock-bg)) var(--dock-bg-opacity-pct, 100%), transparent);
+      /* 底板：渐变（--dock-gradient）优先；否则自定义色（--dock-base-bg）或主题色，统一按不透明度混合（--dock-bg-opacity-pct） */
+      background: var(--dock-gradient, color-mix(in srgb, var(--dock-base-bg, var(--dock-bg)) var(--dock-bg-opacity-pct, 100%), transparent));
     }
     .dock-tooltip { background: color-mix(in srgb, var(--dock-base-bg, var(--dock-bg)) 95%, transparent); }
     /* ===== 快捷栏效果系统 ===== */
@@ -1560,6 +1560,19 @@
               <div class="form-group">
                 <label class="form-label">底板不透明度: <span id="dock-bg-opacity-val" class="range-value">72</span>%（越低越透出模糊效果）</label>
                 <input type="range" id="dock-bg-opacity-range" class="form-range" min="0" max="100" step="1">
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label"><input type="checkbox" id="dock-bg-gradient-toggle"> 底板渐变（开启后使用双色渐变；关闭回退上方纯色/主题）</label>
+              </div>
+              <div class="form-group" id="dock-bg-gradient-group" style="display: none;">
+                <label class="form-label">渐变颜色（起始 → 结束）</label>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <input type="color" id="dock-bg-gradient-start" class="form-control" style="width:64px; height:34px; padding:2px; cursor:pointer; flex:0 0 auto;" title="渐变起始色">
+                  <span style="opacity:.6;">→</span>
+                  <input type="color" id="dock-bg-gradient-end" class="form-control" style="width:64px; height:34px; padding:2px; cursor:pointer; flex:0 0 auto;" title="渐变结束色">
+                </div>
+                <label class="form-label" style="margin-top:8px;">渐变角度: <span id="dock-bg-gradient-angle-val" class="range-value">90</span>°（0=上→下，90=左→右，180=下→上）</label>
+                <input type="range" id="dock-bg-gradient-angle-range" class="form-range" min="0" max="360" step="5">
               </div>
             </div>
             <div class="settings-panel">
@@ -2918,6 +2931,10 @@
         dockEffectLevel: 'fancy',
         dockBgColor: '',
         dockBgOpacity: 72,
+        dockBgGradient: false, // 底板渐变开关（开启后用双色渐变，关闭回退纯色/主题）
+        dockBgGradientStart: '#4A90E2', // 渐变起始色
+        dockBgGradientEnd: '#9B6DFF', // 渐变结束色
+        dockBgGradientAngle: 90, // 渐变角度（0=上→下，90=左→右）
         liquidGlassTheme: false,
         liquidGlassLevel: 'fancy',
         liquidGlassTransparency: 45,
@@ -3090,6 +3107,10 @@
             dockEffectLevel: state.dockEffectLevel,
             dockBgColor: state.dockBgColor,
             dockBgOpacity: state.dockBgOpacity,
+            dockBgGradient: state.dockBgGradient,
+            dockBgGradientStart: state.dockBgGradientStart,
+            dockBgGradientEnd: state.dockBgGradientEnd,
+            dockBgGradientAngle: state.dockBgGradientAngle,
             liquidGlassTheme: state.liquidGlassTheme,
             liquidGlassLevel: state.liquidGlassLevel,
             liquidGlassTransparency: state.liquidGlassTransparency,
@@ -3399,6 +3420,14 @@
             state.dockBgOpacity = 72;
           } else {
             state.dockBgOpacity = Math.max(0, Math.min(100, state.dockBgOpacity));
+          }
+          if (typeof state.dockBgGradient !== 'boolean') state.dockBgGradient = false;
+          if (!/^#[0-9a-fA-F]{3,8}$/.test(state.dockBgGradientStart || '')) state.dockBgGradientStart = '#4A90E2';
+          if (!/^#[0-9a-fA-F]{3,8}$/.test(state.dockBgGradientEnd || '')) state.dockBgGradientEnd = '#9B6DFF';
+          if (typeof state.dockBgGradientAngle !== 'number' || isNaN(state.dockBgGradientAngle)) {
+            state.dockBgGradientAngle = 90;
+          } else {
+            state.dockBgGradientAngle = Math.max(0, Math.min(360, Math.round(state.dockBgGradientAngle)));
           }
           if (state.layoutVersion !== 'new' && state.layoutVersion !== 'legacy') {
             state.layoutVersion = 'new';
@@ -4051,6 +4080,16 @@
         // 底板不透明度（0-100%）
         const opacity = Math.max(0, Math.min(100, parseInt(state.dockBgOpacity) || 0));
         root.style.setProperty('--dock-bg-opacity-pct', opacity + '%');
+        // 底板渐变：开启且双色有效时写入 --dock-gradient（不透明度同样混入两端，与纯色行为一致）；否则移除以回退纯色/主题
+        const gs = state.dockBgGradientStart, ge = state.dockBgGradientEnd;
+        if (state.dockBgGradient && /^#[0-9a-fA-F]{3,8}$/.test(gs) && /^#[0-9a-fA-F]{3,8}$/.test(ge)) {
+          // 用户角度 0=上→下 / 90=左→右 / 180=下→上；CSS 0deg=向上，故 css = 180 - 用户角度
+          const cssAngle = ((180 - (Math.round(state.dockBgGradientAngle) || 0)) % 360 + 360) % 360;
+          const stops = `color-mix(in srgb, ${gs} ${opacity}%, transparent), color-mix(in srgb, ${ge} ${opacity}%, transparent)`;
+          root.style.setProperty('--dock-gradient', `linear-gradient(${cssAngle}deg, ${stops})`);
+        } else {
+          root.style.removeProperty('--dock-gradient');
+        }
       }
 
       // 全局液态玻璃主题（实验性）：开关 + 档位 + 无级通透度/模糊度/色彩饱和/流光速度，经 html 属性与 CSS 变量驱动
@@ -6853,6 +6892,10 @@
           data.dockEffectLevel = state.dockEffectLevel;
           data.dockBgColor = state.dockBgColor;
           data.dockBgOpacity = state.dockBgOpacity;
+          data.dockBgGradient = state.dockBgGradient;
+          data.dockBgGradientStart = state.dockBgGradientStart;
+          data.dockBgGradientEnd = state.dockBgGradientEnd;
+          data.dockBgGradientAngle = state.dockBgGradientAngle;
           data.liquidGlassTheme = state.liquidGlassTheme;
           data.liquidGlassLevel = state.liquidGlassLevel;
           data.liquidGlassTransparency = state.liquidGlassTransparency;
@@ -8559,6 +8602,31 @@
           saveData();
         };
 
+        // 底板渐变：开关 + 起始/结束色 + 角度
+        document.getElementById('dock-bg-gradient-toggle').onchange = (e) => {
+          state.dockBgGradient = e.target.checked;
+          document.getElementById('dock-bg-gradient-group').style.display = state.dockBgGradient ? '' : 'none';
+          applyDockBlur();
+          saveData();
+          showToast(state.dockBgGradient ? '已启用底板渐变' : '底板渐变已关闭（回退纯色）');
+        };
+        document.getElementById('dock-bg-gradient-start').oninput = (e) => {
+          state.dockBgGradientStart = e.target.value || '#4A90E2';
+          applyDockBlur();
+          saveData();
+        };
+        document.getElementById('dock-bg-gradient-end').oninput = (e) => {
+          state.dockBgGradientEnd = e.target.value || '#9B6DFF';
+          applyDockBlur();
+          saveData();
+        };
+        document.getElementById('dock-bg-gradient-angle-range').oninput = (e) => {
+          state.dockBgGradientAngle = Math.max(0, Math.min(360, parseInt(e.target.value) || 0));
+          document.getElementById('dock-bg-gradient-angle-val').textContent = state.dockBgGradientAngle;
+          applyDockBlur();
+          saveData();
+        };
+
         // Dock 彩虹动态流光：开关 + 速度 + 光晕强度
         document.getElementById('dock-rainbow-toggle').onchange = (e) => {
           state.dockRainbow = e.target.checked;
@@ -9647,6 +9715,12 @@
         document.getElementById('dock-bg-color-label').textContent = state.dockBgColor ? state.dockBgColor : '跟随主题';
         document.getElementById('dock-bg-opacity-range').value = state.dockBgOpacity;
         document.getElementById('dock-bg-opacity-val').textContent = state.dockBgOpacity;
+        document.getElementById('dock-bg-gradient-toggle').checked = !!state.dockBgGradient;
+        document.getElementById('dock-bg-gradient-group').style.display = state.dockBgGradient ? '' : 'none';
+        document.getElementById('dock-bg-gradient-start').value = /^#[0-9a-fA-F]{6}$/.test(state.dockBgGradientStart || '') ? state.dockBgGradientStart : '#4A90E2';
+        document.getElementById('dock-bg-gradient-end').value = /^#[0-9a-fA-F]{6}$/.test(state.dockBgGradientEnd || '') ? state.dockBgGradientEnd : '#9B6DFF';
+        document.getElementById('dock-bg-gradient-angle-range').value = state.dockBgGradientAngle;
+        document.getElementById('dock-bg-gradient-angle-val').textContent = state.dockBgGradientAngle;
 
         // 实验性功能
         document.getElementById('edit-enabled-toggle').checked = state.editEnabled === true;
