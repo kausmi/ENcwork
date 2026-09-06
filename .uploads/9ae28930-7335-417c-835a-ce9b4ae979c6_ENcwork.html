@@ -494,7 +494,7 @@
     .attendance-names.h-fixed[data-att-per-row="5"] { grid-template-columns: repeat(5, minmax(0, max-content)); }
     .attendance-names.h-fixed[data-att-per-row="6"] { grid-template-columns: repeat(6, minmax(0, max-content)); }
     .attendance-names.h-fixed[data-att-per-row="8"] { grid-template-columns: repeat(8, minmax(0, max-content)); }
-    .att-chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; font-size: 12px; border: 1px solid var(--border-color); border-left: 3px solid var(--st-color, var(--accent-color)); border-radius: 2px; }
+    .att-chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; font-size: var(--att-name-size, 12px); border: 1px solid var(--border-color); border-left: 3px solid var(--st-color, var(--accent-color)); border-radius: 2px; }
     .att-chip i { width: 7px; height: 7px; background: var(--st-color, var(--accent-color)); flex-shrink: 0; }
 
     /* 考试时间表卡片（特殊卡片：自动布局中置顶排列，按日期倒计时展示） */
@@ -1845,6 +1845,10 @@
                   <option value="8">每行 8 人</option>
                 </select>
               </div>
+              <div class="form-group">
+                <label class="form-label">姓名字号: <span id="att-name-size-val" class="range-value">12</span>px</label>
+                <input type="range" id="att-name-size-range" class="form-range" min="8" max="28" step="1">
+              </div>
               <p style="opacity: 0.65; font-size: 12.5px; line-height: 1.6;">点击主界面的考勤卡片即可为当日每个学生设置状态。每个状态可选择统计方式：「计入应到与实到」（默认出勤、迟到）、「仅计入应到」（请假、缺勤，计入应到但不计入实到）或「不计入应到实到」（应到实到均不统计）。每个状态还可单独设置是否在考勤卡片上显示该状态学生的名字。</p>
             </div>
             <div class="settings-panel">
@@ -2877,6 +2881,7 @@
         attNamesLayout: 'horizontal',
         attNamesColumns: 'auto',
         attNamesPerRow: 'auto',
+        attNameSize: 12, // 考勤卡片姓名字号（px）
         roster: [],
         attendance: {},
         attendanceStatuses: [],
@@ -3159,6 +3164,7 @@
             attNamesLayout: state.attNamesLayout,
             attNamesColumns: state.attNamesColumns,
             attNamesPerRow: state.attNamesPerRow,
+            attNameSize: state.attNameSize,
             attendanceShowNames: state.attendanceShowNames,
             roster: state.roster,
             attendance: state.attendance,
@@ -3400,6 +3406,11 @@
           }
           if (!['auto', '3', '4', '5', '6', '8'].includes(state.attNamesPerRow)) {
             state.attNamesPerRow = 'auto';
+          }
+          if (typeof state.attNameSize !== 'number' || isNaN(state.attNameSize)) {
+            state.attNameSize = 12;
+          } else {
+            state.attNameSize = Math.max(8, Math.min(28, Math.round(state.attNameSize)));
           }
           if (typeof state.mdEditorTheme === 'undefined') {
             state.mdEditorTheme = 'light';
@@ -3915,6 +3926,7 @@
 
       function applyFontSettings() {
         document.documentElement.style.setProperty('--global-font-size', state.fontSize + 'px');
+        document.documentElement.style.setProperty('--att-name-size', state.attNameSize + 'px');
         // 自定义字体颜色：开启「影响全局」时覆盖根 --text-color；否则仅作用于主内容区（#app），顶栏强制使用主题色避免看不清
         const appEl = document.getElementById('app');
         const topBar = document.getElementById('top-bar');
@@ -6809,6 +6821,7 @@
           data.attNamesLayout = state.attNamesLayout;
           data.attNamesColumns = state.attNamesColumns;
           data.attNamesPerRow = state.attNamesPerRow;
+          data.attNameSize = state.attNameSize;
           data.showAttendance = state.showAttendance;
         }
         if (inc.appearance) {
@@ -9092,6 +9105,12 @@
           saveData();
           renderSubjects();
         };
+        document.getElementById('att-name-size-range').oninput = (e) => {
+          state.attNameSize = parseInt(e.target.value);
+          document.getElementById('att-name-size-val').textContent = state.attNameSize;
+          applyFontSettings();
+          saveData();
+        };
         document.getElementById('add-att-group').onclick = addAttendanceGroupFromInput;
         document.getElementById('att-group-input').addEventListener('keydown', (e) => {
           if (e.key === 'Enter') addAttendanceGroupFromInput();
@@ -9749,6 +9768,8 @@
         document.getElementById('att-names-layout').value = state.attNamesLayout === 'vertical' ? 'vertical' : 'horizontal';
         document.getElementById('att-names-columns').value = ['auto', '2', '3', '4', '5'].includes(state.attNamesColumns) ? state.attNamesColumns : 'auto';
         document.getElementById('att-names-per-row').value = ['auto', '3', '4', '5', '6', '8'].includes(state.attNamesPerRow) ? state.attNamesPerRow : 'auto';
+        document.getElementById('att-name-size-range').value = state.attNameSize;
+        document.getElementById('att-name-size-val').textContent = state.attNameSize;
         renderRosterList();
         renderAttGroupList();
         renderStatusList();
