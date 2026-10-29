@@ -36559,7 +36559,8 @@ html .card-actions button:hover,
 html .card-header .delete-btn:hover {
   background: color-mix(in srgb, var(--accent-color) 14%, transparent) !important;
 }
-html .card-title { font-size: 13.5px !important; font-weight: 600 !important; letter-spacing: .01em !important; }
+/* 学科卡片标题不再写死字号：交给基础规则 .card-title{font-size:1.02em}（ENcwork-otto.html:2409）与主题各自的 em 值，这样 A+/A- 与自动字号都能生效 */
+html .card-title { font-weight: 600 !important; letter-spacing: .01em !important; }
 
 /* 快捷栏：MD3 elevated surface，圆角 26px；按钮胶囊 + state layer */
 html #dock {
