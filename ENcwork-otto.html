@@ -8168,8 +8168,35 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
     document.addEventListener('animationcancel', release, true);
   })();
   </script>
+<style id="enc-aurora-style">
+#enc-aurora-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0; transition: opacity .6s ease;
+  background-image: linear-gradient(120deg,
+    var(--au-c1, #6a5acd) 0%,
+    var(--au-c2, #00c6ff) 33%,
+    var(--au-c3, #ff6ec7) 66%,
+    var(--au-c1, #6a5acd) 100%);
+  background-size: 300% 300%;
+  background-position: 0% 50%;
+}
+html[data-aurora="on"] #enc-aurora-bg { opacity: var(--au-opacity, 0.55); }
+html[data-aurora="on"][data-aurora-q="low"] #enc-aurora-bg { animation: encAuroraShift 44s ease-in-out infinite; }
+html[data-aurora="on"][data-aurora-q="medium"] #enc-aurora-bg { animation: encAuroraShift 24s ease-in-out infinite; }
+html[data-aurora="on"][data-aurora-q="high"] #enc-aurora-bg { animation: encAuroraShift 14s ease-in-out infinite; filter: saturate(1.15); }
+html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !important; }
+@keyframes encAuroraShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-aurora="on"] #enc-aurora-bg { animation: none !important; }
+}
+</style>
 </head>
 <body>
+<div id="enc-aurora-bg" aria-hidden="true"></div>
 <svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none;">
   <defs>
     <filter id="enc-liquid-lens" x="-10%" y="-10%" width="120%" height="120%">
@@ -8617,6 +8644,29 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
           </div>
 
           <div class="settings-subsection" id="section-background" data-label="背景与壁纸">
+            <div class="settings-panel ot-card" id="enc-aurora-panel">
+              <h3 class="sub-header"><span class="dv-tag">流光</span><span>背景动态流光</span></h3>
+              <div class="ot-row">
+                <div><div class="rl">启用动态流光</div><div class="rd">在页面底层铺一层缓慢流动的渐变，不遮挡内容。</div></div>
+                <div class="rc"><label class="switch"><input type="checkbox" id="bg-aurora-toggle"><span class="slider"></span></label></div>
+              </div>
+              <div class="ot-row">
+                <div><div class="rl">流光颜色</div><div class="rd">三种颜色循环过渡。</div></div>
+                <div class="rc dv-inline">
+                  <input type="color" id="bg-aurora-c1" class="form-control" style="width:52px;height:34px;padding:2px;">
+                  <input type="color" id="bg-aurora-c2" class="form-control" style="width:52px;height:34px;padding:2px;">
+                  <input type="color" id="bg-aurora-c3" class="form-control" style="width:52px;height:34px;padding:2px;">
+                </div>
+              </div>
+              <div class="ot-row">
+                <div><div class="rl">画质档位</div><div class="rd">低档流动最慢最省电；高档流动更快、色彩更饱和。</div></div>
+                <div class="rc"><select id="bg-aurora-quality" class="form-control"><option value="low">低（省电）</option><option value="medium">中（默认）</option><option value="high">高（鲜艳）</option></select></div>
+              </div>
+              <div class="ot-row">
+                <div><div class="rl">不透明度</div><div class="rd">流光相对内容的浓淡。</div></div>
+                <div class="rc"><input type="range" id="bg-aurora-opacity" min="12" max="95" step="1" class="form-control"><span id="bg-aurora-opacity-val" style="min-width:42px;text-align:right;">55%</span></div>
+              </div>
+            </div>
             <h2 class="section-header sub"><span class="sec-index">01B</span><span>背景与壁纸</span></h2>
             <div class="settings-panel">
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
@@ -11161,7 +11211,7 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
       // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
       // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-      const APP_VERSION = '1.58';
+      const APP_VERSION = '1.59';
       const APP_NAME = '月行水上';
 
       // ===== 版本标识：OTTO版 / 精简版 =====
@@ -11216,6 +11266,17 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
         return '夕阳之下';
       }
       const VERSION_LOG = [
+      {
+      version: '1.59-otto',
+      date: '2026-11-06',
+      type: 'release',
+      summary: '背景动态流光上线：页面底层可铺一层缓慢流动的渐变，三色可自定义，画质三档，不透明度可调。',
+      items: [
+            { type: 'feature', text: '新增背景动态流光：设置 → 背景与壁纸里开启，底层铺一层 3 色循环流动的渐变，不遮挡卡片' },
+            { type: 'feature', text: '流光三色可自定义（原生取色器），并可选画质档位：低（44s 最省电）/ 中（24s）/ 高（14s 更鲜艳），另可调不透明度 12%–95%' },
+            { type: 'improve', text: '动效等级为「禁用」或系统开启「减少动态效果」时，流光自动停止流动只保留静态底色' }
+      ]
+      },
       {
       version: '1.58-otto',
       date: '2026-11-06',
@@ -11926,6 +11987,10 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
         aiModel: '',
         aiKey: '',
         aiHistory: [],
+        bgAuroraOn: false,
+        bgAuroraColors: ['#6a5acd', '#00c6ff', '#ff6ec7'],
+        bgAuroraQuality: 'medium',
+        bgAuroraOpacity: 0.55,
         // 液态玻璃扩展可调项：亮度 / 对比度 / 反光角度
         liquidGlassBrightness: 100,
         liquidGlassContrast: 100,
@@ -12997,6 +13062,12 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
           if (typeof state.aiModel !== 'string') state.aiModel = '';
           if (typeof state.aiKey !== 'string') state.aiKey = '';
           if (!Array.isArray(state.aiHistory)) state.aiHistory = [];
+          if (typeof state.bgAuroraOn !== 'boolean') state.bgAuroraOn = false;
+          if (!Array.isArray(state.bgAuroraColors) || state.bgAuroraColors.length !== 3) state.bgAuroraColors = ['#6a5acd', '#00c6ff', '#ff6ec7'];
+          state.bgAuroraColors = state.bgAuroraColors.map(function (c) { return (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c)) ? c : '#6a5acd'; });
+          if (['low', 'medium', 'high'].indexOf(state.bgAuroraQuality) < 0) state.bgAuroraQuality = 'medium';
+          if (typeof state.bgAuroraOpacity !== 'number' || !isFinite(state.bgAuroraOpacity)) state.bgAuroraOpacity = 0.55;
+          state.bgAuroraOpacity = Math.max(0.12, Math.min(0.95, state.bgAuroraOpacity));
           if (typeof state.dockBlur === 'undefined') {
             state.dockBlur = true;
           }
@@ -24330,8 +24401,62 @@ window.__ENC_DEBUG__ = {
         });
 
         // 设置按钮（顶栏右上角 / 快捷栏共用）
+        // ===== 背景动态流光 =====
+        function applyAurora() {
+          var root = document.documentElement;
+          var on = state.bgAuroraOn === true;
+          root.setAttribute('data-aurora', on ? 'on' : 'off');
+          root.setAttribute('data-aurora-q', state.bgAuroraQuality || 'medium');
+          var c = Array.isArray(state.bgAuroraColors) ? state.bgAuroraColors : [];
+          root.style.setProperty('--au-c1', c[0] || '#6a5acd');
+          root.style.setProperty('--au-c2', c[1] || '#00c6ff');
+          root.style.setProperty('--au-c3', c[2] || '#ff6ec7');
+          root.style.setProperty('--au-opacity', String(typeof state.bgAuroraOpacity === 'number' ? state.bgAuroraOpacity : 0.55));
+        }
+        function encAuroraSyncUI() {
+          var on = state.bgAuroraOn === true;
+          var t = document.getElementById('bg-aurora-toggle'); if (t) t.checked = on;
+          var c = Array.isArray(state.bgAuroraColors) ? state.bgAuroraColors : [];
+          ['c1', 'c2', 'c3'].forEach(function (k, i) {
+            var el = document.getElementById('bg-aurora-' + k);
+            if (el) el.value = c[i] || '#6a5acd';
+          });
+          var q = document.getElementById('bg-aurora-quality');
+          if (q) q.value = state.bgAuroraQuality || 'medium';
+          var pct = Math.round((typeof state.bgAuroraOpacity === 'number' ? state.bgAuroraOpacity : 0.55) * 100);
+          var op = document.getElementById('bg-aurora-opacity'); if (op) op.value = pct;
+          var opv = document.getElementById('bg-aurora-opacity-val'); if (opv) opv.textContent = pct + '%';
+        }
+        function encAuroraBind() {
+          var t = document.getElementById('bg-aurora-toggle');
+          if (t) t.addEventListener('change', function () {
+            state.bgAuroraOn = this.checked; applyAurora(); encAuroraSyncUI(); saveData();
+          });
+          ['c1', 'c2', 'c3'].forEach(function (k, i) {
+            var el = document.getElementById('bg-aurora-' + k);
+            if (!el) return;
+            el.addEventListener('input', function () {
+              var arr = Array.isArray(state.bgAuroraColors) ? state.bgAuroraColors.slice() : ['#6a5acd', '#00c6ff', '#ff6ec7'];
+              arr[i] = this.value;
+              state.bgAuroraColors = arr;
+              applyAurora(); saveData();
+            });
+          });
+          var q = document.getElementById('bg-aurora-quality');
+          if (q) q.addEventListener('change', function () {
+            state.bgAuroraQuality = this.value; applyAurora(); saveData();
+          });
+          var op = document.getElementById('bg-aurora-opacity');
+          if (op) op.addEventListener('input', function () {
+            state.bgAuroraOpacity = Math.max(0.12, Math.min(0.95, (parseInt(this.value, 10) || 55) / 100));
+            applyAurora(); encAuroraSyncUI(); saveData();
+          });
+        }
+        try { encAuroraBind(); applyAurora(); } catch (e) { console.warn('背景流光初始化失败：', e); }
+
         function openSettingsModal() {
         try { if (typeof renderHelpRail === 'function') renderHelpRail(); } catch (e) {}
+          try { if (typeof encAuroraSyncUI === 'function') encAuroraSyncUI(); } catch (e) {}
           $('settings-modal').classList.add('active');
           updateSettingsUI();
           // 邦多利主题：让设置卡片右下角显示一位乐队成员立绘（固定在卡片角落，不随滚动）

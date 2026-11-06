@@ -2739,7 +2739,7 @@ defaultAttendanceStatuses: [
 ],
 ultraPlusDefaults: { blurMult: 2.4, saturate: 300, brightness: 1.3, sheenSpeed: 7, bandSpeed: 9, opacityFactor: 32, dispersion: 50 }
 };
-const APP_VERSION = '1.58';
+const APP_VERSION = '1.59';
 const APP_EDITION = 'legacy';
 const APP_EDITION_NAME = '精简版';
 const APP_EDITION_NAME_OTHER = 'OTTO版';
@@ -2763,6 +2763,16 @@ if (major === 4) return '夕阳之下';
 return '夕阳之下';
 }
 const VERSION_LOG = [
+      {
+      version: '1.59-legacy',
+      date: '2026-11-06',
+      type: 'release',
+      summary: '问 AI 功能补齐：设置 → 通用功能里填接口、模型与密钥，可在当前页面对话。',
+      items: [
+            { type: 'feature', text: '新增「问 AI」：填接口地址、模型名与 API 密钥后可在当前页面直接对话，自动带上当天各科作业作为上下文' },
+            { type: 'improve', text: '动效等级保持精简版策略：不提供设置项以降低性能负担，内置默认为标准档' }
+      ]
+      },
       {
       version: '1.58-legacy',
       date: '2026-11-06',
