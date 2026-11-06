@@ -8373,6 +8373,15 @@ html[data-theme="bang-dream"] body, html[data-theme="sekai"] body { transition: 
 #section-help .tutor-body > p.mt { margin-top: 12px; }
 #section-help .tutor summary { font-weight: 600; }
 </style>
+<style id="enc-dock-ring-fix">
+/* 底栏按钮：干掉安卓 WebView 点击时的圆形 tap 高亮，以及键盘聚焦描边 */
+#dock .dock-item, #dock .dock-item * {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+}
+#dock .dock-item:focus { outline: none !important; }
+#dock .dock-item:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent-color, #6750A4) 60%, transparent) !important; outline-offset: 2px; }
+</style>
 </head>
 <body>
 <div id="enc-aurora-bg" aria-hidden="true"></div>
@@ -37835,6 +37844,21 @@ html #notification-bar {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mark);
   else mark();
   window.__encMarkSubSections = mark;
+})();
+</script>
+<script id="enc-dock-tip-fix">
+(function () {
+  function strip() {
+    var items = document.querySelectorAll('#dock .dock-item[title]');
+    for (var i = 0; i < items.length; i++) {
+      var el = items[i];
+      if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', el.getAttribute('title'));
+      el.removeAttribute('title');
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', strip);
+  else strip();
+  window.__encStripDockTitle = strip;
 })();
 </script>
 </body></html>
