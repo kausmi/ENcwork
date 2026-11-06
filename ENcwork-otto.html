@@ -1144,7 +1144,7 @@
         radial-gradient(ellipse 92% 62% at 50% -14%, color-mix(in srgb, var(--bd-accent) 26%, transparent) 0%, transparent 60%),
         radial-gradient(ellipse 70% 52% at 88% 112%, color-mix(in srgb, var(--bd-accent) 15%, transparent) 0%, transparent 55%),
         linear-gradient(180deg, rgba(26,24,35,.72) 0%, rgba(19,18,24,.86) 58%, rgba(13,12,18,.92) 100%),
-        var(--bd-band-bg, none),
+        var(--bd-card-band-bg, var(--bd-band-bg, none)),
         linear-gradient(180deg, #1A1823 0%, #131218 58%, #0D0C12 100%);
       background-size: auto, auto, auto, cover, auto;
       background-position: center, center, center, center 26%, center;
@@ -1562,7 +1562,7 @@ html[data-theme="bang-dream"] .card {
         radial-gradient(ellipse 92% 62% at 50% -14%, color-mix(in srgb, var(--bd-accent) 20%, transparent) 0%, transparent 60%),
         radial-gradient(ellipse 70% 52% at 88% 112%, color-mix(in srgb, var(--bd-accent) 12%, transparent) 0%, transparent 55%),
         linear-gradient(180deg, rgba(255,255,255,.80) 0%, rgba(250,246,240,.90) 58%, rgba(243,238,231,.95) 100%),
-        var(--bd-band-bg, none),
+        var(--bd-card-band-bg, var(--bd-band-bg, none)),
         linear-gradient(180deg, #FBF8F4 0%, #F5F0E9 58%, #EFE9E0 100%);
       background-size: auto, auto, auto, cover, auto;
       background-position: center, center, center, center 26%, center;
@@ -8302,6 +8302,22 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
 #settings-modal .settings-layout.sidebar-collapsed .settings-content::before { content: ''; }
 #settings-modal .settings-layout.sidebar-collapsed #settings-sidebar-expand.show { display: inline-flex; align-items: center; justify-content: center; }
 </style>
+<style id="enc-bdcardbg-glass-off">
+/* 作业卡片铺了乐队舞台图时，只让作业卡片本身退出液态玻璃，其余界面不受影响 */
+html[data-bd-cardbg="on"] .subject-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-bd-cardbg="on"] .subject-card::after {
+  opacity: 0 !important;
+  animation: none !important;
+  display: none !important;
+}
+html[data-bd-cardbg="on"] .subject-card .card-glass,
+html[data-bd-cardbg="on"] .subject-card .liquid-glass-layer {
+  display: none !important;
+}
+</style>
 </head>
 <body>
 <div id="enc-aurora-bg" aria-hidden="true"></div>
@@ -8561,6 +8577,12 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
                   <span class="bd-toggle-hint">开启后，作业卡片背景板铺上当前乐队的舞台背景图（内置素材，离线可用）。背景图绘制在文字层「下方」，文字与按钮始终清晰；再叠一层底色蒙版进一步保证可读性。切换乐队立即换图。</span>
                 </span>
               </label>
+              <div class="form-group" id="bandori-card-band-group" style="margin: 4px 0 10px;">
+                <label class="form-label">卡片背景用哪支乐队的舞台图</label>
+                <select id="bandori-card-band" class="form-control">
+                  <option value="current">跟随当前乐队（默认）</option>
+                </select>
+              </div>
               <label class="bd-toggle" for="bandori-page-bg-toggle">
                 <input type="checkbox" id="bandori-page-bg-toggle">
                 <span class="bd-toggle-body">
@@ -12191,6 +12213,7 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
         bandoriAccentBand: '1', // 界面强调色所用乐队：选「全部乐队」显示全部卡面时仍按它取色
         bandoriMemberBg: false, // 邦多利主题：是否把乐队成员立绘作为页面背景（默认关，切换页面时随机换人）
         bandoriCardBg: false, // 邦多利主题：作业卡片背景板是否使用当前乐队的舞台背景（默认关）
+        bandoriCardBand: 'current', // 作业卡片背景板用哪支乐队的舞台图：'current'=跟随当前乐队，其余为乐队 id
         bandoriPageBg: true, // 邦多利主题：页面纯色底替换为当前乐队的舞台背景图（默认开）
         bandoriAllBg: '', // 「全部乐队」时随机抽中的舞台图 id（选中时抽一次并保持）
         bdCardTrain: 'trained', // 邦多利：卡面版本 'normal' 特训前 / 'trained' 特训后（与其它主题独立）
@@ -12499,6 +12522,7 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
             bandoriAccentBand: state.bandoriAccentBand,
             bandoriMemberBg: state.bandoriMemberBg,
             bandoriCardBg: !!state.bandoriCardBg,
+            bandoriCardBand: String(state.bandoriCardBand || 'current'),
             bandoriPageBg: !!state.bandoriPageBg,
             bandoriAllBg: state.bandoriAllBg || '',
             bdCardTrain: state.bdCardTrain === 'normal' ? 'normal' : 'trained',
@@ -13241,6 +13265,7 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
           if (typeof state.bandoriMemberBg !== 'boolean') {
             state.bandoriMemberBg = false;
           }
+          if (typeof state.bandoriCardBand !== 'string' || !state.bandoriCardBand) state.bandoriCardBand = 'current';
           if (typeof state.bandoriCardBg !== 'boolean') {
             state.bandoriCardBg = false;
           }
@@ -30896,6 +30921,17 @@ const SEKAI_UNIT_LOGOS = {
         const root = document.documentElement;
         if (state.bandoriCardBg) root.setAttribute('data-bd-cardbg', 'on');
         else root.removeAttribute('data-bd-cardbg');
+        // 卡片背景可以用别的乐队的舞台图（不跟随当前乐队）
+        try {
+          var cb = String(state.bandoriCardBand || 'current');
+          var pickId = cb;
+          if (cb === 'current') {
+            pickId = (String(state.bandoriBand) === 'all') ? String(state.bandoriAllBg || '') : String(state.bandoriBand || '');
+          }
+          var url = pickId ? (bandoriBgUrl(pickId) || (typeof BANDORI_BGS !== 'undefined' ? BANDORI_BGS[pickId] : '')) : '';
+          if (url) root.style.setProperty('--bd-card-band-bg', 'url("' + url + '")');
+          else root.style.removeProperty('--bd-card-band-bg');
+        } catch (e) {}
         if (state.bandoriPageBg) root.setAttribute('data-bd-pagebg', 'on');
         else root.removeAttribute('data-bd-pagebg');
       }
@@ -30964,6 +31000,35 @@ const SEKAI_UNIT_LOGOS = {
         const cb = document.getElementById('bandori-card-bg-toggle');
         if (!cb) return;
         cb.checked = !!state.bandoriCardBg;
+        // 卡片背景可选别的乐队的舞台图
+        try {
+          var sel = document.getElementById('bandori-card-band');
+          if (sel) {
+            if (typeof BANDORI_BGS !== 'undefined') {
+              Object.keys(BANDORI_BGS).filter(function (k) { return !!BANDORI_BGS[k] && k !== 'all'; }).forEach(function (k) {
+                var f = (typeof bandoriFindBand === 'function') ? bandoriFindBand(k) : null;
+                var op = document.createElement('option');
+                op.value = k; op.textContent = (f && f.name) ? f.name : k;
+                sel.appendChild(op);
+              });
+              var opA = document.createElement('option');
+              opA.value = 'all'; opA.textContent = '全部乐队（每次随机）';
+              sel.appendChild(opA);
+            }
+            sel.value = String(state.bandoriCardBand || 'current');
+            sel.onchange = function () {
+              var v = this.value;
+              if (v === 'all') {
+                var ks = (typeof BANDORI_BGS !== 'undefined') ? Object.keys(BANDORI_BGS).filter(function (k) { return !!BANDORI_BGS[k] && k !== 'all'; }) : [];
+                v = ks.length ? ks[Math.floor(Math.random() * ks.length)] : 'current';
+                this.value = v;
+              }
+              state.bandoriCardBand = v;
+              saveData(); applyBandoriCardBg();
+              showToast(state.bandoriCardBg ? '作业卡片背景板已换成该乐队的舞台图' : '已记录，开启作业卡片背景板后生效');
+            };
+          }
+        } catch (e) {}
         cb.onchange = () => {
           state.bandoriCardBg = !!cb.checked;
           saveData();
@@ -36078,7 +36143,7 @@ html[data-theme="bang-dream"][data-bd-cardbg="on"] .subject-card::before {
   pointer-events: none;
   background-image:
     linear-gradient(165deg, rgba(19, 18, 24, .90) 0%, rgba(19, 18, 24, .74) 48%, rgba(19, 18, 24, .92) 100%),
-    var(--bd-band-bg, none);
+    var(--bd-card-band-bg, var(--bd-band-bg, none));
   background-size: cover, cover;
   background-position: center, center 30%;
   background-repeat: no-repeat, no-repeat;
@@ -36086,17 +36151,17 @@ html[data-theme="bang-dream"][data-bd-cardbg="on"] .subject-card::before {
 html[data-theme="bang-dream"][data-bd-cardbg="on"] .subject-card:hover::before {
   background-image:
     linear-gradient(165deg, rgba(19, 18, 24, .86) 0%, rgba(19, 18, 24, .66) 48%, rgba(19, 18, 24, .90) 100%),
-    var(--bd-band-bg, none);
+    var(--bd-card-band-bg, var(--bd-band-bg, none));
 }
 html[data-theme="bang-dream"][data-theme-mode="light"][data-bd-cardbg="on"] .subject-card::before {
   background-image:
     linear-gradient(165deg, rgba(255, 252, 246, .92) 0%, rgba(255, 252, 246, .74) 48%, rgba(255, 252, 246, .94) 100%),
-    var(--bd-band-bg, none);
+    var(--bd-card-band-bg, var(--bd-band-bg, none));
 }
 html[data-theme="bang-dream"][data-theme-mode="light"][data-bd-cardbg="on"] .subject-card:hover::before {
   background-image:
     linear-gradient(165deg, rgba(255, 252, 246, .88) 0%, rgba(255, 252, 246, .66) 48%, rgba(255, 252, 246, .92) 100%),
-    var(--bd-band-bg, none);
+    var(--bd-card-band-bg, var(--bd-band-bg, none));
 }
 </style>
 <style id="enc-artpos-ux">
