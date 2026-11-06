@@ -8173,7 +8173,7 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
   </script>
 <style id="enc-aurora-style">
 #enc-aurora-bg {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
   opacity: 0; transition: opacity .6s ease;
   background-image: linear-gradient(120deg,
     var(--au-c1, #6a5acd) 0%,
@@ -8197,48 +8197,78 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
   html[data-aurora="on"] #enc-aurora-bg { animation: none !important; }
 }
 </style>
+
+/* .switch 容器：滑块方案已废，只留 input 上的开关 */
+#settings-modal .switch { display: inline-flex; align-items: center; }
+#settings-modal .switch > .slider { display: none !important; }
 <style id="enc-switch-redo">
-/* 站内开关统一重做：右侧滑动开关 + 选中整行描边，一眼能看出开还是关 */
-#settings-modal .checkbox-label:has(> input[type="checkbox"]) {
-  border: 1px solid color-mix(in srgb, var(--border-color, #ccc) 65%, transparent);
-  border-radius: 10px;
-  padding: 8px 12px;
-  background: transparent;
-  transition: background .16s ease, border-color .16s ease;
+/* ========== 开关统一重写（旧方案全部作废，只保留 input 上的开关） ========== */
+#settings-modal input[type="checkbox"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  position: relative !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  display: inline-block !important;
+  flex: 0 0 auto !important;
+  width: 42px !important;
+  height: 24px !important;
+  min-width: 42px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--text-muted, #888) 40%, transparent) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border-color, #ccc) 75%, transparent) !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+  transition: background .18s ease !important;
 }
-#settings-modal .checkbox-label:has(> input[type="checkbox"]):has(> input:checked) {
-  border-color: color-mix(in srgb, var(--accent-color) 70%, transparent);
-  background: color-mix(in srgb, var(--accent-color) 11%, transparent);
+#settings-modal input[type="checkbox"]::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 3px !important;
+  left: 3px !important;
+  transform: none !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3) !important;
+  transition: left .18s ease !important;
+  display: block !important;
 }
-#settings-modal .checkbox-label > input[type="checkbox"] {
-  -webkit-appearance: none; appearance: none;
-  flex: 0 0 auto; margin: 0;
-  width: 40px; height: 22px; border-radius: 11px;
-  background: color-mix(in srgb, var(--text-muted, #888) 38%, transparent);
-  position: relative; cursor: pointer; outline: none;
-  transition: background .18s ease;
+#settings-modal input[type="checkbox"]::after { content: none !important; display: none !important; }
+#settings-modal input[type="checkbox"]:checked {
+  background: var(--accent-color, #6750A4) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-color, #6750A4) 80%, transparent) !important;
 }
-#settings-modal .checkbox-label > input[type="checkbox"]::after {
-  content: ''; position: absolute; top: 2px; left: 2px;
-  width: 18px; height: 18px; border-radius: 50%;
-  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.32);
-  transition: transform .18s ease;
+#settings-modal input[type="checkbox"]:checked::before { left: calc(100% - 21px) !important; }
+#settings-modal input[type="checkbox"]:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent-color, #6750A4) 55%, transparent) !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
 }
-#settings-modal .checkbox-label > input[type="checkbox"]:checked { background: var(--accent-color); }
-#settings-modal .checkbox-label > input[type="checkbox"]:checked::after { transform: translateX(18px); }
-#settings-modal .checkbox-label > input[type="checkbox"]:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 35%, transparent);
+/* 彻底废掉旧方案：在 span 上再画一个开关 */
+#settings-modal .checkbox-label > input[type="checkbox"] + span { padding-left: 0 !important; }
+#settings-modal .checkbox-label > input[type="checkbox"] + span::before,
+#settings-modal .checkbox-label > input[type="checkbox"] + span::after { content: none !important; display: none !important; }
+/* 行容器不再套边框，避免和新开关叠成一团 */
+#settings-modal .checkbox-label {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 7px 0 !important;
+  border-radius: 0 !important;
+  gap: 10px !important;
 }
-/* .switch / .slider（流光面板等新控件） */
-.switch { position: relative; display: inline-flex; align-items: center; cursor: pointer; }
-.switch > input { -webkit-appearance: none; appearance: none; width: 40px; height: 22px; border-radius: 11px; margin: 0;
-  background: color-mix(in srgb, var(--text-muted, #888) 38%, transparent); position: relative; cursor: pointer; transition: background .18s ease; }
-.switch > input::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%;
-  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.32); transition: transform .18s ease; }
-.switch > input:checked { background: var(--accent-color); }
-.switch > input:checked::after { transform: translateX(18px); }
-.switch > .slider { display: none; }
 </style>
+
+/* 关闭按钮永远固定在弹窗右上角：任何分区、任何滚动位置都能退出 */
+#settings-modal > .modal { position: relative; }
+#settings-modal > .modal > .modal-header { position: sticky; top: 0; z-index: 40; }
+#settings-modal > .modal > .modal-header > .modal-close {
+  position: absolute; right: 14px; top: 12px; z-index: 60;
+  display: inline-flex; align-items: center; justify-content: center;
+}
 <style id="enc-settings-fitfix">
 /* 设置弹窗：头部固定 + 内容内部滚动，任何分区（考勤/数据/长篇教程）都能随时点关闭 */
 #settings-modal > .modal {
@@ -8296,9 +8326,8 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
   #settings-modal #settings-sidebar-collapse { display: block; }
 }
 /* 收起：侧栏整体消失，内容区占满 */
-#settings-modal .settings-layout.sidebar-collapsed { grid-template-columns: 0 1fr !important; display: grid; }
-#settings-modal .settings-layout.sidebar-collapsed > .settings-sidebar { display: none; }
-#settings-modal .settings-layout.sidebar-collapsed > .settings-content { padding-left: 0; }
+#settings-modal .settings-layout.sidebar-collapsed > .settings-sidebar { display: none !important; }
+#settings-modal .settings-layout.sidebar-collapsed > .settings-content { flex: 1 1 auto !important; width: 100% !important; min-width: 0 !important; }
 /* 收起后，在内容区左上角留一个展开按钮 */
 #settings-modal .settings-content > #settings-sidebar-expand { display: none; }
 #settings-modal .settings-layout.sidebar-collapsed .settings-content::before { content: ''; }
@@ -11419,7 +11448,7 @@ html[data-theme="bang-dream"] body, html[data-theme="sekai"] body { transition: 
       // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
       // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-      const APP_VERSION = '1.60';
+      const APP_VERSION = '1.61';
       const APP_NAME = '月行水上';
 
       // ===== 版本标识：OTTO版 / 精简版 =====
@@ -11475,6 +11504,20 @@ html[data-theme="bang-dream"] body, html[data-theme="sekai"] body { transition: 
       }
       const VERSION_LOG = [
         {
+      version: '1.61-otto',
+      date: '2026-11-07',
+      type: 'fix',
+      summary: '修复设置页侧栏收起后内容消失、开关重叠、背景像素粒子与动态流光不显示、关闭自定义背景残留壁纸、设置弹窗无法退出等问题。',
+      items: [
+        { type: 'fix', text: '设置页侧栏收起后内容整体消失：收起逻辑误把 flex 布局改写成 grid，现已只隐藏侧栏、内容区自动占满' },
+        { type: 'fix', text: '开关按钮重叠成两个：旧样式在 input 与 span 上各画一套开关，现统一为 input 单套滑块，旧方案伪元素全部作废' },
+        { type: 'fix', text: '开启背景像素粒子与动态流光没有反应：两个背景层被主容器整片盖住，已提升层级并挂到 body 末尾' },
+        { type: 'fix', text: '关闭自定义背景后壁纸仍残留在页面：现在会同时关闭背景图、背景视频与轮播背景并给出提示' },
+        { type: 'fix', text: '考勤管理、数据管理页无法退出设置：关闭按钮改为固定在弹窗右上角，任何滚动位置都可点' },
+        { type: 'fix', text: '开关容器 .switch 缺少基础样式导致排版错位，已补齐' },
+      ]
+    },
+    {
           version: '1.60-otto', date: '2026-11-06', type: 'release',
           summary: '设置页 UI 大修：去掉 SETTINGS/MENU 与副标题、搜索图标对齐、全站开关重做、编号胶囊对比度、侧栏可收起、弹窗固定头部、新增像素粒子背景、问 AI 带考勤与模型列表。',
           items: [
@@ -26247,8 +26290,8 @@ window.__ENC_DEBUG__ = {
             cv = document.createElement('canvas');
             cv.id = 'enc-pixel-canvas';
             cv.setAttribute('aria-hidden', 'true');
-            cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.85;';
-            document.body.insertBefore(cv, document.body.firstChild);
+            cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:.75;';
+            document.body.appendChild(cv);
           }
           ctx = cv.getContext('2d');
           resize();
@@ -27681,6 +27724,12 @@ window.__ENC_DEBUG__ = {
               } else {
                 const bi = document.getElementById('bg-image');
                 if (bi) bi.style.backgroundImage = (state.bgPreset && state.bgPreset !== 'none') ? bi.style.backgroundImage : 'none';
+                // 关闭自定义背景时，把正在显示的壁纸/视频/轮播一起停掉，避免残留在页面上
+                const turned = [];
+                if (state.bgImage) { state.bgImage = ''; turned.push('背景图'); }
+                if (state.bgVideo) { state.bgVideo = ''; turned.push('背景视频'); }
+                if (Array.isArray(state.bgImages) && state.bgImages.length) { state.bgImages = []; turned.push('轮播背景'); }
+                if (turned.length && typeof showToast === 'function') showToast('已同时关闭 ' + turned.join('、'), 'info');
                 applyBackground();
               }
               saveData();
