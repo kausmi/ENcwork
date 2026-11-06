@@ -8637,6 +8637,7 @@ body #section-background > div.settings-panel {
   color: var(--text-color); font-weight: 600;
 }
 </style>
+
 </head>
 <body>
 <div id="enc-aurora-bg" aria-hidden="true"></div>
@@ -10661,151 +10662,104 @@ body #section-background > div.settings-panel {
         <details class="tutor" id="tut-start" open="">
       <summary>快速上手（三步开用）</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">E课作业（ENcwork）是专为晚自习场景设计的教室大屏展示板</p>
-        <p>1. 添加学科</p>
-        <span class="expect">默认已自动配置好字号自适应与最小卡片间距</span>
-        <p>2. 布置作业</p>
-        <span class="expect">编辑中每0.6秒自动暂存草稿</span>
-        <p>3. 大屏展示</p>
-        <span class="expect">按Esc或再点一次退出全屏</span>
-        <p class="tutor-lead mt">晚自习一天全流程：</p>
-        <p>放学前：逐科布置作业 → 点「复制」粘到班级群</p>
-        <p>晚自习开始：点考勤卡片 → 批量标记缺勤 → 大屏显示应到/实到</p>
-        <p>挂屏：一键全屏 → 整晚展示作业+考勤+时钟</p>
-        <p>临时调整：直接点卡片修改，无需退出全屏</p>
-        <p>次日归档：作业自动按日期归档，点快捷栏「←」回看历史</p>
+<p>第一步，添加学科。主界面底部快捷栏点「+ 学科」，输入名称确定即可。默认已经准备好语文、数学、英语、物理、化学、政治、历史、地理、生物九科，不需要的可以在学科卡片右上角菜单里删掉。</p>
+<span class="expect">已存在的同名学科会提示重复，不会建出两个。</span>
+<p>第二步，布置作业。点任意学科卡片上的「添加」，一行一条作业，用换行分开就自动拆成多条。标签可以叠加（比如「重要」「背诵」），用来在卡片上做视觉标记。</p>
+<span class="expect">编辑过程中每 0.6 秒自动暂存，切走再回来内容还在。</span>
+<p>第三步，大屏展示。点快捷栏的「进入全屏」，界面会隐藏所有编辑入口，只留下作业卡片、考勤卡片和时钟。</p>
+<span class="expect">全屏状态下按 Esc，或者再点一次全屏按钮即可退出。</span>
+<p>一个晚自习的完整流程：放学前逐科布置作业；晚自习开始去掉考勤，标记缺勤名单；挂屏展示；临时要改就直接点卡片，不用退出全屏；第二天点快捷栏的「←」回看前一天。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-hw">
       <summary>作业管理</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">布置/编辑作业：</p>
-        <p>点击学科卡片 → 打开编辑弹窗</p>
-        <p>输入内容，用工具栏插入格式/图片</p>
-        <p>Ctrl+Enter保存</p>
-        <span class="expect">快捷词：点输入区上方快捷词标签一键插入常用语句</span>
-        <p class="tutor-lead mt">插入图片：</p>
-        <p>编辑弹窗工具栏点图片按钮</p>
-        <p>选「本地上传」或「链接上传」</p>
-        <span class="expect">清理无用图片：设置→数据管理→危险操作→清除图片缓存</span>
-        <p class="tutor-lead mt">切换日期：</p>
-        <p>快捷栏点「←」/「→」按自然日逐天切换</p>
-        <p>或点「日历」按钮任选一天</p>
-        <p>键盘按 ← / → 方向键同样可切换</p>
-        <span class="expect">每天打开自动跳到当天作业页面</span>
-        <p class="tutor-lead mt">复制到班级群：</p>
-        <p>快捷栏点「复制」→ 当日全部作业复制为纯文本 → QQ/微信群 Ctrl+V 粘贴</p>
-        <span class="expect">复制的是当前查看日期的作业</span>
-        <p class="tutor-lead mt">作业标签（自定义颜色）：</p>
-        <p>设置→布局与内容→作业标签→输入名称+选颜色→添加</p>
-        <p>编辑作业时点标签打上，卡片按标签颜色显示</p>
-        <p>改标签颜色：点标签列表中该标签右侧的取色块，实时换色</p>
-        <p class="tutor-lead mt">整理学科卡片：</p>
-        <p>拖拽卡片排序</p>
-        <p>鼠标移到卡片右上角菜单改学科颜色/删除学科</p>
-        <p>作业条目支持「完成」标记，已完成自动沉底</p>
+<p>添加单条：点学科卡片的「添加」，输入内容回车保存。</p>
+<p>批量添加：在输入框里一行写一条，保存时会按行自动拆成多条独立作业。</p>
+<p>修改单条：点作业文字进入编辑弹窗，改完保存。</p>
+<p>修改全部：同一学科当天有多条时，弹窗里会出现「编辑全部」，点它会把所有条目用「 / 」连接后填进输入框，你可以整段重写，保存时会再按「 / 」拆回去。</p>
+<span class="expect">如果某条内容本身就含「 / 」，请改用单条编辑，避免被误拆。</span>
+<p>撤销分条：多条作业想合成一条时，点「撤销分条」，会按顺序用换行合并成一条，标签取并集，完成状态取「全部完成才算完成」。</p>
+<span class="expect">合并后底部会弹出撤销提示，几秒内点「撤销」可以还原。</span>
+<p>完成标记：点作业前面的圆圈打勾，卡片会显示进度，比如 3/5。</p>
+<p>复制到群：点卡片上的复制按钮，会把该科当天作业按纯文本格式复制到剪贴板，直接粘进班级群即可。</p>
+<p>历史回看：快捷栏「←」切到前一天，作业按日期归档，不会串。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-att">
       <summary>考勤管理</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">开启考勤卡片：</p>
-        <p>设置→考勤管理→勾选「<b>显示考勤卡片</b>」。也可在 设置→布局与内容→快捷栏自定义→主界面卡片显隐 中快速开关。</p>
-        <p class="tutor-lead mt">录入学生名单：</p>
-        <p><span class="step">1</span>设置→考勤管理→<b>名单管理</b>。</p>
-        <p><span class="step">2</span>少量学生：上方输入框输入姓名（多人用逗号/空格/分号分隔）→ 添加。</p>
-        <p><span class="step">3</span>全班名单：粘贴到「<b>批量导入</b>」文本框（每行一人）→ 批量导入。</p>
-        <p class="tutor-lead mt">每日点名：</p>
-        <p><span class="step">1</span>主界面<b>点击考勤卡片</b> → 弹窗逐个点学生选状态（出勤/迟到/请假/缺勤）。</p>
-        <p><span class="step">2</span>批量标记：弹窗右上角点「<b>批量标记</b>」→ 多选学生 → 底部操作条选状态一键套用 → 退出批量。</p>
-        <span class="expect">快捷路径：设置→考勤管理→名单管理→「进入多选」，不打开弹窗也能批量设状态；分组管理可按小组整组设状态。</span>
-        <p class="tutor-lead mt">拼音搜索学生：</p>
-        <p><span class="step">1</span>设置→考勤管理→名单管理→点「<b>展开名单</b>」。</p>
-        <p><span class="step">2</span>搜索框输入关键词：支持中文姓名、拼音全拼、首字母缩写（如输入 <b>zs</b> 匹配「张三」）。</p>
-        <p><span class="step">3</span>列表实时过滤，显示「匹配 X / 共 Y 人」。</p>
+<p>开启考勤卡片：设置 → 考勤管理 → 打开「显示考勤卡片」，主界面就会出现考勤卡片。</p>
+<p>点名：点考勤卡片进入名单，点学生名字切换状态（到 / 缺 / 请假）。批量标记时可以直接点「全部到齐」再单独取消缺勤的人。</p>
+<p>显示缺勤名单：打开「在卡片上显示未出勤学生姓名」，卡片上会直接列出缺勤人名字，不用点进去看。</p>
+<p>姓名排列：横向模式按从左到右多行换行；纵向模式可以指定列数。两种模式都能设「每行人数」，或者选自动按卡片宽度换行。</p>
+<p>字号：关闭「姓名字号跟随全局字号」后，可以用下方滑块单独调姓名和考勤人数的字号，避免名单太长溢出卡片。</p>
+<span class="expect">考勤数据按日期分别保存，切到前一天看到的是那天的名单状态。</span>
+<p>统计：设置 → 考勤管理里可以看周期统计，也可以点快捷栏「工作日历」按天回看。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-notice">
       <summary>通知与公告</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">发布通知后在顶栏下方显示通知条，学生抬头即见重要公告。</p>
-        <p><span class="step">1</span>设置→<b>布局与内容→通知与公告</b>（或顶栏通知条右侧铃铛按钮）。</p>
-        <p><span class="step">2</span>填「通知标题」+「通知内容」，类型选「<b>普通通知</b>」或「<b>紧急通知</b>」（红色高亮）→ 点「<b>发布</b>」。</p>
-        <p><span class="step">3</span>顶栏下方出现通知条，横向滚动展示最多5条；点击通知查看详情并自动标记已读。</p>
-        <span class="expect">通知条右侧铃铛显示未读数角标；设置→布局与内容→通知与公告中可发布、删除、清空全部通知。</span>
+<p>发布：主界面快捷栏点「通知」，填写标题、选类型（普通 / 重要 / 提醒），发布后会显示在通知区。</p>
+<p>类型影响颜色和图标，重要通知不会被自动清理。</p>
+<p>清除：在通知区点通知条右侧的清除，或者设置 → 通知里点「清空全部通知」。</p>
+<p>跟随顶栏：打开「通知跟随顶栏」后，通知区会贴在顶栏下方，不再和日历抢位置。屏幕高度不足时建议开启。</p>
+<span class="expect">通知是本机数据，换浏览器或清缓存会一起消失。</span>
       </div>
     </details>
 
     <details class="tutor" id="tut-theme">
       <summary>个性化外观</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">换主题（23 套）：</p>
-        <p>设置→<b>个性化→主题外观</b>→点选任意主题立即预览，含Material系列、深色护眼、科技蓝、终末地、明日方舟、邦多利、P3幽蓝门扉、P5R皇家版、动态取色、复古手账等。</p>
-        <span class="expect">「MD3自动取色」与「动态取色」主题会自动从当前背景（图片/渐变/纯色）提取主色生成整套配色，切换背景后自动重新取色；P3/P5R主题有专属动态效果层，可在 设置→个性化→动效与特效 中逐项开关。</span>
-        <p class="tutor-lead mt">换背景（图片/GIF/视频）：</p>
-        <p><span class="step">1</span>设置→<b>个性化→背景与壁纸</b>→上传本地图片。</p>
-        <p><span class="step">2</span>拖「<b>背景模糊</b>」滑块虚化、用「<b>颜色遮罩</b>」压暗提亮。</p>
-        <p><span class="step">3</span>「归属」选「<b>仅当前主题</b>」可为单个主题配独立背景。</p>
-        <span class="expect">GIF/视频背景在同页上传；优先级：预设 &gt; 视频 &gt; GIF &gt; 静态图。</span>
-        <p class="tutor-lead mt">字号与缩放：</p>
-        <p>· 懒人方案：开启「<b>字号自适应屏幕</b>」（已默认开启）</p>
-        <p>· 手动：拖「<b>字号</b>」滑块（14~48px）+「<b>整体缩放比例</b>」（50%~200%）</p>
-        <p class="tutor-lead mt">快捷栏自定义：</p>
-        <p>设置→布局与内容→<b>快捷栏自定义</b>→勾选网格逐个显示/隐藏快捷栏按钮；「主界面卡片显隐」分组可快速开关考勤卡片。</p>
+<p>切主题：设置 → 主题外观。分成全部 / Material / 经典简约 / 游戏联动 / 动态取色五组，游戏联动包含邦多利、世界计划和女神异闻录等主题。</p>
+<p>明暗模式：每个主题都有浅色和深色两套，切换按钮在主题卡片上。</p>
+<p>液态玻璃：开启后卡片、顶栏和底栏会有真实的模糊与折射。面板里可以调透明度、模糊半径、色彩饱和、亮度、对比度和反光角度。</p>
+<span class="expect">液态玻璃在低端机上会明显掉帧，卡顿就把它关掉，改用普通卡片。</span>
+<p>动效等级：分为禁用、精简、标准、华丽四档。禁用会关掉所有过渡和动画，最省电；华丽会额外打开卡片流光等装饰效果。</p>
+<p>字号：全局字体大小滑块会同步影响主界面与设置页。也可以单独给作业卡片、考勤姓名、时钟设字号。</p>
+<p>字体颜色：默认跟随主题，打开自定义后可以指定字体颜色。开启「自动对比度」会根据背景亮度自动选深色或浅色文字。</p>
+<p>三个游戏主题（邦多利、世界计划、Our Notes 已移除）的立绘位移互相独立，在各自主题下调整不会影响另外两个。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-bandori">
-      <summary>邦多利主题（乐队切换）</summary>
+      <summary>邦多利主题</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">启用邦多利主题：</p>
-        <p><span class="step">1</span>设置→<b>个性化→主题外观</b>→在主题网格点选「🎸 邦多利」。</p>
-        <p><span class="step">2</span>选中后，主题网格下方出现「<b>乐队切换</b>」面板（未选邦多利主题时该面板隐藏）。</p>
-        <p class="tutor-lead mt">切换乐队：</p>
-        <p><span class="step">1</span>在「乐队切换」面板点选任意乐队卡片 → 全局主题色、卡片描边、导航高亮即时换成该乐队代表色。</p>
-        <p><span class="step">2</span>每张卡片显示乐队队标与舞台背景（素材取自 Bestdori 国服资源包，已内嵌本文件），切换后立即刷新。</p>
-        <span class="expect">支持 8 支乐队：Poppin'Party、Afterglow、Hello, Happy World!、Pastel＊Palettes、Roselia、RAISE A SUILEN、Morfonica、MyGO!!!!!。选择会随数据一起保存，下次打开自动恢复。</span>
-        <p class="tutor-lead mt">自定义微调：</p>
-        <p>· 想换背景：设置→个性化→背景与壁纸 上传图片，会覆盖邦多利主题的默认舞台背景。</p>
-        <p>· 队标与舞台背景均已内嵌本地，完全离线无需联网；资源缺失时自动回退为乐队代表色纯色块，不影响使用。</p>
+<p>进入：设置 → 主题外观 → 游戏联动 → 选邦多利主题。</p>
+<p>切换乐队：在主题设置里选乐队，页面背景、卡片装饰色和立绘会跟着换。</p>
+<p>立绘位置：邦多利、世界计划两套主题的立绘位移是分开存的，在邦多利里调好的位置切到世界计划不会带过去，切回来还在。</p>
+<p>作业卡片背景板：打开后作业卡片可以使用乐队舞台图做背景。下拉框可以选「跟随当前乐队」或者「全部乐队（每次随机）」。</p>
+<span class="expect">开启作业卡片背景板时，作业卡片上的液态玻璃会自动关掉，避免糊成一片。</span>
+<p>卡片斜切：P3、P5 主题的作业卡片是对角斜切造型，圆角滑块不会把它变成纯圆角。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-plugin">
-      <summary>特效与截图</summary>
+      <summary>背景特效</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">特效在哪里调：</p>
-        <p><span class="step">1</span>设置 → <b>个性化 → 动效与特效</b>：全局动效等级、液态玻璃（通透度/模糊/饱和度/亮度/对比度/反光角度）、快捷栏底板与彩虹流光等，全部为<b>滑块</b>，拖动即时预览。</p>
-        <p><span class="step">2</span>设置 → <b>个性化 → 动效与特效 → 性能预设</b>：一键套用「关闭 / 平衡 / 性能 / 极致」，之后仍可逐项微调。</p>
-        
-
-        <p class="tutor-lead mt">截图：</p>
-        <p>· 快捷栏点「<b>截图</b>」→ 干净版图片（不带特效）；点「<b>特效截图</b>」→ 保留液态玻璃等特效（截图期间动画自动暂停）。</p>
-        <p>· 截图进行中右下角会显示「<b>截图中，请勿退出</b>」提示，请保持窗口打开；该提示<b>不会进入图片</b>。输出格式、内容开关与更多说明见「<b>截图与导出图片</b>」一节。</p>
-
-        <p class="tutor-lead mt">背景与主题：</p>
-        <p>· 背景图片 / GIF / 视频（含在线直链）在 设置 → <b>个性化 → 背景与壁纸</b> 中管理。</p>
-        <p>· P3 / P5R 等主题的专属配色与卡面素材，随 设置 → <b>个性化 → 主题外观</b> 切换主题后自动生效。</p>
+<p>动态流光：设置 → 背景与壁纸 → 动态流光。开启后背景会缓慢流动渐变。可以自定义三段颜色、透明度和画质档位。</p>
+<span class="expect">开启流光会自动关闭自定义背景图和背景视频，避免互相遮挡。</span>
+<p>像素粒子：可以调流动速度、粒子密度和颜色。速度档位从 20% 到 300%，越高流动越快。</p>
+<p>智能补边：自定义背景图比屏幕小的时候，四周会用图片边缘的颜色自动铺满，四个角落按相邻两边混色补齐，不会出现色块断层。</p>
+<p>图片轮播：可以一次选多张图，设定切换间隔和切换效果。</p>
+<span class="expect">流光和粒子都是背景层，页面内容会自动变透明让它们透出来，不需要额外设置。</span>
+<p>背景与壁纸页顶部有「背景总览」，能直接看到当前背景开关、当前用的什么背景、流光和粒子开没开。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-shot">
-      <summary>截图与导出图片</summary>
+      <summary>截图与导出</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">快捷栏两个截图按钮：</p>
-        <p><span class="step">1</span>「<b>截图</b>」→ 干净版：自动收起 快捷栏、提示与弹窗，动画暂停后拍摄，导出<b>当天完整作业画面</b>。</p>
-        <p><span class="step">2</span>「<b>特效截图</b>」→ 保留液态玻璃等特效（动画同样暂停），适合发到班级群展示。</p>
-        <p><span class="step">3</span>拍摄期间右下角会显示「<b>截图中，请勿退出</b>」提示 —— 请保持窗口打开，等提示消失、弹出「截图已保存」即可。</p>
-        <span class="expect">这条提示只是进度提示，<b>不会出现在截图里</b>；截图内容同样不含 快捷栏、提示气泡与弹窗。</span>
-        <p class="tutor-lead mt">输出格式与内容：</p>
-        <p>· 设置 → 其他 → 通用功能 → <b>截图输出格式</b>：PNG 下载（无损）/ JPG 下载（体积小）/ 复制到剪贴板（可直接粘贴到微信、文档）。</p>
-        <p>· 同页可关闭「包含图片卡片」；卡面 / 立绘背景默认不进入截图，需要时可在同一面板开启。</p>
-        <p>· 文件名形如「作业截图_20261014_203000.png」或「作业特效截图_….png」，保存位置由浏览器下载设置决定。</p>
-        <p class="tutor-lead mt">截图拍不全 / 作业很多怎么办？</p>
-        <p>截图按<b>整页内容</b>拍摄（不是当前视口）；卡片很多时会自动降到可承受的分辨率，虚拟滚动在拍摄期间临时关闭，保证视口外的卡片也进入画面。</p>
+<p>普通截图：快捷栏点「截图」，会拍下当前主界面并保存为图片。</p>
+<p>特效截图：需要保留动画、毛玻璃等视觉效果时用这个，速度比普通截图慢一些。</p>
+<p>截图前会自动关闭液态玻璃、流光等重特效，避免截出来是糊的或空白。</p>
+<span class="expect">截图引擎优先用 snapdom，失败会回退到 html2canvas。两者都要从网络加载，完全断网时截图会提示引擎未就绪，联网刷新一次即可。</span>
+<p>导出 PNG 失败常见原因是图片过大，程序会自动降采样重试，最多降三次。</p>
+<p>导出作业：可以把当天或指定日期的作业按纯文本导出，用于发群或存档。</p>
       </div>
     </details>
 
@@ -10813,167 +10767,124 @@ body #section-background > div.settings-panel {
     <details class="tutor" id="tut-data">
       <summary>数据管理</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">导出/导入数据：</p>
-        <p>设置→<b>数据管理→导出与导入</b>：</p>
-        <p>· 导出JSON（完整备份）/ 导出MD（当日作业）/ 导出UAF / 多日期导出JSON</p>
-        <p>· 导入JSON / 导入UAF</p>
-        <p>· 自定义导出：勾选要导出的内容（作业/考勤/外观/其他）</p>
-        <p class="tutor-lead mt">自动备份：</p>
-        <p><span class="step">1</span>设置→数据管理→<b>自动备份</b>→点「选择备份文件夹」授权（需Chrome/Edge）。</p>
-        <p><span class="step">2</span>勾选「启用自动备份」→ 选间隔（5分钟~24小时）。</p>
-        <span class="expect">未选文件夹时改用浏览器下载方式保存；备份文件名形如「ENcwork备份_日期_时间.json」。</span>
-        <p class="tutor-lead mt">从备份恢复：</p>
-        <p>设置→数据管理→「识别文件夹内备份」→「扫描备份文件夹」→ 列表中点「导入恢复」→ 勾选要覆盖的部分。</p>
-        <span class="expect">换电脑迁移：旧电脑导出JSON → 拷贝到新电脑 → 导入JSON。</span>
-        <span class="expect">需在HTTPS或localhost环境下安装（file://本地打开时浏览器不触发安装提示，属正常现象）。</span>
-        <p class="tutor-lead mt">运行错误日志：</p>
-        <p>设置→<b>数据管理</b>→「运行错误日志」→ 点「刷新」查看最近100条错误（含类型/信息/来源/堆栈）→ 排查完可「清空日志」。</p>
-        <span class="expect">自动捕获页面JS报错和未处理的Promise异常，反馈bug时可截图此面板帮助定位。</span>
-        <p class="tutor-lead mt">危险操作：</p>
-        <p>· 清除图片缓存（仅删无引用图片）</p>
-        <p>· 清空今日作业 / 清空所有数据（需多次确认）</p>
+<p>数据全部存在本机浏览器里，没有账号、没有服务器。换浏览器、清缓存、无痕模式都会导致数据丢失。</p>
+<p>备份文件夹：设置 → 数据管理 → 选择备份文件夹。会先弹一个确认框说明用途，确认后才打开系统的文件夹选择窗口。</p>
+<span class="expect">系统的权限弹窗由浏览器控制，无法省略，这是浏览器的安全限制。</span>
+<p>自动备份：打开后会在设定周期自动写入备份文件。如果文件夹权限失效，会先弹确认框询问是否重新授权，不会静默失败。</p>
+<p>恢复：从备份文件夹里选一个备份文件恢复，恢复前会二次确认，当前数据会被覆盖。</p>
+<p>导入导出：也可以手动导出 JSON 备份文件，再导入到别的设备。</p>
+<p>清理：设置里可以清空作业、清空考勤、恢复默认设置，都是不可撤销的，操作前会弹确认。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-perf">
-      <summary>性能与卡顿排查</summary>
+      <summary>性能与卡顿</summary>
       <div class="tutor-body">
-        <p class="tutor-lead mt">性能分析器（自动检测设备性能）：</p>
-        <p><span class="step">1</span>首次打开页面时自动启动性能分析（可在 设置→其他→性能与系统→性能分析器 中关闭）。</p>
-        <p><span class="step">2</span>分析持续30秒（可选15/30/60/120秒），监测帧率波动、CPU占用、长时间使用后的性能变化。</p>
-        <p><span class="step">3</span>分析完成后发送通知，显示平均帧率、最高/最低帧率、帧率波动、平均CPU占用、性能趋势，并给出性能预设建议。</p>
-        <span class="expect">手动分析：设置→其他→性能与系统→性能分析器→点「立即分析性能」；查看上次结果点「查看上次结果」；导出性能数据点「导出性能数据」。</span>
-        <p style="border: 1px dashed var(--warn-color, #E8961E); border-radius: 2px; padding: 10px 12px; background: color-mix(in srgb, var(--warn-color, #E8961E) 8%, transparent); margin: 10px 0;"><b style="color: var(--warn-color, #E8961E);">⚠ 高开销设置组合：</b>以下几项在大屏或老旧设备上最易导致卡顿。</p>
-        <p>· <b>动效等级</b>：「华丽plus」「超华丽」启用3D变换与多层动画，建议大屏用「标准」或更低</p>
-        <p>· <b>液态玻璃</b>：「液态玻璃」风格+「华丽」等级+高模糊组合开销最大</p>
-        <p>· <b>超华丽plus快捷栏</b>：多层backdrop-filter+动画叠加，开销最高</p>
-        <p>· <b>性能预设</b>：大屏或老设备建议直接选「性能」或「关闭」，会统一收敛动画、模糊与动态特效。</p>
-        <p class="tutor-lead mt">排查流程：</p>
-        <p><span class="step">1</span>设置→个性化→动效与特效→<b>性能预设选「性能」或「关闭」</b>→ 观察是否恢复流畅。</p>
-        <p><span class="step">2</span>恢复流畅则<b>逐个重新开启</b>，定位卡顿插件。</p>
-        <p><span class="step">3</span>仍卡顿则到 设置→个性化→动效与特效→把「全局动效等级」降到「标准」或「精简」。</p>
-        <p><span class="step">4</span>仍不理想时，在 设置→个性化→动效与特效 中降低「全局动效等级」与液态玻璃强度。</p>
-        <span class="expect">性能预设：设置→个性化→动效与特效→性能预设→一键套用（关闭/平衡/性能/极致），应用后仍可逐项微调限制项。</span>
+<p>先降特效：液态玻璃、动态流光、像素粒子这三项对性能影响最大，卡的时候优先关它们。</p>
+<p>动效等级调到「精简」或「禁用」，可以关掉大部分过渡动画。</p>
+<p>动效等级调到「标准」通常够用，「华丽」只在平板或电脑上开。</p>
+<p>性能预设：设置 → 性能与系统里有一键预设，会根据设备能力自动关掉高开销项。</p>
+<p>作业条目很多时，滚动补边和实时预览会变慢，可以关掉「实时预览」。</p>
+<span class="expect">首次打开时程序会做一次性能检测，如果检测到设备较弱会自动降级，这个提示会跟随顶栏显示在顶部。</span>
+<p>仍然卡的话，到设置 → 性能与系统 → 复制运行日志，把日志发给开发者定位。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-backup">
-      <summary>⚠ 更新前必备份</summary>
+      <summary>更新前备份</summary>
       <div class="tutor-body">
-        <p style="border: 1px dashed var(--warn-color, #E8961E); border-radius: 2px; padding: 10px 12px; background: color-mix(in srgb, var(--warn-color, #E8961E) 8%, transparent); margin-bottom: 10px;"><b style="color: var(--warn-color, #E8961E);">⚠ 重要：</b>每次更新版本前，请务必先<b>导出JSON</b>或<b>立即备份一次</b>，以防数据丢失。</p>
-        <p><span class="step">1</span>更新前：设置→数据管理→导出与导入→「<b>导出JSON</b>」保存文件。</p>
-        <p><span class="step">2</span>用新版本文件替换旧版本。</p>
-        <p><span class="step">3</span>更新后如遇数据异常：设置→数据管理→「<b>导入JSON</b>」选备份文件恢复。</p>
-        <span class="expect">已开启自动备份的用户也建议更新前手动备份一次，双重保险。</span>
+<p>更新方式：拿到新的 HTML 文件后，覆盖原文件即可，数据不会丢，因为数据存在浏览器的本地存储里，跟文件无关。</p>
+<p>但保险起见，更新前导出一次备份：设置 → 数据管理 → 导出备份，存到手机文件里。</p>
+<p>如果更新后界面打不开，把旧文件换回来，数据还在。</p>
+<span class="expect">用「恢复默认设置」而不是直接清浏览器数据，清浏览器数据会把作业一起清掉。</span>
+<p>版本号在设置 → 关于里能看到，也可以看更新日志确认当前版本。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-faq">
-      <summary>常见问题（FAQ）</summary>
+      <summary>常见问题</summary>
       <div class="tutor-body">
-        <div class="hd-faq">
-        <div class="qa"><p class="qa-q">打开页面后停留在上一天的作业？</p><p class="qa-a">已修复，每天打开自动跳到当天作业页面。</p></div>
-        <div class="qa"><p class="qa-q">快捷栏「上一天 / 下一天」按钮无效？</p><p class="qa-a">已修复，改为按自然日前后切换（含没有作业的日期）。</p></div>
-        <div class="qa"><p class="qa-q">本地上传的图片不显示在作业卡片里？</p><p class="qa-a">已修复，卡片渲染前自动从 IndexedDB 解析本地图片为可显示地址，编辑预览与卡片展示一致。</p></div>
-        <div class="qa"><p class="qa-q">隐藏顶栏功能用不了？</p><p class="qa-a">顶栏已固定在顶部不随内容滚动，可通过 设置→布局与内容→界面元素 或 快捷栏顶栏开关按钮隐藏/恢复。</p></div>
-        <div class="qa"><p class="qa-q">每天默认显示哪些学科卡片？</p><p class="qa-a">默认显示数学、语文、英语、物理、化学、政治、历史七科卡片，即使前一天删除该学科，第二天也会自动恢复显示（删除默认学科仅当天隐藏，自定义学科可彻底删除）。</p></div>
-        <div class="qa"><p class="qa-q">缩放浏览器窗口时顶栏位置乱飞？</p><p class="qa-a">已修复，顶栏固定在容器顶部不随缩放改变位置。</p></div>
-        <div class="qa"><p class="qa-q">点击颜色选择器弹出原生选择器？</p><p class="qa-a">已修复，所有颜色/日期输入框统一使用自制选择器（document 级事件委托拦截）。</p></div>
-        <div class="qa"><p class="qa-q">快捷键有哪些？</p><p class="qa-a">Ctrl+Enter 保存作业、←/→ 切换日期、Ctrl+/ 查看全部快捷键、Esc 退出全屏/关闭弹窗。</p></div>
-        <div class="qa"><p class="qa-q">如何备份数据？</p><p class="qa-a">设置→数据管理→导出与导入→「导出 JSON」保存完整备份文件；或开启自动备份（设置→数据管理→自动备份），选间隔和文件夹即可自动定期备份。</p></div>
-        <div class="qa"><p class="qa-q">如何换设备迁移数据？</p><p class="qa-a">旧设备导出 JSON → 拷贝到新设备 → 新设备打开本应用 → 设置→数据管理→「导入 JSON」选择备份文件，作业/考勤/外观全部恢复。</p></div>
-        <div class="qa"><p class="qa-q">考勤报表怎么用？</p><p class="qa-a">设置→其他→考勤报表→选时间范围（本周/本月/自定义）→自动汇总每人出勤/迟到/请假/缺勤次数及出勤率→可导出 CSV（Excel 直接打开）或 PNG 图片。</p></div>
-        <div class="qa"><p class="qa-q">作业历史怎么搜索？</p><p class="qa-a">快捷栏点时钟图标打开作业历史→列表视图→顶部搜索框输入关键词（匹配作业内容）→学科筛选下拉可按学科过滤→点「跳转到该日期」直接切换主界面。</p></div>
-        <div class="qa"><p class="qa-q">大屏卡顿怎么办？</p><p class="qa-a">①设置→其他→性能与系统→性能分析器→立即分析，获取帧率/CPU 报告；②性能预设选「精简/禁用」；③在 个性化→动效与特效 中关闭液态玻璃等特效；④全局动效等级降到「标准」或「精简」。</p></div>
-        <div class="qa"><p class="qa-q">作业量统计的数字和 AI 分析对不上？</p><p class="qa-a">两者已统一为同一口径：都会自动识别「学科名 + 作业项」多行结构，把每一条作业项独立计数，不合并、不漏计。</p></div>
-        <div class="qa"><p class="qa-q">MD3 自动取色主题怎么用？</p><p class="qa-a">选择「MD3 自动取色」或「MD3 自动取色·深色」后，会自动从当前背景提取主色并生成整套 Material You 配色；更换背景后立即重新取色，无需手动操作。</p></div>
-        <div class="qa"><p class="qa-q">邦多利主题怎么换乐队？</p><p class="qa-a">在 设置→个性化→主题外观 选中「🎸 邦多利」后，主题网格下方会出现「乐队切换」面板，点选任一乐队即可把全局主题色、页面舞台背景换成该乐队风格，并刷新队标/队图；资源缺失时自动回退为纯色，不影响使用。</p></div>
-        </div>
+<p>作业不见了？先确认是不是切到了别的日期。作业按日期分开存，快捷栏的「←」和「工作日历」都能切日期。</p>
+<p>学科卡片不显示？可能是在学科管理里把它隐藏了，或者当天被标记为隐藏。默认学科只当天隐藏，第二天会自动回来。</p>
+<p>字体看不清？如果主题底色和字体颜色太接近，到设置 → 字体与字号打开「自动对比度」，或者把字体颜色改成跟随主题。</p>
+<p>页面一片空白或者看到一堆 CSS 文本？说明文件里的样式被破坏，重新下载最新的 HTML 覆盖即可。</p>
+<p>截图报「引擎未就绪」？截图组件是联网加载的，断网时不可用。联网后刷新页面再试。</p>
+<p>备份提示没有权限？浏览器的文件夹授权会过期，到设置 → 数据管理重新选择一次文件夹即可。</p>
+<p>数据能不能多设备同步？不能。这是纯本地应用，没有云同步，需要用导出/导入备份在设备之间搬。</p>
+<p>卡片重复出现两次？先检查是不是自己手动添加了同名学科，同名会自动加后缀而不是重复创建。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-ai">
-      <summary>问AI · 数据分析</summary>
+      <summary>问 AI · 数据分析</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">自动生成结构化提示词，复制到AI对话中分析作业/考勤数据。</p>
-        <p><span class="step">1</span>设置→<b>其他</b>→「问AI · 数据分析提示词生成器」。</p>
-        <p><span class="step">2</span>选择分析模式：<b>作业数据分析</b>或<b>考勤数据分析</b>。</p>
-        <p><span class="step">3</span>选择数据范围：仅当天/最近7天/最近30天/自定义范围/全部数据。</p>
-        <p><span class="step">4</span>点「<b>生成提示词</b>」→ 下方文本框显示完整提示词（含纯文本作业数据，自动移除图片）。</p>
-        <p><span class="step">5</span>点「<b>一键复制提示词</b>」→ 粘贴到豆包/ChatGPT/Claude等AI对话中。</p>
-        <span class="expect">AI 会智能识别「学科名 + 作业项」结构：例如把「语文/背作文/抄写课文/英语/1.练习册/2.抄单词」这种粘贴进来的作业，自动拆分为各学科的独立作业项并逐条计数（统计口径为「项」，不合并）。</span>
-        <span class="expect">考勤分析中的状态名称（迟到/请假/缺勤等）会自动跟随你在考勤管理中自定义的标签名称。</span>
+<p>问 AI 是调用外部的大模型接口，需要你自己填接口地址和 API 密钥，程序不内置任何密钥，也不会把你的密钥上传到别处。</p>
+<p>配置：设置 → 通用功能 → 问 AI，填三样东西：接口地址（形如 https://api.example.com/v1/chat/completions）、模型名、API 密钥。</p>
+<p>拿模型名：填好接口地址和密钥后点「获取模型」，程序会向该接口拉取可用模型列表，从下拉里选一个即可。</p>
+<span class="expect">只支持与 OpenAI 接口格式兼容的服务。密钥只存在本机浏览器里。</span>
+<p>使用：点「打开对话」，可以直接问「我今天的作业还有哪些没布置」「这周谁缺勤最多」之类的问题。</p>
+<p>程序会自动把当天的作业和各科完成情况、以及考勤缺勤名单作为上下文一起发过去，所以它能回答跟当天数据有关的问题。</p>
+<span class="expect">对话记录存在本机，可以在面板里点「清空对话」清掉。</span>
+<p>如果返回报错，先检查接口地址有没有写错（必须以 /chat/completions 结尾）、密钥是否过期、该模型是否允许调用。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-stat">
       <summary>作业统计与历史</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">作业量周报/月报：</p>
-        <p>设置→<b>其他→通用功能</b>→「作业量统计」→ 选本周/上周/本月/上月/自定义范围。</p>
-        <p>横向柱状图+数据表格展示各科作业项数及占比（与 AI 分析同口径：自动识别「学科名+作业项」多行结构后按项统计，含编号项逐条计数），支持导出CSV和PNG图片。</p>
-        <p class="tutor-lead mt">作业历史回看：</p>
-        <p>快捷栏点「<b>时钟图标</b>」→ 打开作业历史面板。</p>
-        <p>· 日历视图：月历形式，有作业的日期显示小圆点，点击查看详情</p>
-        <p>· 列表视图：按日期倒序排列，点击展开/收起</p>
-        <p>· 支持学科筛选+关键词搜索</p>
-        <p>· 点「跳转到该日期」可直接切换主界面到对应日期</p>
-        <p class="tutor-lead mt">考勤报表：</p>
-        <p>设置→<b>其他</b>→「考勤报表」→ 选时间范围 → 汇总出勤/迟到/请假/缺勤次数及出勤率。</p>
-        <p>支持表格预览、CSV导出、图片导出。</p>
+<p>完成进度：每张作业卡片右上角显示完成数量，比如 3/5。</p>
+<p>按天回看：快捷栏「←」切前一天，日历按钮可以跳到任意日期。</p>
+<p>工作日历：点快捷栏「工作日历」可以看到整月的作业和考勤概况，有作业的日期会标记出来。</p>
+<p>考勤统计：设置 → 考勤管理 → 名单与状态里可以看周期内每个人的缺勤次数。</p>
+<p>作业历史：设置 → 数据管理里可以按日期范围导出历史作业。</p>
+<span class="expect">统计只统计本机已保存的数据，删除过的作业不会出现在统计里。</span>
       </div>
     </details>
 
     <details class="tutor" id="tut-sys">
-      <summary>系统检测与错误日志</summary>
+      <summary>系统检测与日志</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">系统错误检测：</p>
-        <p>设置→<b>其他</b>→「系统错误检测」→ 自动检测数据完整性、DOM元素、核心功能。</p>
-        <p class="tutor-lead mt">错误日志：</p>
-        <p>设置→<b>其他</b>→「运行错误日志」→ 点「刷新」查看最近错误。</p>
-        <p>点「<b>一键复制</b>」可复制完整错误日志（含错误类型、时间、信息、位置、<b>完整堆栈</b>），反馈bug时粘贴给开发者。</p>
-        <span class="expect">错误日志自动捕获页面JS报错和未处理的Promise异常，最多保留100条。</span>
+<p>性能检测：首次打开会跑一次设备性能检测，结果会决定默认动效等级和特效开关。检测结果和当前状态可以在设置 → 性能与系统里看到。</p>
+<p>运行日志：程序会自动记录运行中的报错。设置 → 反馈与帮助 → 复制运行日志，会把最近的错误按类型、时间、位置、堆栈整理成文本，直接粘贴给开发者即可。</p>
+<span class="expect">日志只存在本机，不会自动上传。</span>
+<p>版本信息：设置 → 关于里显示当前版本号、编辑版本类型和构建信息。</p>
+<p>更新日志：设置 → 反馈与帮助 → 查看更新日志，能看到每个版本改了什么。</p>
       </div>
     </details>
 
     <details class="tutor" id="tut-subject">
       <summary>学科自定义</summary>
       <div class="tutor-body">
-        <p class="tutor-lead">更改学科名称：</p>
-        <p>主界面鼠标移到学科卡片右上角菜单 → 点「<b>重命名</b>」→ 输入新名称。</p>
-        <p class="tutor-lead mt">自定义学科图标：</p>
-        <p>设置→<b>布局与内容</b>→学科管理 → 点学科的「<b>图标</b>」按钮 → 选择内置图标或上传本地图片/GIF。</p>
-        <span class="expect">上传的图标保存在本地，刷新后仍然显示；支持GIF动图图标。</span>
-        <p class="tutor-lead mt">自定义学科颜色：</p>
-        <p>点学科卡片右上角菜单 → 「<b>改颜色</b>」→ 使用自制颜色选择器选色。</p>
+<p>添加：快捷栏「+ 学科」，输入名称。默认已有语文、数学、英语、物理、化学、政治、历史、地理、生物九科。</p>
+<p>图标与颜色：在学科管理里可以给每个学科换图标和主题色，图标支持 emoji，也支持上传自定义图片。</p>
+<p>排序：在学科管理里拖动可以调整卡片顺序。</p>
+<p>隐藏与删除：隐藏只是当天不显示，第二天自动回来；删除会连同该学科的历史作业一起删掉，删除前会二次确认。</p>
+<span class="expect">老版本的数据升级后会自动补上「地理」「生物」两科，不需要手动添加。</span>
+<p>快捷栏按钮：快捷栏可以自定义常用的按钮，设置 → 内容 → 快捷栏里能勾选显示哪些。</p>
       </div>
     </details>
 
     
     <details class="tutor" id="tut-migrate">
-      <summary>版本区分与数据迁移（精简版 ↔ OTTO版）</summary>
+      <summary>版本与迁移</summary>
       <div class="tutor-body">
-
-        <p class="tutor-lead">我用的是哪个版本？</p>
-        <p>· <b>OTTO版</b>：功能最全，需要 <b>Windows 10 及以上</b>系统。</p>
-        <p>· <b>精简版</b>：轻量快速，<b>Windows 7 / 8 / 10 及以上</b>都能用，老电脑与旧版 Edge 可正常运行。</p>
-        <span class="expect">当前版本可在 设置 → 关于 顶部的彩色徽标中一眼看到，也可点本页顶部的版本芯片。</span>
-        <p class="tutor-lead mt">两个版本怎么互相搬数据？</p>
-        <p><span class="step">1</span>在<b>旧版本</b>里点「导出我的数据到中转槽位」（<b>设置 → 数据管理 → 数据迁移</b>面板，或新手教程的最后一步）。</p>
-        <p><span class="step">2</span>打开<b>另一个版本</b>，在同一浏览器里点「从另一版本导入」。</p>
-        <p><span class="step">3</span>勾选要覆盖的板块（学科作业 / 标签 / 快捷词 / 考勤 / 考试 / 节假日）→ 确认导入。</p>
-        <span class="expect">全程不联网、不产生中间文件。两个版本共用同一份浏览器本地数据，所以必须「先导出、后导入」才能跨版本搬运。</span>
-        <span class="expect">导入会覆盖本版本对应数据，建议先在 设置 → 数据管理 → 导出与导入 备份一份 JSON。</span>
-
+<p>当前版本号在设置 → 关于里看。更新日志里列出了每个版本的新增与修复。</p>
+<p>换设备迁移：旧设备上导出备份文件（设置 → 数据管理 → 导出），把文件传到新设备，再在新设备上导入。备份文件是 JSON 格式，包含作业、考勤和全部设置。</p>
+<p>只有作业没有考勤？导出备份时是全量导出，不会只导一部分，检查一下是不是导入时选错了文件。</p>
+<span class="expect">导入会覆盖当前数据，导入前程序会二次确认。</span>
+<p>版本兼容：旧版本的备份可以在新版本导入，反向不保证。跨大版本迁移建议先导出备份再更新。</p>
+<p>已移除的功能：Our Notes 主题、卡片边缘高光、作业卡片毛玻璃、卡片边缘泛光、卡片流光效果已在新版本删除，相关的旧设置会在加载时自动清理，不会报错。</p>
       </div>
     </details>
 <details class="tutor" id="tut-helpdoc">
-      <summary>帮助文档与反馈</summary>
+      <summary>帮助与反馈</summary>
       <div class="tutor-body">
-        <p>· 更多教程与常见问题：<a id="help-doc-link" href="https://share.note.youdao.com/s/2gYrvtgr" target="_blank" rel="noopener">在线帮助文档</a></p>
-        <p>· 首次使用说明弹窗可在 设置→关于 的「重新查看首次使用说明」中再次打开。</p>
-        <p>· 版本历史位于 设置→关于；设置搜索框可快速定位功能（输入关键词如「考勤」「粒子」「字号」「问AI」）。</p>
-        <p>· 遇到bug请先到 设置→其他→运行错误日志 一键复制日志，再反馈给开发者。</p>
+<p>搜索：帮助页顶部的搜索框支持关键词过滤，输入「备份」「截图」「考勤」等词会直接在左侧章节里筛出相关条目。</p>
+<p>章节索引：左栏列出全部教程章节，点任意一条会在右栏打开对应内容。</p>
+<p>在线文档：右上角「在线帮助文档」会打开外部文档站点，内容更详细但可能滞后于当前版本。</p>
+<p>重新看新手引导：如果第一次的引导跳过了，这里可以重新走一遍。</p>
+<p>反馈问题：点「复制运行日志」把最近报错整理好，连同问题描述和截图一起发给开发者。如果能说明是哪个页面、做了什么操作后出现的，定位会快很多。</p>
+<span class="expect">反馈时请不要只写「打不开」，带上日志能省掉好几轮来回。</span>
       </div>
     </details>
   </div>
@@ -11735,6 +11646,8 @@ body #section-background > div.settings-panel {
       type: 'feature',
       summary: '背景与壁纸页整体重做：响应式两列卡片墙、主视觉预览置顶、顶部背景总览条、面板与控件视觉统一。',
       items: [
+        { type: 'feature', text: '重写「反馈与帮助」全部教程：18 个章节按任务场景重写，标注入口、步骤与预期结果' },
+        { type: 'improve', text: '设置面板整体改为 Material Design 3 风格：28px 圆角弹窗、胶囊导航、16px 填充式卡片、12px 描边输入框、胶囊按钮' },
         { type: 'feature', text: '背景与壁纸页改为响应式两列卡片墙（窄屏自动单列），面板统一圆角卡片 + 悬停浮起' },
         { type: 'feature', text: '实时预览升为主视觉，横跨整行置顶' },
         { type: 'feature', text: '新增顶部「背景总览」条，实时显示背景开关、当前背景类型、流光与粒子状态' },
@@ -12193,8 +12106,8 @@ body #section-background > div.settings-panel {
       const HELP_TOPICS = [
         { id: 'tut-start', t: '快速上手' }, { id: 'tut-hw', t: '作业管理' },
         { id: 'tut-att', t: '考勤管理' }, { id: 'tut-notice', t: '通知与公告' },
-        { id: 'tut-theme', t: '个性化外观' }, { id: 'tut-bandori', t: '邦多利主题' },
-        { id: 'tut-plugin', t: '特效与截图' }, { id: 'tut-shot', t: '截图与导出' }, { id: 'tut-data', t: '数据管理' },
+        { id: 'tut-theme', t: '主题与外观' }, { id: 'tut-bandori', t: '邦多利主题' },
+        { id: 'tut-plugin', t: '背景特效' }, { id: 'tut-shot', t: '截图与导出' }, { id: 'tut-data', t: '数据管理' },
         { id: 'tut-perf', t: '性能与卡顿' }, { id: 'tut-backup', t: '更新前备份' },
         { id: 'tut-faq', t: '常见问题' }, { id: 'tut-ai', t: '问AI · 数据分析' },
         { id: 'tut-stat', t: '作业统计与历史' }, { id: 'tut-sys', t: '系统检测与日志' },
@@ -38268,4 +38181,252 @@ html #notification-bar {
   window.__encBgHeroRefresh = refresh;
 })();
 </script>
+<style id="enc-md3-settings">
+/* ===== 设置面板 Material Design 3 化 ===== */
+#settings-modal > .modal {
+  --md3-surface: var(--card-bg, #fff) !important;
+  --md3-on-surface: var(--text-color, #1c1b1f) !important;
+  --md3-primary: var(--accent-color, #6750A4) !important;
+  --md3-container: color-mix(in srgb, var(--md3-on-surface) 5%, var(--md3-surface)) !important;
+  --md3-container-high: color-mix(in srgb, var(--md3-on-surface) 8%, var(--md3-surface)) !important;
+  --md3-outline: color-mix(in srgb, var(--md3-on-surface) 22%, transparent) !important;
+  --md3-outline-soft: color-mix(in srgb, var(--md3-on-surface) 12%, transparent) !important;
+  --md3-on-surface-var: color-mix(in srgb, var(--md3-on-surface) 68%, transparent) !important;
+  background: var(--md3-surface) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .16) !important;
+}
+#settings-modal > .modal > .modal-header {
+  background: var(--md3-surface) !important;
+  border-bottom: 1px solid var(--md3-outline-soft) !important;
+  padding: 16px 22px 12px !important;
+}
+#settings-modal > .modal > .modal-header .modal-title,
+#settings-modal > .modal > .modal-header h2 {
+  font-size: 20px !important; font-weight: 600 !important; letter-spacing: .1px !important;
+  color: var(--md3-on-surface) !important;
+}
+#settings-modal > .modal > .modal-header .modal-close {
+  border-radius: 50% !important; width: 40px !important; height: 40px !important;
+  color: var(--md3-on-surface-var) !important; background: transparent !important;
+  transition: background .16s ease !important;
+}
+#settings-modal > .modal > .modal-header .modal-close:hover { background: var(--md3-container-high) !important; }
+
+/* 侧栏：MD3 navigation drawer */
+#settings-modal .settings-sidebar {
+  background: transparent !important;
+  border-right: 1px solid var(--md3-outline-soft) !important;
+  padding: 14px 10px !important;
+}
+#settings-modal .settings-nav-item {
+  border-radius: 999px !important;
+  padding: 11px 16px !important;
+  margin: 2px 0 !important;
+  font-size: 13.5px !important; font-weight: 500 !important;
+  color: var(--md3-on-surface-var) !important;
+  background: transparent !important;
+  border: none !important;
+  transition: background .16s ease, color .16s ease !important;
+}
+#settings-modal .settings-nav-item:hover { background: var(--md3-container) !important; }
+#settings-modal .settings-nav-item.active {
+  background: color-mix(in srgb, var(--md3-primary) 16%, var(--md3-surface)) !important;
+  color: var(--md3-primary) !important;
+  font-weight: 600 !important;
+}
+#settings-modal .settings-nav-item .nav-index {
+  font-size: 11px !important; font-weight: 600 !important; opacity: .72 !important;
+  margin-right: 10px !important;
+}
+#settings-modal .settings-nav-sub { padding: 2px 0 6px !important; }
+#settings-modal .settings-nav-sub-btn {
+  border-radius: 999px !important;
+  padding: 8px 14px 8px 34px !important;
+  margin: 1px 0 !important;
+  font-size: 12.5px !important;
+  color: var(--md3-on-surface-var) !important;
+  background: transparent !important;
+  border: none !important;
+}
+#settings-modal .settings-nav-sub-btn:hover { background: var(--md3-container) !important; }
+#settings-modal .settings-nav-sub-btn.active {
+  background: color-mix(in srgb, var(--md3-primary) 12%, var(--md3-surface)) !important;
+  color: var(--md3-primary) !important; font-weight: 600 !important;
+}
+#settings-modal .settings-search {
+  background: var(--md3-container-high) !important;
+  border: none !important;
+  border-radius: 999px !important;
+  margin-bottom: 10px !important;
+}
+#settings-modal .settings-search-input {
+  background: transparent !important; border: none !important;
+  border-radius: 999px !important; font-size: 13px !important;
+}
+
+/* 内容区 */
+#settings-modal .settings-content { padding: 4px 22px 26px !important; }
+#settings-modal .settings-section-head .sec-index,
+#settings-modal .section-header .sec-index {
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--md3-primary) 16%, var(--md3-surface)) !important;
+  color: var(--md3-primary) !important;
+  border: none !important;
+  font-size: 11px !important; font-weight: 700 !important;
+  padding: 3px 10px !important;
+}
+#settings-modal .settings-section-head h2,
+#settings-modal .section-header h2,
+#settings-modal .section-header {
+  font-size: 20px !important; font-weight: 600 !important;
+  color: var(--md3-on-surface) !important; letter-spacing: .1px !important;
+}
+
+/* 面板：MD3 card（filled） */
+#settings-modal .settings-panel,
+#settings-modal .ot-card,
+#settings-modal > .modal .settings-panel {
+  background: var(--md3-container) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+  padding: 18px 20px 16px !important;
+  margin: 0 0 12px !important;
+  transition: background .16s ease !important;
+}
+#settings-modal .settings-panel:hover,
+#settings-modal .ot-card:hover {
+  background: var(--md3-container-high) !important;
+}
+#settings-modal .settings-panel > h3,
+#settings-modal .ot-card > h3,
+#settings-modal .sub-header {
+  font-size: 14px !important; font-weight: 600 !important;
+  color: var(--md3-on-surface) !important;
+  margin: 0 0 12px !important; padding: 0 !important;
+  border: none !important;
+}
+#settings-modal .settings-panel > h3::before,
+#settings-modal .ot-card > h3::before,
+#section-background > .settings-panel > h3::before { content: none !important; display: none !important; }
+
+/* 文字层级 */
+#settings-modal .settings-panel p,
+#settings-modal .settings-panel .rd,
+#settings-modal .settings-panel .desc,
+#settings-modal .form-group > label,
+#settings-modal .ot-row .rd {
+  font-size: 12px !important;
+  color: var(--md3-on-surface-var) !important;
+  line-height: 1.65 !important;
+}
+#settings-modal .settings-panel .rl,
+#settings-modal .ot-row .rl {
+  font-size: 13.5px !important; font-weight: 500 !important; color: var(--md3-on-surface) !important;
+}
+
+/* 输入框：MD3 outlined field */
+#settings-modal input[type="text"],
+#settings-modal input[type="url"],
+#settings-modal input[type="password"],
+#settings-modal input[type="number"],
+#settings-modal input[type="time"],
+#settings-modal input[type="date"],
+#settings-modal textarea,
+#settings-modal select,
+#settings-modal .form-control {
+  background: transparent !important;
+  border: 1px solid var(--md3-outline) !important;
+  border-radius: 12px !important;
+  padding: 10px 13px !important;
+  font-size: 13px !important;
+  color: var(--md3-on-surface) !important;
+  transition: border-color .16s ease, box-shadow .16s ease !important;
+}
+#settings-modal input:focus,
+#settings-modal textarea:focus,
+#settings-modal select:focus,
+#settings-modal .form-control:focus {
+  outline: none !important;
+  border-color: var(--md3-primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--md3-primary) 16%, transparent) !important;
+}
+
+/* 按钮：filled / outlined pill */
+#settings-modal button.btn,
+#settings-modal .btn,
+#settings-modal button.settings-btn {
+  border-radius: 999px !important;
+  padding: 9px 20px !important;
+  font-size: 13px !important; font-weight: 600 !important;
+  min-height: 38px !important;
+  background: color-mix(in srgb, var(--md3-primary) 14%, var(--md3-surface)) !important;
+  color: var(--md3-primary) !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background .16s ease, box-shadow .16s ease !important;
+}
+#settings-modal button.btn:hover,
+#settings-modal .btn:hover {
+  background: color-mix(in srgb, var(--md3-primary) 22%, var(--md3-surface)) !important;
+}
+#settings-modal button.btn.primary,
+#settings-modal .btn-primary {
+  background: var(--md3-primary) !important;
+  color: #fff !important;
+}
+
+/* 开关：MD3 switch 尺寸与配色 */
+#settings-modal input[type="checkbox"] {
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--md3-on-surface) 26%, transparent) !important;
+  border: none !important;
+}
+#settings-modal input[type="checkbox"]:checked {
+  background: var(--md3-primary) !important;
+}
+#settings-modal .checkbox-label {
+  border-radius: 12px !important;
+  padding: 8px 10px !important;
+  transition: background .16s ease !important;
+}
+#settings-modal .checkbox-label:hover { background: var(--md3-container-high) !important; }
+
+/* 滑动条 */
+#settings-modal input[type="range"] { height: 32px !important; }
+#settings-modal .form-range { border-radius: 999px !important; }
+
+/* 折叠块 */
+#settings-modal details {
+  border-radius: 16px !important;
+  background: var(--md3-container) !important;
+  border: none !important;
+  padding: 0 !important;
+  margin-bottom: 10px !important;
+  overflow: hidden !important;
+}
+#settings-modal details > summary {
+  padding: 14px 18px !important;
+  font-size: 13.5px !important; font-weight: 600 !important;
+  color: var(--md3-on-surface) !important;
+  background: transparent !important;
+  border: none !important;
+}
+#settings-modal details[open] > summary { border-bottom: 1px solid var(--md3-outline-soft) !important; }
+#settings-modal details > div,
+#settings-modal details .tutor-body { padding: 14px 18px !important; }
+
+/* 分隔与提示 */
+#settings-modal hr { border: none !important; border-top: 1px solid var(--md3-outline-soft) !important; margin: 14px 0 !important; }
+#settings-modal .hp-chip { border-radius: 999px !important; background: var(--md3-container-high) !important; border: none !important; }
+#settings-modal .hp-act { border-radius: 16px !important; background: var(--md3-container) !important; border: none !important; }
+
+/* 窄屏 */
+@media (max-width: 768px) {
+  #settings-modal > .modal { border-radius: 22px !important; }
+  #settings-modal .settings-content { padding: 2px 14px 20px !important; }
+  #settings-modal .settings-panel { padding: 15px 15px 13px !important; }
+}
+</style>
 </body></html>
