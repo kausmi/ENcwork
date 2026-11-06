@@ -8237,6 +8237,71 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
 .switch > input:checked::after { transform: translateX(18px); }
 .switch > .slider { display: none; }
 </style>
+<style id="enc-settings-fitfix">
+/* 设置弹窗：头部固定 + 内容内部滚动，任何分区（考勤/数据/长篇教程）都能随时点关闭 */
+#settings-modal > .modal {
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#settings-modal .modal-header {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--card-bg, #fff);
+  flex: 0 0 auto;
+}
+#settings-modal .settings-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+#settings-modal .settings-content {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+#settings-modal .settings-sidebar { min-height: 0; overflow-y: auto; }
+@media (max-width: 768px) {
+  #settings-modal > .modal { max-height: 94vh; }
+  #settings-modal .settings-layout { flex-direction: column; }
+  #settings-modal .settings-sidebar { max-height: 34vh; flex: 0 0 auto; }
+  #settings-modal .settings-content { flex: 1 1 auto; }
+}
+</style>
+<style id="enc-settings-sidebar-collapse">
+/* 大项与子项统一圆角，不再一头圆一头方 */
+#settings-modal .settings-nav-item,
+#settings-modal .settings-nav-item.active,
+#settings-modal .settings-nav-item::before,
+#settings-modal #settings-nav-list .settings-nav-sub-btn,
+#settings-modal #settings-nav-list .settings-nav-sub-btn.active { border-radius: 10px !important; }
+#settings-modal .settings-nav-item.active::before { border-radius: 3px !important; }
+/* 侧栏收起 / 展开 */
+#settings-modal #settings-sidebar-collapse {
+  display: none; width: 100%; margin: 0 0 8px; padding: 6px 10px;
+  font-size: 12px; color: var(--text-muted); background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--border-color, #ccc) 60%, transparent);
+  border-radius: 8px; cursor: pointer;
+}
+#settings-modal #settings-sidebar-expand {
+  display: none; width: 28px; height: 28px; margin: 0 0 8px; padding: 0;
+  font-size: 14px; line-height: 1; color: var(--text-muted); background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--border-color, #ccc) 60%, transparent);
+  border-radius: 8px; cursor: pointer;
+}
+@media (min-width: 769px) {
+  #settings-modal #settings-sidebar-collapse { display: block; }
+}
+/* 收起：侧栏整体消失，内容区占满 */
+#settings-modal .settings-layout.sidebar-collapsed { grid-template-columns: 0 1fr !important; display: grid; }
+#settings-modal .settings-layout.sidebar-collapsed > .settings-sidebar { display: none; }
+#settings-modal .settings-layout.sidebar-collapsed > .settings-content { padding-left: 0; }
+/* 收起后，在内容区左上角留一个展开按钮 */
+#settings-modal .settings-content > #settings-sidebar-expand { display: none; }
+#settings-modal .settings-layout.sidebar-collapsed .settings-content::before { content: ''; }
+#settings-modal .settings-layout.sidebar-collapsed #settings-sidebar-expand.show { display: inline-flex; align-items: center; justify-content: center; }
+</style>
 </head>
 <body>
 <div id="enc-aurora-bg" aria-hidden="true"></div>
@@ -8408,6 +8473,8 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
       </div>
       <div class="settings-layout">
         <aside class="settings-sidebar">
+          <button type="button" id="settings-sidebar-collapse" title="收起侧栏" aria-label="收起侧栏">‹ 收起</button>
+          <button type="button" id="settings-sidebar-expand" title="展开侧栏" aria-label="展开侧栏">›</button>
           <div class="settings-search">
             <input type="text" id="settings-search-input" class="settings-search-input" placeholder="搜索设置项…" aria-label="搜索设置">
             <button id="settings-search-clear" class="settings-search-clear" style="display:none;" aria-label="清除搜索">✕</button>
@@ -8709,6 +8776,25 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
               </div>
             </div>
             <h2 class="section-header sub"><span class="sec-index">01B</span><span>背景与壁纸</span></h2>
+            <div class="settings-panel ot-card" id="enc-pixel-panel">
+              <h3 class="sub-header"><span class="dv-tag">粒子</span><span>像素粒子</span></h3>
+              <div class="ot-row">
+                <div><div class="rl">启用像素粒子</div><div class="rd">在背景上飘落像素点，可与流光叠加。</div></div>
+                <div class="rc"><label class="switch"><input type="checkbox" id="bg-pixel-toggle"><span class="slider"></span></label></div>
+              </div>
+              <div class="ot-row">
+                <div><div class="rl">流动速度</div><div class="rd">数值越大粒子移动越快。</div></div>
+                <div class="rc"><input type="range" id="bg-pixel-speed" class="form-range" min="20" max="300" step="10" style="width:140px;"> <span id="bg-pixel-speed-val" style="font-size:12px;opacity:.7;">100%</span></div>
+              </div>
+              <div class="ot-row">
+                <div><div class="rl">粒子数量</div><div class="rd">越多越热闹，也越耗电。</div></div>
+                <div class="rc"><input type="range" id="bg-pixel-density" class="form-range" min="10" max="200" step="10" style="width:140px;"> <span id="bg-pixel-density-val" style="font-size:12px;opacity:.7;">60</span></div>
+              </div>
+              <div class="ot-row">
+                <div><div class="rl">粒子颜色</div><div class="rd">留空则跟随主题强调色。</div></div>
+                <div class="rc"><input type="color" id="bg-pixel-color" class="form-control" style="width:52px;height:34px;padding:2px;"></div>
+              </div>
+            </div>
             <div class="settings-panel">
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
                 <div>
@@ -10351,7 +10437,7 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
         <p class="tutor-lead">特效在哪里调：</p>
         <p><span class="step">1</span>设置 → <b>个性化 → 动效与特效</b>：全局动效等级、液态玻璃（通透度/模糊/饱和/流光）、卡片边缘高光与泛光、快捷栏底板与彩虹流光等，全部为<b>滑块</b>，拖动即时预览。</p>
         <p><span class="step">2</span>设置 → <b>个性化 → 动效与特效 → 性能预设</b>：一键套用「关闭 / 平衡 / 性能 / 极致」，之后仍可逐项微调。</p>
-        <span class="expect">旧版「插件管理」入口已下线，相关特效现已全部并入「个性化 → 动效与特效」，不再需要单独导入插件文件。</span>
+        
 
         <p class="tutor-lead mt">截图：</p>
         <p>· 快捷栏点「<b>截图</b>」→ 干净版图片（不带特效）；点「<b>特效截图</b>」→ 保留液态玻璃/泛光等特效（截图期间动画自动暂停）。</p>
@@ -10582,14 +10668,7 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
               </div>
             </div>
 
-            <div class="about-grid">
-              <div class="about-card"><i>📚</i><b>多学科作业</b><span>按学科与日期记录，支持分条与合并</span></div>
-              <div class="about-card"><i>👥</i><b>考勤统计</b><span>一键点名，自动汇总到日历</span></div>
-              <div class="about-card"><i>📅</i><b>日历视图</b><span>作业与考勤按天回看</span></div>
-              <div class="about-card"><i>🎨</i><b>主题系统</b><span>二十余套主题，可逐项微调</span></div>
-              <div class="about-card"><i>🔌</i><b>插件与资源包</b><span>导入即用，不联网也能跑</span></div>
-              <div class="about-card"><i>🔒</i><b>本地存储</b><span>无账号、无上传，可随时备份导出</span></div>
-            </div>
+            
 
             <div class="about-actions">
               <button type="button" class="btn about-btn" onclick="showChangelogModal()">更新日志</button>
@@ -11252,7 +11331,7 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
       // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
       // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-      const APP_VERSION = '1.59';
+      const APP_VERSION = '1.60';
       const APP_NAME = '月行水上';
 
       // ===== 版本标识：OTTO版 / 精简版 =====
@@ -11307,6 +11386,24 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
         return '夕阳之下';
       }
       const VERSION_LOG = [
+        {
+          version: '1.60-otto', date: '2026-11-06', type: 'release',
+          summary: '设置页 UI 大修：去掉 SETTINGS/MENU 与副标题、搜索图标对齐、全站开关重做、编号胶囊对比度、侧栏可收起、弹窗固定头部、新增像素粒子背景、问 AI 带考勤与模型列表。',
+          items: [
+            { type: 'improve', text: '去掉侧栏顶部 SETTINGS / MENU 与小圆点虚线、去掉标题下的「个性化你的工作台 · Personalize workspace」' },
+            { type: 'fix', text: '修正设置搜索框放大镜图标偏下 6px（容器有底部内边距，图标按整容器居中）' },
+            { type: 'fix', text: '编号胶囊文字改用正文色 + accent 细边框，浅色主题下不再看不清' },
+            { type: 'improve', text: '全站开关重做：右侧滑动开关 + 选中整行描边，一眼能看出开还是关' },
+            { type: 'feature', text: '设置侧栏可收起/展开，收起后内容区占满（状态本地记忆）' },
+            { type: 'fix', text: '设置弹窗头部固定、内容区内部滚动，考勤管理与数据管理等长页面也能随时关闭' },
+            { type: 'feature', text: '背景与壁纸新增「像素粒子」：开关、流动速度、粒子数量、粒子颜色' },
+            { type: 'fix', text: '大项与子项导航圆角统一为 10px，不再一头圆一头方' },
+            { type: 'improve', text: '开启背景动态流光时自动关闭自定义背景图、背景视频与轮播图，避免两层背景互相打架' },
+            { type: 'feature', text: '问 AI 上下文加入当日考勤数据，并支持一键获取服务商模型列表下拉选择' },
+            { type: 'improve', text: '关于页删除六张能力卡；移除插件管理的残留说明文字' },
+            { type: 'fix', text: '顶栏内的输入框不再挂 ⌨ 键盘按钮，避免图标压在日期旁文字上' },
+          ],
+        },
       {
       version: '1.59-otto',
       date: '2026-11-06',
@@ -12028,6 +12125,10 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
         aiModel: '',
         aiKey: '',
         aiHistory: [],
+        bgPixelOn: false,
+        bgPixelSpeed: 100,
+        bgPixelDensity: 60,
+        bgPixelColor: '#4a8cff',
         bgAuroraOn: false,
         bgAuroraColors: ['#6a5acd', '#00c6ff', '#ff6ec7'],
         bgAuroraQuality: 'medium',
@@ -13101,6 +13202,10 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
           // 问 AI：接口/模型/密钥均为字符串，历史必须是数组
           if (typeof state.aiEndpoint !== 'string') state.aiEndpoint = '';
           if (typeof state.aiModel !== 'string') state.aiModel = '';
+          if (typeof state.bgPixelOn !== 'boolean') state.bgPixelOn = false;
+          if (typeof state.bgPixelSpeed !== 'number' || !isFinite(state.bgPixelSpeed)) state.bgPixelSpeed = 100;
+          if (typeof state.bgPixelDensity !== 'number' || !isFinite(state.bgPixelDensity)) state.bgPixelDensity = 60;
+          if (typeof state.bgPixelColor !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(state.bgPixelColor)) state.bgPixelColor = '#4a8cff';
           if (typeof state.aiKey !== 'string') state.aiKey = '';
           if (!Array.isArray(state.aiHistory)) state.aiHistory = [];
           if (typeof state.bgAuroraOn !== 'boolean') state.bgAuroraOn = false;
@@ -19704,6 +19809,8 @@ const _fade = (rgb, deg) => 'linear-gradient(' + deg + ', rgba(' + rgb + ',1) 0%
         if (tag !== 'input' && tag !== 'textarea') return;
         if (tag === 'input' && ENC_KBD_SKIP_TYPES[(el.type || 'text').toLowerCase()]) return;
         if (el.disabled || el.readOnly) return;
+        // 顶栏（含日期/星期区）里的输入框不挂键盘按钮，避免图标压在日期文字旁边
+        if (el.closest && el.closest('#topbar, .topbar, .header-bar, .date-bar')) return;
         const parent = el.parentElement;
         if (!parent) return;
         // 已经有原生键盘按钮的（内容型键盘 / 小键盘）不重复加
@@ -25994,6 +26101,111 @@ window.__ENC_DEBUG__ = {
         });
 
         // 设置侧边栏
+
+        // 设置侧栏收起 / 展开（宽屏可用，收起后内容区占满）
+        (function () {
+          var layout = document.querySelector('#settings-modal .settings-layout');
+          var cBtn = document.getElementById('settings-sidebar-collapse');
+          var eBtn = document.getElementById('settings-sidebar-expand');
+          if (!layout || !cBtn) return;
+          var KEY = 'enc.settings.sidebarCollapsed';
+          function apply(collapsed) {
+            layout.classList.toggle('sidebar-collapsed', !!collapsed);
+            try { localStorage.setItem(KEY, collapsed ? '1' : '0'); } catch (e) {}
+          }
+          try { if (localStorage.getItem(KEY) === '1') apply(true); } catch (e) {}
+          cBtn.addEventListener('click', function () { apply(true); });
+          if (eBtn) {
+            eBtn.addEventListener('click', function () { apply(false); });
+            // 收起后把展开按钮挪进内容区，点击还原
+            var content = layout.querySelector('.settings-content');
+            if (content) { content.insertBefore(eBtn, content.firstChild); eBtn.classList.add('show'); }
+          }
+        })();
+
+      // 背景像素粒子：独立 canvas 覆盖层，按 speed/density 渲染
+      (function encInitPixelParticles() {
+        var cv = null, ctx = null, raf = null, ps = [];
+        function ensureCanvas() {
+          if (cv && document.body.contains(cv)) return;
+          cv = document.getElementById('enc-pixel-canvas');
+          if (!cv) {
+            cv = document.createElement('canvas');
+            cv.id = 'enc-pixel-canvas';
+            cv.setAttribute('aria-hidden', 'true');
+            cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.85;';
+            document.body.insertBefore(cv, document.body.firstChild);
+          }
+          ctx = cv.getContext('2d');
+          resize();
+        }
+        function resize() {
+          if (!cv) return;
+          var dpr = Math.min(window.devicePixelRatio || 1, 2);
+          cv.width = Math.floor(window.innerWidth * dpr);
+          cv.height = Math.floor(window.innerHeight * dpr);
+          if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        function spawn(n) {
+          var w = window.innerWidth, h = window.innerHeight;
+          ps = [];
+          for (var i = 0; i < n; i++) {
+            ps.push({ x: Math.random() * w, y: Math.random() * h, s: 1 + Math.random() * 2, v: .3 + Math.random() * .9, a: .25 + Math.random() * .6 });
+          }
+        }
+        function color() {
+          var c = (state.bgPixelColor || '').trim();
+          return c || getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#4a8cff';
+        }
+        function loop() {
+          if (!ctx || !cv) return;
+          var sp = (state.bgPixelSpeed || 100) / 100;
+          var w = window.innerWidth, h = window.innerHeight;
+          ctx.clearRect(0, 0, w, h);
+          ctx.fillStyle = color();
+          for (var i = 0; i < ps.length; i++) {
+            var p = ps[i];
+            ctx.globalAlpha = p.a;
+            ctx.fillRect(p.x, p.y, p.s, p.s);
+            p.y += p.v * sp;
+            p.x += Math.sin((p.y + i) * .01) * .25 * sp;
+            if (p.y > h + 4) { p.y = -4; p.x = Math.random() * w; }
+            if (p.x < -4) p.x = w + 4; else if (p.x > w + 4) p.x = -4;
+          }
+          ctx.globalAlpha = 1;
+          raf = requestAnimationFrame(loop);
+        }
+        function start() {
+          ensureCanvas();
+          if (!ctx) return;
+          spawn(Math.round(state.bgPixelDensity || 60));
+          if (raf) cancelAnimationFrame(raf);
+          loop();
+        }
+        function stop() {
+          if (raf) { cancelAnimationFrame(raf); raf = null; }
+          if (ctx && cv) ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        }
+        window.__encPixelApply = function () {
+          if (state.bgPixelOn) start(); else stop();
+          var t = document.getElementById('bg-pixel-toggle'); if (t && document.activeElement !== t) t.checked = !!state.bgPixelOn;
+          var sp = document.getElementById('bg-pixel-speed'); if (sp && document.activeElement !== sp) sp.value = state.bgPixelSpeed || 100;
+          var spv = document.getElementById('bg-pixel-speed-val'); if (spv) spv.textContent = (state.bgPixelSpeed || 100) + '%';
+          var de = document.getElementById('bg-pixel-density'); if (de && document.activeElement !== de) de.value = state.bgPixelDensity || 60;
+          var dev = document.getElementById('bg-pixel-density-val'); if (dev) dev.textContent = String(state.bgPixelDensity || 60);
+          var co = document.getElementById('bg-pixel-color'); if (co) co.value = state.bgPixelColor || '#4a8cff';
+        };
+        window.addEventListener('resize', function () { resize(); if (state.bgPixelOn) spawn(Math.round(state.bgPixelDensity || 60)); });
+        var t2 = document.getElementById('bg-pixel-toggle');
+        if (t2) t2.addEventListener('change', function () { state.bgPixelOn = this.checked; window.__encPixelApply(); saveData(); });
+        var sp2 = document.getElementById('bg-pixel-speed');
+        if (sp2) sp2.addEventListener('input', function () { state.bgPixelSpeed = parseInt(this.value, 10) || 100; window.__encPixelApply(); saveData(); });
+        var de2 = document.getElementById('bg-pixel-density');
+        if (de2) de2.addEventListener('input', function () { state.bgPixelDensity = parseInt(this.value, 10) || 60; if (state.bgPixelOn) spawn(state.bgPixelDensity); window.__encPixelApply(); saveData(); });
+        var co2 = document.getElementById('bg-pixel-color');
+        if (co2) co2.addEventListener('input', function () { state.bgPixelColor = this.value; saveData(); });
+        setTimeout(function () { try { window.__encPixelApply(); } catch (e) {} }, 300);
+      })();
         document.querySelectorAll('.settings-nav-item').forEach(item => {
           item.onclick = () => {
             saveSettingsScroll();
