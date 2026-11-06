@@ -8503,7 +8503,141 @@ html[data-theme="bang-dream"] body, html[data-theme="sekai"] body { transition: 
    因此开启时把 #app 的背景交还给 body，让背景层透出来。 */
 html[data-aurora="on"] #app,
 html[data-pixel="on"] #app { background-color: transparent !important; }
-</style></head>
+</style><style id="enc-bg-page-redo2">
+/* ==========================================================
+   背景与壁纸页 · 整体重做
+   版式：响应式两列画布 + 卡片化面板 + 主视觉预览置顶
+   ========================================================== */
+
+/* 1) 画布：两列卡片墙（窄屏自动单列） */
+#section-background.active {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)) !important;
+  gap: 14px !important;
+  align-items: start !important;
+  flex-direction: initial !important;
+}
+@media (max-width: 720px) {
+  #section-background.active { grid-template-columns: 1fr !important; }
+}
+
+/* 2) 主视觉：实时预览置顶并横跨整行 */
+#section-background > #bg-panel-preview {
+  grid-column: 1 / -1 !important;
+  order: -10 !important;
+}
+
+/* 3) 动态类面板沉到末尾（流光、粒子） */
+#section-background > #enc-aurora-panel { order: 80 !important; }
+#section-background > #enc-pixel-panel { order: 81 !important; }
+
+/* 4) 面板统一卡片化 */
+#section-background > .settings-panel,
+body #section-background > div.settings-panel {
+  margin: 0 !important;
+  padding: 15px 16px 13px !important;
+  border-radius: 14px !important;
+  background: var(--card-bg, #fff) !important;
+  border: 1px solid color-mix(in srgb, var(--text-color, #333) 10%, transparent) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .045) !important;
+  transition: box-shadow .22s ease, transform .22s ease, border-color .22s ease !important;
+  content-visibility: visible !important;
+}
+#section-background > .settings-panel:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .09) !important;
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent-color, #6750A4) 34%, transparent) !important;
+}
+
+/* 5) 面板标题：小字 + 左侧强调竖条 */
+#section-background > .settings-panel > h3 {
+  position: relative;
+  margin: 0 0 13px !important;
+  padding-left: 11px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .02em;
+  line-height: 1.35;
+  color: var(--text-color) !important;
+  border: 0 !important;
+}
+#section-background > .settings-panel > h3::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 3px; height: 15px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: var(--accent-color, #6750A4);
+}
+#section-background > .settings-panel > h3 .dv-tag,
+#section-background > .settings-panel > h3 > span.dv-tag {
+  font-size: 10.5px; padding: 1px 6px; margin-right: 5px;
+  border-radius: 5px; vertical-align: 1px;
+}
+
+/* 6) 面板内部：行距收敛、标签不再抢戏 */
+#section-background .form-group { margin: 0 0 12px !important; }
+#section-background .form-group:last-child { margin-bottom: 0 !important; }
+#section-background .form-label { font-size: 12px !important; opacity: .78 !important; margin-bottom: 5px !important; }
+#section-background .form-hint { font-size: 11.5px !important; opacity: .58 !important; margin-top: 4px !important; line-height: 1.55; }
+#section-background .form-control { font-size: 13px !important; padding: 8px 11px !important; border-radius: 9px !important; }
+#section-background .checkbox-label { padding: 3px 0 !important; }
+
+/* 7) 直属画布的零散设置项，也收进卡片，视觉不散 */
+#section-background > .form-group,
+#section-background > .bg-rotate-row {
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  border-radius: 14px !important;
+  background: var(--card-bg, #fff) !important;
+  border: 1px solid color-mix(in srgb, var(--text-color, #333) 10%, transparent) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .045) !important;
+}
+
+/* 8) 数值类控件并排，省纵向空间 */
+#section-background .enc-bg-row2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+@media (max-width: 480px) { #section-background .enc-bg-row2 { grid-template-columns: 1fr; } }
+
+/* 9) 按钮在新卡片里更轻快 */
+#section-background .btn { border-radius: 9px !important; font-size: 12.5px !important; }
+#section-background .settings-panel .btn + .btn { margin-left: 6px; }
+
+/* 10) 关闭自定义背景时，用一个轻提示代替“整页突然空掉”的错觉 */
+#section-background:not(:has(#bg-enabled-toggle:checked)) > #bg-panel-preview::before {
+  content: '开启「自定义背景」后，这里会显示实时预览';
+  display: block; padding: 22px 12px; text-align: center;
+  font-size: 12px; color: color-mix(in srgb, var(--text-color) 55%, transparent);
+}
+
+/* 11) 顶部总览条：一眼看清现在用的是什么背景 */
+#section-background > #enc-bg-hero {
+  grid-column: 1 / -1 !important;
+  order: -20 !important;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding: 13px 16px; border-radius: 14px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent-color, #6750A4) 12%, var(--card-bg, #fff)),
+    var(--card-bg, #fff));
+  border: 1px solid color-mix(in srgb, var(--accent-color, #6750A4) 26%, transparent);
+}
+#section-background > #enc-bg-hero .enc-bg-hero-title {
+  font-size: 13px; font-weight: 700; margin-right: 6px; color: var(--text-color);
+}
+#section-background > #enc-bg-hero .enc-bg-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 999px; font-size: 11.5px; line-height: 1.4;
+  background: color-mix(in srgb, var(--text-color, #333) 8%, transparent);
+  color: var(--text-color);
+}
+#section-background > #enc-bg-hero .enc-bg-chip[data-on="1"] {
+  background: color-mix(in srgb, var(--accent-color, #6750A4) 20%, transparent);
+  color: var(--text-color); font-weight: 600;
+}
+</style>
+</head>
 <body>
 <div id="enc-aurora-bg" aria-hidden="true"></div>
 <svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none;">
@@ -9002,7 +9136,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
                 <div class="rc"><input type="color" id="bg-pixel-color" class="form-control" style="width:52px;height:34px;padding:2px;"></div>
               </div>
             </div>
-            <div class="settings-panel">
+            <div class="settings-panel" id="bg-panel-custom">
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
                 <div>
                   <h3 class="sub-header" style="margin: 0;">自定义背景</h3>
@@ -9019,7 +9153,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
                 </label>
               </div>
             </div>
-            <div class="settings-panel bg-needs-enabled" style="display: none;">
+            <div class="settings-panel bg-needs-enabled" style="display: none;" id="bg-panel-preview">
               <h3 class="sub-header">实时预览</h3>
               <div id="bg-preview-container" style="position: relative; width: 100%; height: 200px; border-radius: 8px; overflow: hidden; background: var(--surface-subtle); border: 1px solid var(--border-color);">
                 <div id="bg-preview-image" style="position: absolute; inset: -20px; background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
@@ -9031,7 +9165,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
               </div>
               <p id="bg-preview-info" style="opacity: 0.6; font-size: 12px; margin-top: 8px;"></p>
             </div>
-            <div class="settings-panel bg-needs-enabled" style="display: none;">
+            <div class="settings-panel bg-needs-enabled" style="display: none;" id="bg-panel-source">
               <h3 class="sub-header">图片来源</h3>
               <div style="display: flex; gap: 8px; margin-bottom: 14px;">
                 <button type="button" class="btn bg-source-btn active" data-bg-source="local" style="flex: 1;">本地上传</button>
@@ -9049,7 +9183,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
                 </div>
               </div>
             </div>
-            <div class="settings-panel bg-needs-enabled" style="display: none;">
+            <div class="settings-panel bg-needs-enabled" style="display: none;" id="bg-panel-static">
               <h3 class="sub-header">静态背景图</h3>
               <div class="form-group" id="bg-source-local">
                 <label class="form-label">上传背景图</label>
@@ -9120,7 +9254,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
                 </div>
               </div>
             </div>
-            <div class="settings-panel bg-needs-enabled">
+            <div class="settings-panel bg-needs-enabled" id="bg-panel-display">
               <h3 class="sub-header">背景显示方式</h3>
               <div class="form-group">
                 <label class="form-label">显示模式</label>
@@ -9166,7 +9300,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
               <button type="button" class="btn btn-sm" id="bg-preset-create">新建预设</button>
             </div>
 
-            <div class="settings-panel bg-needs-enabled">
+            <div class="settings-panel bg-needs-enabled" id="bg-panel-crop">
               <h3 class="sub-header">背景图裁切位置</h3>
               <div class="form-group">
                 <label class="form-label">缩放</label>
@@ -9194,7 +9328,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
                 <button type="button" class="btn btn-sm" id="bg-drag-toggle">在主界面拖动调整</button>
               </div>
             </div>
-            <div class="settings-panel bg-needs-enabled">
+            <div class="settings-panel bg-needs-enabled" id="bg-panel-gif">
               <h3 class="sub-header">GIF 背景</h3>
               <div class="form-group">
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -9203,7 +9337,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
                 </div>
               </div>
             </div>
-            <div class="settings-panel bg-needs-enabled">
+            <div class="settings-panel bg-needs-enabled" id="bg-panel-video">
               <h3 class="sub-header">视频背景</h3>
               <div class="form-group">
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -11540,7 +11674,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
       // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
       // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-      const APP_VERSION = '1.62';
+      const APP_VERSION = '1.63';
       const APP_NAME = '月行水上';
 
       // ===== 版本标识：OTTO版 / 精简版 =====
@@ -11596,6 +11730,21 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
       }
       const VERSION_LOG = [
         {
+      version: '1.63-otto',
+      date: '2026-11-07',
+      type: 'feature',
+      summary: '背景与壁纸页整体重做：响应式两列卡片墙、主视觉预览置顶、顶部背景总览条、面板与控件视觉统一。',
+      items: [
+        { type: 'feature', text: '背景与壁纸页改为响应式两列卡片墙（窄屏自动单列），面板统一圆角卡片 + 悬停浮起' },
+        { type: 'feature', text: '实时预览升为主视觉，横跨整行置顶' },
+        { type: 'feature', text: '新增顶部「背景总览」条，实时显示背景开关、当前背景类型、流光与粒子状态' },
+        { type: 'feature', text: '面板标题统一为小字加左侧强调竖条，标签不再抢戏' },
+        { type: 'feature', text: '面板内部行距、标签、提示文字字号整体收敛，控件更紧凑' },
+        { type: 'feature', text: '动态类面板（流光 / 粒子）沉到页面末尾，不与常用背景设置混排' },
+        { type: 'feature', text: '关闭自定义背景时，预览区显示轻提示，不再让整页看起来像空了' },
+      ]
+    },
+    {
       version: '1.62-otto',
       date: '2026-11-07',
       type: 'fix',
@@ -38077,6 +38226,46 @@ html #notification-bar {
   else all();
   document.addEventListener('click', function () { setTimeout(all, 0); }, true);
   window.__encSwitchSkin = all;
+})();
+</script>
+<script id="enc-bg-hero-js">
+/* 背景页顶部总览条：实时显示当前背景类型与开关状态 */
+(function () {
+  function build() {
+    var sec = document.getElementById('section-background');
+    if (!sec) return null;
+    var hero = document.getElementById('enc-bg-hero');
+    if (!hero) {
+      hero = document.createElement('div');
+      hero.id = 'enc-bg-hero';
+      sec.insertBefore(hero, sec.firstChild);
+    }
+    return hero;
+  }
+  function refresh() {
+    var sec = document.getElementById('section-background');
+    var hero = build();
+    if (!hero || !sec) return;
+    var st = (typeof state === 'object' && state) ? state : {};
+    var chips = [];
+    var on = !!st.bgEnabled;
+    chips.push(['背景', on ? '已开启' : '已关闭', on]);
+    var type = on ? (st.bgVideo ? '视频' : (st.bgImage ? '静态图' : (st.bgImages && st.bgImages.length ? '轮播 ' + st.bgImages.length + ' 张' : '无'))) : '未启用';
+    chips.push(['当前', type, !!(on && (st.bgVideo || st.bgImage || (st.bgImages && st.bgImages.length)))]);
+    chips.push(['流光', st.bgAuroraOn ? '开' : '关', !!st.bgAuroraOn]);
+    chips.push(['粒子', st.bgPixelOn ? '开' : '关', !!st.bgPixelOn]);
+    var html = '<span class="enc-bg-hero-title">背景总览</span>';
+    for (var i = 0; i < chips.length; i++) {
+      html += '<span class="enc-bg-chip" data-on="' + (chips[i][2] ? '1' : '0') + '">' +
+        chips[i][0] + '：' + chips[i][1] + '</span>';
+    }
+    hero.innerHTML = html;
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh);
+  else refresh();
+  document.addEventListener('click', function () { setTimeout(refresh, 60); }, true);
+  document.addEventListener('change', function () { setTimeout(refresh, 60); }, true);
+  window.__encBgHeroRefresh = refresh;
 })();
 </script>
 </body></html>
