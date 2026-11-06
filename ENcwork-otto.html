@@ -5067,11 +5067,12 @@ html.theme-transition #dock {
     }
     .section-header.sub .sec-index {
       font-size: 11px;
-      background: color-mix(in srgb, var(--accent-color) 16%, transparent);
-      color: color-mix(in srgb, var(--accent-color) 72%, var(--text-color));
+      background: color-mix(in srgb, var(--accent-color) 14%, transparent);
+      color: var(--text-color);
+      border: 1px solid color-mix(in srgb, var(--accent-color) 42%, transparent);
       padding: 2px 8px;
       border-radius: 6px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.5px;
     }
 
@@ -5336,12 +5337,12 @@ html.theme-transition #dock {
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 16%, transparent);
     }
     #settings-modal .settings-search::before {
-      content: ''; position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      content: ''; position: absolute; left: 13px; top: calc(50% - 6px); transform: translateY(-50%);
       width: 12px; height: 12px; border: 1.6px solid var(--text-muted); border-radius: 50%;
       opacity: .7; pointer-events: none;
     }
     #settings-modal .settings-search::after {
-      content: ''; position: absolute; left: 23px; top: calc(50% + 7px); width: 6px; height: 1.6px;
+      content: ''; position: absolute; left: 23px; top: calc(50% + 1px); width: 6px; height: 1.6px;
       background: var(--text-muted); transform: rotate(45deg); opacity: .7; pointer-events: none; border-radius: 1px;
     }
     #settings-modal .settings-search-clear {
@@ -8194,6 +8195,48 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
   html[data-aurora="on"] #enc-aurora-bg { animation: none !important; }
 }
 </style>
+<style id="enc-switch-redo">
+/* 站内开关统一重做：右侧滑动开关 + 选中整行描边，一眼能看出开还是关 */
+#settings-modal .checkbox-label:has(> input[type="checkbox"]) {
+  border: 1px solid color-mix(in srgb, var(--border-color, #ccc) 65%, transparent);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: transparent;
+  transition: background .16s ease, border-color .16s ease;
+}
+#settings-modal .checkbox-label:has(> input[type="checkbox"]):has(> input:checked) {
+  border-color: color-mix(in srgb, var(--accent-color) 70%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 11%, transparent);
+}
+#settings-modal .checkbox-label > input[type="checkbox"] {
+  -webkit-appearance: none; appearance: none;
+  flex: 0 0 auto; margin: 0;
+  width: 40px; height: 22px; border-radius: 11px;
+  background: color-mix(in srgb, var(--text-muted, #888) 38%, transparent);
+  position: relative; cursor: pointer; outline: none;
+  transition: background .18s ease;
+}
+#settings-modal .checkbox-label > input[type="checkbox"]::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.32);
+  transition: transform .18s ease;
+}
+#settings-modal .checkbox-label > input[type="checkbox"]:checked { background: var(--accent-color); }
+#settings-modal .checkbox-label > input[type="checkbox"]:checked::after { transform: translateX(18px); }
+#settings-modal .checkbox-label > input[type="checkbox"]:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 35%, transparent);
+}
+/* .switch / .slider（流光面板等新控件） */
+.switch { position: relative; display: inline-flex; align-items: center; cursor: pointer; }
+.switch > input { -webkit-appearance: none; appearance: none; width: 40px; height: 22px; border-radius: 11px; margin: 0;
+  background: color-mix(in srgb, var(--text-muted, #888) 38%, transparent); position: relative; cursor: pointer; transition: background .18s ease; }
+.switch > input::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.32); transition: transform .18s ease; }
+.switch > input:checked { background: var(--accent-color); }
+.switch > input:checked::after { transform: translateX(18px); }
+.switch > .slider { display: none; }
+</style>
 </head>
 <body>
 <div id="enc-aurora-bg" aria-hidden="true"></div>
@@ -8358,15 +8401,13 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
           <span class="mt-ic" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>
           <span class="mt-txt">
             <span class="mt-main">设置</span>
-            <span class="mt-sub">个性化你的工作台 · Personalize workspace</span>
-          </span>
+                      </span>
           <span class="title-code">SETTINGS</span>
         </span>
         <button class="modal-close" data-close="settings-modal" aria-label="关闭">✕</button>
       </div>
       <div class="settings-layout">
         <aside class="settings-sidebar">
-          <div class="settings-sidebar-head">SETTINGS / MENU</div>
           <div class="settings-search">
             <input type="text" id="settings-search-input" class="settings-search-input" placeholder="搜索设置项…" aria-label="搜索设置">
             <button id="settings-search-clear" class="settings-search-clear" style="display:none;" aria-label="清除搜索">✕</button>
@@ -9892,7 +9933,7 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
                 </div>
                 <div class="ot-row">
                   <div><div class="rl">模型名</div><div class="rd">按服务商文档填写</div></div>
-                  <div class="rc"><input type="text" id="ai-model-input" class="form-control" placeholder="gpt-4o-mini" autocomplete="off" spellcheck="false"></div>
+                  <div class="rc"><input type="text" id="ai-model-input" class="form-control" list="ai-model-list" placeholder="gpt-4o-mini" autocomplete="off" spellcheck="false"><datalist id="ai-model-list"></datalist><button type="button" class="btn" id="ai-fetch-models" style="margin-left:6px;">获取模型</button></div>
                 </div>
                 <div class="ot-row">
                   <div><div class="rl">API 密钥</div><div class="rd">只保存在本机浏览器，不会上传到别处</div></div>
@@ -21000,6 +21041,22 @@ function saveAllHomeworks() {
           hwLines.push(s.name + '：' + t);
         });
         lines.push('作业：' + (hwLines.length ? '\n  ' + hwLines.join('\n  ') : '今天没有布置作业'));
+        // 考勤数据一并带上，方便直接问「今天谁没来」
+        try {
+          const att = (state.attendance && state.attendance[d]) ? state.attendance[d] : null;
+          if (att && typeof att === 'object') {
+            const absent = [], present = [];
+            Object.keys(att).forEach(function (name) {
+              const v = att[name];
+              if (v === 'absent' || v === 'leave' || v === true) absent.push(name + (v === 'leave' ? '（请假）' : ''));
+              else present.push(name);
+            });
+            if (absent.length || present.length) {
+              lines.push('考勤：' + (absent.length ? '未到 ' + absent.join('、') : '全员到齐')
+                + (present.length ? '；已到 ' + present.length + ' 人' : ''));
+            }
+          }
+        } catch (e) {}
         return lines.join('\n');
       }
       function encAiRender() {
@@ -21098,6 +21155,39 @@ function saveAllHomeworks() {
         }
         encBindEl('ai-endpoint-input').oninput = function (e) { state.aiEndpoint = e.target.value.trim(); saveData(); };
         encBindEl('ai-model-input').oninput = function (e) { state.aiModel = e.target.value.trim(); saveData(); };
+        // 拉取服务商模型列表（OpenAI 兼容 /v1/models）
+        (function () {
+          var btn = document.getElementById('ai-fetch-models');
+          if (!btn) return;
+          btn.addEventListener('click', async function () {
+            var ep = (state.aiEndpoint || '').trim();
+            if (!ep) { showToast('请先填写接口地址', 'warn'); return; }
+            var base = ep.replace(/\/+$/, '');
+            if (!/\/v1$/.test(base) && !/\/models$/.test(base)) base = base.replace(/\/chat\/completions$/, '');
+            var url = /\/models$/.test(base) ? base : base.replace(/\/+$/, '') + '/models';
+            btn.disabled = true; btn.textContent = '获取中…';
+            try {
+              var r = await fetch(url, { headers: state.aiKey ? { 'Authorization': 'Bearer ' + state.aiKey } : {} });
+              var d = await r.json();
+              var list = d && (d.data || d.models) || [];
+              var dl = document.getElementById('ai-model-list');
+              if (dl) {
+                dl.innerHTML = '';
+                list.slice(0, 300).forEach(function (m) {
+                  var id = m && (m.id || m.name || m);
+                  if (!id) return;
+                  var opt = document.createElement('option'); opt.value = String(id); dl.appendChild(opt);
+                });
+              }
+              showToast('已获取 ' + list.length + ' 个模型，点输入框可直接选', 'success');
+            } catch (e) {
+              showToast('获取失败：' + (e && e.message ? e.message : e), 'error');
+            } finally {
+              btn.disabled = false; btn.textContent = '获取模型';
+            }
+          });
+        })();
+
         encBindEl('ai-key-input').oninput = function (e) { state.aiKey = e.target.value.trim(); saveData(); };
         encAiSyncConfigUI();
       }
@@ -24430,7 +24520,17 @@ window.__ENC_DEBUG__ = {
         function encAuroraBind() {
           var t = document.getElementById('bg-aurora-toggle');
           if (t) t.addEventListener('change', function () {
-            state.bgAuroraOn = this.checked; applyAurora(); encAuroraSyncUI(); saveData();
+            state.bgAuroraOn = this.checked;
+            // 开流光时默认关掉自定义背景图与背景视频，避免两层背景互相打架
+            if (state.bgAuroraOn) {
+              var turned = [];
+              if (state.bgImage) { state.bgImage = ''; turned.push('自定义背景图'); }
+              if (state.bgVideo) { state.bgVideo = ''; turned.push('背景视频'); }
+              if (Array.isArray(state.bgImages) && state.bgImages.length) { state.bgImages = []; turned.push('轮播背景图'); }
+              if (turned.length && typeof showToast === 'function') showToast('已关闭 ' + turned.join('、') + '，交给流光显示', 'info');
+              if (typeof renderSubjects === 'function') { try { renderSubjects(); } catch (e) {} }
+            }
+            applyAurora(); encAuroraSyncUI(); saveData();
           });
           ['c1', 'c2', 'c3'].forEach(function (k, i) {
             var el = document.getElementById('bg-aurora-' + k);
