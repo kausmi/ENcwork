@@ -8198,70 +8198,137 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
 }
 </style>
 
-/* .switch 容器：滑块方案已废，只留 input 上的开关 */
-#settings-modal .switch { display: inline-flex; align-items: center; }
-#settings-modal .switch > .slider { display: none !important; }
 <style id="enc-switch-redo">
-/* ========== 开关统一重写（旧方案全部作废，只保留 input 上的开关） ========== */
+/* ==========================================================
+   开关 + 滑动条统一层（参照设计范例重写）
+   开关：轨道由 input 自身绘制，圆点走 ::before，**只用一套**
+   滑动条：轨道用渐变画出已选进度，圆点带光环
+   ========================================================== */
+
+/* 关闭旧方案的一切残余：span 上的伪元素、容器边框 */
+#settings-modal .checkbox-label > input[type="checkbox"] + span::before,
+#settings-modal .checkbox-label > input[type="checkbox"] + span::after,
+#settings-modal .enc-set-toggle > input[type="checkbox"] + span::before,
+#settings-modal .enc-set-toggle > input[type="checkbox"] + span::after {
+  content: none !important; display: none !important;
+}
+#settings-modal .checkbox-label > input[type="checkbox"] + span,
+#settings-modal .enc-set-toggle > input[type="checkbox"] + span {
+  padding-left: 0 !important;
+}
+#settings-modal .checkbox-label,
+#settings-modal .enc-set-toggle {
+  border: 0 !important; background: transparent !important;
+  border-radius: 10px !important; box-shadow: none !important;
+}
+
+/* ---------- 开关本体：42 x 24 轨道 ---------- */
 #settings-modal input[type="checkbox"] {
   -webkit-appearance: none !important;
   appearance: none !important;
   position: relative !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  display: inline-block !important;
-  flex: 0 0 auto !important;
+  flex: none !important;
   width: 42px !important;
   height: 24px !important;
   min-width: 42px !important;
   margin: 0 !important;
+  padding: 0 !important;
   border: 0 !important;
   border-radius: 999px !important;
-  background: color-mix(in srgb, var(--text-muted, #888) 40%, transparent) !important;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border-color, #ccc) 75%, transparent) !important;
+  background: color-mix(in srgb, var(--text-color, #333) 24%, transparent) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-color, #333) 12%, transparent) !important;
   cursor: pointer !important;
-  vertical-align: middle !important;
-  transition: background .18s ease !important;
+  outline: none !important;
+  transition: background-color .22s ease, box-shadow .22s ease !important;
 }
+/* 圆点：关闭态 18px，左内边距 3px（(24-18)/2） */
 #settings-modal input[type="checkbox"]::before {
   content: '' !important;
+  display: block !important;
   position: absolute !important;
-  top: 3px !important;
+  top: 50% !important;
   left: 3px !important;
-  transform: none !important;
   width: 18px !important;
   height: 18px !important;
   border-radius: 50% !important;
   background: #fff !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.3) !important;
-  transition: left .18s ease !important;
-  display: block !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .3) !important;
+  transform: translateY(-50%) !important;
+  transition: left .22s cubic-bezier(.2, .9, .3, 1.1), width .2s ease, height .2s ease !important;
+  pointer-events: none !important;
 }
-#settings-modal input[type="checkbox"]::after { content: none !important; display: none !important; }
+/* 开启态：轨道染色，圆点放大到 20px 并右移（右间距同样 3px） */
 #settings-modal input[type="checkbox"]:checked {
   background: var(--accent-color, #6750A4) !important;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-color, #6750A4) 80%, transparent) !important;
-}
-#settings-modal input[type="checkbox"]:checked::before { left: calc(100% - 21px) !important; }
-#settings-modal input[type="checkbox"]:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent-color, #6750A4) 55%, transparent) !important;
-  outline-offset: 2px !important;
   box-shadow: none !important;
 }
-/* 彻底废掉旧方案：在 span 上再画一个开关 */
-#settings-modal .checkbox-label > input[type="checkbox"] + span { padding-left: 0 !important; }
-#settings-modal .checkbox-label > input[type="checkbox"] + span::before,
-#settings-modal .checkbox-label > input[type="checkbox"] + span::after { content: none !important; display: none !important; }
-/* 行容器不再套边框，避免和新开关叠成一团 */
-#settings-modal .checkbox-label {
-  border: 0 !important;
+#settings-modal input[type="checkbox"]:checked::before {
+  left: 19px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+#settings-modal input[type="checkbox"]:active::before { width: 22px !important; }
+#settings-modal input[type="checkbox"]:checked:active::before { left: 17px !important; }
+#settings-modal input[type="checkbox"]:disabled {
+  opacity: .45 !important; cursor: not-allowed !important;
+}
+/* 彻底断掉残留的第二套圆点 */
+#settings-modal input[type="checkbox"]::after {
+  content: none !important; display: none !important;
+}
+
+/* ---------- 滑动条：轨道画进度，拇指带光环 ---------- */
+#settings-modal input[type="range"],
+#settings-modal .form-range {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 100% !important;
+  height: 22px !important;
+  margin: 6px 0 !important;
+  padding: 0 !important;
   background: transparent !important;
-  padding: 7px 0 !important;
-  border-radius: 0 !important;
-  gap: 10px !important;
+  border: 0 !important;
+  outline: none !important;
+  cursor: pointer !important;
+}
+#settings-modal input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 999px;
+  background: linear-gradient(to right,
+    var(--accent-color, #6750A4) 0%,
+    var(--accent-color, #6750A4) var(--enc-range-pct, 0%),
+    color-mix(in srgb, var(--text-color, #333) 16%, transparent) var(--enc-range-pct, 0%),
+    color-mix(in srgb, var(--text-color, #333) 16%, transparent) 100%);
+}
+#settings-modal input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; margin-top: -6px;
+  border: 0; border-radius: 50%;
+  background: var(--accent-color, #6750A4);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color, #6750A4) 22%, transparent);
+  transition: box-shadow .18s ease, transform .18s ease;
+}
+#settings-modal input[type="range"]:hover::-webkit-slider-thumb {
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-color, #6750A4) 20%, transparent);
+}
+#settings-modal input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent-color, #6750A4) 24%, transparent);
+}
+#settings-modal input[type="range"]::-moz-range-track {
+  height: 6px; border-radius: 999px;
+  background: color-mix(in srgb, var(--text-color, #333) 16%, transparent);
+}
+#settings-modal input[type="range"]::-moz-range-progress {
+  height: 6px; border-radius: 999px; background: var(--accent-color, #6750A4);
+}
+#settings-modal input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px; border: 0; border-radius: 50%;
+  background: var(--accent-color, #6750A4);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color, #6750A4) 22%, transparent);
 }
 </style>
 
+<style id="enc-settings-fitfix">
 /* 关闭按钮永远固定在弹窗右上角：任何分区、任何滚动位置都能退出 */
 #settings-modal > .modal { position: relative; }
 #settings-modal > .modal > .modal-header { position: sticky; top: 0; z-index: 40; }
@@ -8269,7 +8336,6 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
   position: absolute; right: 14px; top: 12px; z-index: 60;
   display: inline-flex; align-items: center; justify-content: center;
 }
-<style id="enc-settings-fitfix">
 /* 设置弹窗：头部固定 + 内容内部滚动，任何分区（考勤/数据/长篇教程）都能随时点关闭 */
 #settings-modal > .modal {
   max-height: 92vh;
@@ -8327,11 +8393,31 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
 }
 /* 收起：侧栏整体消失，内容区占满 */
 #settings-modal .settings-layout.sidebar-collapsed > .settings-sidebar { display: none !important; }
-#settings-modal .settings-layout.sidebar-collapsed > .settings-content { flex: 1 1 auto !important; width: 100% !important; min-width: 0 !important; }
+#settings-modal .settings-layout.sidebar-collapsed > .settings-content {
+  flex: 1 1 auto !important; width: 100% !important; min-width: 0 !important;
+  max-width: 100% !important; overflow-y: auto !important; overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
 /* 收起后，在内容区左上角留一个展开按钮 */
 #settings-modal .settings-content > #settings-sidebar-expand { display: none; }
-#settings-modal .settings-layout.sidebar-collapsed .settings-content::before { content: ''; }
-#settings-modal .settings-layout.sidebar-collapsed #settings-sidebar-expand.show { display: inline-flex; align-items: center; justify-content: center; }
+#settings-modal .settings-layout.sidebar-collapsed #settings-sidebar-expand.show {
+  display: inline-flex !important; align-items: center; justify-content: center;
+}
+/* 展开按钮钉在弹窗头部左侧，与关闭按钮一样不随内容滚动 */
+#settings-modal > .modal > .modal-header { position: relative; padding-left: 52px; }
+#settings-modal > .modal > .modal-header > #settings-sidebar-expand {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  width: 30px; height: 30px; margin: 0; padding: 0; z-index: 55;
+  display: none; align-items: center; justify-content: center;
+  font-size: 15px; line-height: 1; color: var(--text-color);
+  background: color-mix(in srgb, var(--accent-color, #6750A4) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-color, #6750A4) 34%, transparent);
+  border-radius: 9px; cursor: pointer;
+}
+/* 仅在收起状态显示展开按钮（:has 从弹窗往下判，header 在 layout 之前，不能用 ~） */
+#settings-modal > .modal:has(> .settings-layout.sidebar-collapsed) > .modal-header > #settings-sidebar-expand {
+  display: inline-flex !important;
+}
 </style>
 <style id="enc-bdcardbg-glass-off">
 /* 作业卡片铺了乐队舞台图时，只让作业卡片本身退出液态玻璃，其余界面不受影响 */
@@ -11454,7 +11540,7 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
       // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
       // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-      const APP_VERSION = '1.61';
+      const APP_VERSION = '1.62';
       const APP_NAME = '月行水上';
 
       // ===== 版本标识：OTTO版 / 精简版 =====
@@ -11510,6 +11596,21 @@ html[data-pixel="on"] #app { background-color: transparent !important; }
       }
       const VERSION_LOG = [
         {
+      version: '1.62-otto',
+      date: '2026-11-07',
+      type: 'fix',
+      summary: '设置页开关与滑动条按设计范例重写，修复开关重叠与 CSS 文本泄漏；侧栏收起不再卡死，所有分区点击回归通过。',
+      items: [
+        { type: 'fix', text: '修复设置页把 CSS 源码当文本显示在页面上的问题（样式块被插到了 style 标签之外）' },
+        { type: 'fix', text: '开关按钮按设计范例重写：42×24 轨道 + 18/20px 圆点，开启态位移对称，旧的双套圆点全部关闭' },
+        { type: 'fix', text: '开关额外加内联样式兜底，压过历史遗留的 !important 规则，任何主题下尺寸一致' },
+        { type: 'fix', text: '滑动条重写：轨道用渐变画出已选进度，圆点带三层光环，拖动有缩放反馈' },
+        { type: 'fix', text: '侧栏收起不再把内容区压塌：只隐藏侧栏、内容区占满并独立滚动，展开按钮钉在弹窗头部' },
+        { type: 'fix', text: '收起状态记忆换新键，老用户不会再一打开设置就是收起态' },
+        { type: 'fix', text: '无子页的分类（数据管理、反馈与帮助、关于）切换不再异常' },
+      ]
+    },
+    {
       version: '1.61-otto',
       date: '2026-11-07',
       type: 'fix',
@@ -26271,7 +26372,7 @@ window.__ENC_DEBUG__ = {
           var cBtn = document.getElementById('settings-sidebar-collapse');
           var eBtn = document.getElementById('settings-sidebar-expand');
           if (!layout || !cBtn) return;
-          var KEY = 'enc.settings.sidebarCollapsed';
+          var KEY = 'enc.settings.sidebarCollapsed.v2';
           function apply(collapsed) {
             layout.classList.toggle('sidebar-collapsed', !!collapsed);
             try { localStorage.setItem(KEY, collapsed ? '1' : '0'); } catch (e) {}
@@ -26280,9 +26381,9 @@ window.__ENC_DEBUG__ = {
           cBtn.addEventListener('click', function () { apply(true); });
           if (eBtn) {
             eBtn.addEventListener('click', function () { apply(false); });
-            // 收起后把展开按钮挪进内容区，点击还原
-            var content = layout.querySelector('.settings-content');
-            if (content) { content.insertBefore(eBtn, content.firstChild); eBtn.classList.add('show'); }
+            // 展开按钮钉在弹窗头部左侧：不随内容滚动，收起后也一定点得到
+            var header = document.querySelector('#settings-modal > .modal > .modal-header');
+            if (header && eBtn.parentElement !== header) { header.appendChild(eBtn); }
           }
         })();
 
@@ -37915,6 +38016,67 @@ html #notification-bar {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', strip);
   else strip();
   window.__encStripDockTitle = strip;
+})();
+</script>
+<script id="enc-range-pct-js">
+/* 滑动条进度填充：把当前值换算成百分比写进 --enc-range-pct，供轨道渐变使用 */
+(function () {
+  function pct(r) {
+    var min = parseFloat(r.min); if (isNaN(min)) min = 0;
+    var max = parseFloat(r.max); if (isNaN(max)) max = 100;
+    var v = parseFloat(r.value); if (isNaN(v)) v = min;
+    var p = max > min ? ((v - min) / (max - min)) * 100 : 0;
+    return Math.max(0, Math.min(100, p)) + '%';
+  }
+  function sync(r) { try { r.style.setProperty('--enc-range-pct', pct(r)); } catch (e) {} }
+  function all() {
+    var list = document.querySelectorAll('#settings-modal input[type="range"], #settings-modal .form-range');
+    for (var i = 0; i < list.length; i++) sync(list[i]);
+  }
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t && t.type === 'range' && t.closest && t.closest('#settings-modal')) sync(t);
+  }, true);
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t && t.type === 'range' && t.closest && t.closest('#settings-modal')) sync(t);
+  }, true);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', all);
+  else all();
+  window.__encSyncRangePct = all;
+})();
+</script>
+<script id="enc-switch-inline-js">
+/* legacy 内部旧开关规则太多且大量带 !important，单靠 CSS 级联不可靠。
+   这里直接给设置页里的每个开关写内联样式（内联 + !important 无敌），保证外观统一。 */
+(function () {
+  var W = 42, H = 24, TH = 18;
+  function skin(el) {
+    if (!el || el.tagName !== 'INPUT' || el.type !== 'checkbox') return;
+    var st = el.style;
+    st.setProperty('width', W + 'px', 'important');
+    st.setProperty('height', H + 'px', 'important');
+    st.setProperty('min-width', W + 'px', 'important');
+    st.setProperty('max-width', W + 'px', 'important');
+    st.setProperty('flex', 'none', 'important');
+    st.setProperty('border-radius', '999px', 'important');
+    st.setProperty('appearance', 'none', 'important');
+    st.setProperty('-webkit-appearance', 'none', 'important');
+    st.setProperty('opacity', '1', 'important');
+    st.setProperty('pointer-events', 'auto', 'important');
+    st.setProperty('position', 'relative', 'important');
+    st.setProperty('margin', '0', 'important');
+    st.setProperty('padding', '0', 'important');
+    st.setProperty('border', '0', 'important');
+  }
+  function all() {
+    var list = document.querySelectorAll('#settings-modal input[type="checkbox"]');
+    for (var i = 0; i < list.length; i++) skin(list[i]);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', all);
+  else all();
+  document.addEventListener('click', function () { setTimeout(all, 0); }, true);
+  window.__encSwitchSkin = all;
 })();
 </script>
 </body></html>
