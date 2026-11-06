@@ -8173,7 +8173,7 @@ html[data-perf-mode="low"] .card-sheen, html[data-perf-mode="low"] [class*="shee
   </script>
 <style id="enc-aurora-style">
 #enc-aurora-bg {
-  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  position: fixed; inset: 0; z-index: -9; pointer-events: none;
   opacity: 0; transition: opacity .6s ease;
   background-image: linear-gradient(120deg,
     var(--au-c1, #6a5acd) 0%,
@@ -8411,7 +8411,13 @@ html[data-theme="bang-dream"] body, html[data-theme="sekai"] body { transition: 
 #dock .dock-item:focus { outline: none !important; }
 #dock .dock-item:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent-color, #6750A4) 60%, transparent) !important; outline-offset: 2px; }
 </style>
-</head>
+
+<style id="enc-bg-layer-visible">
+/* 动态流光 / 像素粒子放在背景层（z-index 负值），#app 默认不透明背景色会把整层盖掉，
+   因此开启时把 #app 的背景交还给 body，让背景层透出来。 */
+html[data-aurora="on"] #app,
+html[data-pixel="on"] #app { background-color: transparent !important; }
+</style></head>
 <body>
 <div id="enc-aurora-bg" aria-hidden="true"></div>
 <svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none;">
@@ -26290,7 +26296,7 @@ window.__ENC_DEBUG__ = {
             cv = document.createElement('canvas');
             cv.id = 'enc-pixel-canvas';
             cv.setAttribute('aria-hidden', 'true');
-            cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:.75;';
+            cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-9;opacity:.75;';
             document.body.appendChild(cv);
           }
           ctx = cv.getContext('2d');
@@ -26344,7 +26350,8 @@ window.__ENC_DEBUG__ = {
           if (ctx && cv) ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         }
         window.__encPixelApply = function () {
-          if (state.bgPixelOn) start(); else stop();
+          if (state.bgPixelOn) { document.documentElement.setAttribute('data-pixel','on'); start(); }
+          else { document.documentElement.removeAttribute('data-pixel'); stop(); }
           var t = document.getElementById('bg-pixel-toggle'); if (t && document.activeElement !== t) t.checked = !!state.bgPixelOn;
           var sp = document.getElementById('bg-pixel-speed'); if (sp && document.activeElement !== sp) sp.value = state.bgPixelSpeed || 100;
           var spv = document.getElementById('bg-pixel-speed-val'); if (spv) spv.textContent = (state.bgPixelSpeed || 100) + '%';
