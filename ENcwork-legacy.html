@@ -3016,7 +3016,7 @@ defaultAttendanceStatuses: [
 ],
 ultraPlusDefaults: { blurMult: 2.4, saturate: 300, brightness: 1.3, sheenSpeed: 7, bandSpeed: 9, opacityFactor: 32, dispersion: 50 }
 };
-const APP_VERSION = '1.64';
+const APP_VERSION = '1.65';
 const APP_EDITION = 'legacy';
 const APP_EDITION_NAME = '精简版';
 const APP_EDITION_NAME_OTHER = 'OTTO版';
@@ -3041,6 +3041,16 @@ return '夕阳之下';
 }
 const VERSION_LOG = [
       {
+      version: '1.65-legacy',
+      date: '2026-11-07',
+      type: 'fix',
+      summary: '修复设置页分区不互斥：数据管理与其他分区的卡片墙样式误用了 !important display，导致未激活时也显示、内容堆叠在其它页面下方。',
+      items: [
+        { type: 'fix', text: '数据管理 / 其他分区改为仅在激活时显示为卡片墙，未激活保持隐藏' },
+        { type: 'fix', text: '进入考勤管理 / 数据管理 / 其他后页面内容叠加、滚动异常、关闭按钮难找的问题' }
+      ]
+    },
+    {
       version: '1.64-legacy',
       date: '2026-11-07',
       type: 'fix',
@@ -22511,7 +22521,10 @@ html[data-dock-labels="on"] #dock .dock-item::after {
 @media (max-width:520px){#section-about .about-row{flex-direction:column;align-items:flex-start;gap:4px}#section-about .about-row .v{text-align:left}}
 
 /* ===== 数据管理 / 其他 分区：MD3 卡片墙重构 ===== */
-#section-data, #section-other { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)) !important; gap: 14px !important; align-items: start; }
+#section-data, #section-other { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)) !important; gap: 14px !important; align-items: start; }
+/* 只有激活的分区才是 grid；未激活必须保持隐藏，否则内容会一直堆在别的分区下面 */
+#section-data.active, #section-other.active { display: grid !important; }
+#section-data:not(.active), #section-other:not(.active) { display: none !important; }
 @media (max-width: 820px) { #section-data, #section-other { grid-template-columns: 1fr !important; } }
 #section-data > .settings-panel,
 #section-other .settings-panel {
