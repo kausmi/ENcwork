@@ -926,8 +926,8 @@ body #section-background > div.settings-panel {
             <span id="settings-search-count" class="settings-search-count" style="display:none;"></span>
           </div>
           <div id="settings-search-nav" class="settings-search-nav" style="display:none;">
-            <button id="settings-search-prev" class="settings-search-nav-btn">↑ 上一个</button>
-            <button id="settings-search-next" class="settings-search-nav-btn">下一个 ↓</button>
+            <button id="settings-search-prev" class="settings-search-nav-btn" title="上一个" aria-label="上一个">↑</button>
+            <button id="settings-search-next" class="settings-search-nav-btn" title="下一个" aria-label="下一个">↓</button>
           </div>
           <div id="settings-nav-list">
           <div class="settings-nav-item active" data-section="personal"><span class="nav-index">01</span><span>个性化</span></div>
@@ -935,8 +935,8 @@ body #section-background > div.settings-panel {
           <div class="settings-nav-item" data-section="attendance"><span class="nav-index">03</span><span>考勤管理</span></div>
           <div class="settings-nav-item" data-section="data"><span class="nav-index">04</span><span>数据管理</span></div>
           <div class="settings-nav-item" data-section="help"><span class="nav-index">05</span><span>反馈与帮助</span></div>
-          <div class="settings-nav-item" data-section="about"><span class="nav-index">06</span><span>关于</span></div>
-          <div class="settings-nav-item" data-section="other"><span class="nav-index">07</span><span>其他</span></div>
+          <div class="settings-nav-item" data-section="other"><span class="nav-index">06</span><span>其他</span></div>
+          <div class="settings-nav-item" data-section="about"><span class="nav-index">07</span><span>关于</span></div>
           </div>
         </aside>
         <main class="settings-content">
@@ -944,15 +944,10 @@ body #section-background > div.settings-panel {
           <section class="settings-section active" id="section-personal">
             <div class="settings-section-head">
               <h2 class="section-header"><span class="sec-index">01</span><span>个性化</span><span class="sec-sub">主题 · 背景 · 字体</span></h2>
-              <div class="settings-subnav" id="settings-subnav">
-                <button type="button" class="settings-subnav-btn active" data-sub="appearance"><span>主题外观</span></button>
-                <button type="button" class="settings-subnav-btn" data-sub="background"><span>背景与壁纸</span></button>
-                <button type="button" class="settings-subnav-btn" data-sub="fonts"><span>字体与字号</span></button>
-              </div>
-            </div>
 
           <!-- 个性化 · 子页：主题外观 -->
           <div class="settings-subsection active" id="section-appearance">
+
             <h2 class="section-header sub"><span class="sec-index">01A</span><span>主题外观</span></h2>
             <div class="settings-panel">
               <h3 class="sub-header">主题风格</h3>
@@ -984,6 +979,14 @@ body #section-background > div.settings-panel {
                 <button class="btn btn-primary" id="extract-color-theme">提取并应用主题</button>
                 <div id="extract-result" style="margin-top: 12px; padding: 12px; border-radius: 2px; background: var(--surface-subtle); display: none;"></div>
               </div>
+            </div>
+          
+            <div class="settings-panel" id="enc-changelog-panel-box">
+              <style>#enc-changelog-panel .cl-head{cursor:default}#enc-changelog-panel .cl-entry:last-child{margin-bottom:0}</style>
+              <h3 class="sub-header">更新日志</h3>
+              <p style="font-size:12px;opacity:.7;margin:-4px 0 12px 0;">当前版本 v<span id="enc-changelog-curver"></span>，默认显示最近 4 个版本</p>
+              <div id="enc-changelog-panel"></div>
+              <div class="form-group"><button class="btn" id="enc-changelog-more">查看全部版本</button></div>
             </div>
           </div>
 
@@ -1282,7 +1285,8 @@ body #section-background > div.settings-panel {
             <h2 class="section-header"><span class="sec-index">02</span><span>布局与内容</span></h2>
             
 
-          <div class="settings-panel">
+          <div class="settings-subsection active" id="section-layout-cards" data-label="卡片布局">
+            <div class="settings-panel">
               <h3 class="sub-header">卡片布局</h3>
               <div class="form-group">
                 <label class="form-label">整体缩放比例</label>
@@ -1356,7 +1360,9 @@ body #section-background > div.settings-panel {
 
           <h3 class="sub-header">快捷栏自定义</h3>
               <p style="opacity: 0.65; font-size: 12.5px; line-height: 1.6; margin-bottom: 14px;">逐个控制底部快捷栏显示哪些按钮与内容；隐藏的按钮仍可通过设置或快捷键使用。</p>
-              <div class="form-group">
+              </div>
+            <div class="settings-subsection" id="section-layout-content" data-label="内容与快捷栏">
+            <div class="form-group">
                 <label class="form-label">「添加学科 / 设置」按钮位置</label>
                 <select id="action-btns-pos-select" class="form-control" style="max-width: 320px;">
                   <option value="dock">快捷栏（默认，工具坞最前）</option>
@@ -1569,14 +1575,16 @@ body #section-background > div.settings-panel {
               </div>
           
           
-</section>
+</div>
+          </section>
 
 
 <section class="settings-section" id="section-attendance">
             <h2 class="section-header"><span class="sec-index">03</span><span>考勤管理</span></h2>
             
 
-          <div class="settings-panel">
+          <div class="settings-subsection active" id="section-att-cards" data-label="考勤卡片">
+            <div class="settings-panel">
               <h3 class="sub-header">考勤卡片</h3>
               <div class="form-group">
                 <label class="checkbox-label"><input type="checkbox" id="show-attendance-toggle"> <span>显示考勤卡片</span></label>
@@ -1630,7 +1638,9 @@ body #section-background > div.settings-panel {
           
             
 <h3 class="sub-header">名单管理</h3>
-              <div class="form-group">
+              </div>
+            <div class="settings-subsection" id="section-att-lists" data-label="名单与状态">
+            <div class="form-group">
                 <label class="form-label">添加学生（多个姓名用逗号、空格或分号分隔）</label>
                 <div style="display: flex; gap: 8px;">
                   <input type="text" id="roster-input" class="form-control" placeholder="输入学生姓名">
@@ -1707,7 +1717,8 @@ body #section-background > div.settings-panel {
             
           
           
-</section>
+</div>
+          </section>
 
           <!-- 数据管理 -->
           <section class="settings-section" id="section-data">
@@ -1927,6 +1938,41 @@ body #section-background > div.settings-panel {
 
           </section>
           <!-- 其他页面：问AI工具等杂项功能 -->
+          <section class="settings-section" id="section-help">
+  <h2 class="section-header"><span class="sec-index">05</span><span>反馈与帮助</span></h2>
+
+  <div class="hp-hero">
+    <div class="hp-hero-main">
+      <p class="hp-eyebrow">帮助与反馈</p>
+      <h3 class="hp-title">先搜一下，再照着教程点</h3>
+      <p class="hp-sub">教程按任务场景拆开写：每条都标了入口、步骤和预期结果。搜不到就直接把运行日志发给开发者。</p>
+      <div class="hp-chip" id="hh-edition-chip">
+        <span class="hp-chip-name" id="hh-edition-name">—</span>
+        <span class="hp-chip-note" id="hh-edition-compat">—</span>
+      </div>
+    </div>
+    <nav class="hp-acts" aria-label="快捷入口">
+      <a class="hp-act" href="https://share.note.youdao.com/s/2gYrvtgr" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14.5"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M9 7h7"/><path d="M9 11h7"/></svg><span>在线帮助文档</span></a>
+      <a class="hp-act" href="javascript:void(0)" onclick="showChangelogModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg><span>查看更新日志</span></a>
+      <a class="hp-act" href="javascript:void(0)" id="restart-tutorial-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2 9l10 5 10-5-10-5z"/><path d="M6 11.5V17c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.5"/></svg><span>重新看新手引导</span></a>
+      <a class="hp-act" href="javascript:void(0)" onclick="copyErrorLog()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>复制运行日志</span></a>
+      <a class="hp-act" href="javascript:void(0)" onclick="(function(){var t=document.getElementById('tut-migrate');if(t)t.open=true;var n=document.querySelector('.settings-nav-item[data-section=data]');if(n)n.click();setTimeout(function(){var p=document.getElementById('enc-migrate-panel');if(p)p.scrollIntoView({behavior:'smooth',block:'center'});},90);})()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3.5-3.5"/><path d="M20 16H7l3.5 3.5"/></svg><span>数据迁移</span></a>
+    </nav>
+  </div>
+
+  <div class="hp-search">
+    <svg class="hp-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20.5 20.5 16.6 16.6"/></svg>
+    <input type="search" id="help-search" placeholder="搜索教程与常见问题，例如：考勤 / 备份 / 快捷键 / 背景" oninput="filterHelp()">
+    <div class="hp-search-actions">
+      <button type="button" class="hp-mini" onclick="expandHelp(true)">展开全部</button>
+      <button type="button" class="hp-mini" onclick="expandHelp(false)">收起全部</button>
+    </div>
+  </div>
+
+  <section class="hp-index">
+    <h4 class="hp-index-head">全部主题<span class="hp-index-count" id="help-rail-count"></span></h4>
+    <div class="hp-index-grid" id="help-rail"></div>
+  </section>
           <section class="settings-section" id="section-other">
             <div class="ot-mast">
               <div class="ot-mast-kicker">SYSTEMS CONSOLE · 系统控制台</div>
@@ -1934,13 +1980,8 @@ body #section-background > div.settings-panel {
               <div class="ot-mast-sub">截图输出、问 AI 数据分析、作业与考勤统计，以及运行诊断，集中在这块控制台。切换上方分区查看对应内容。</div>
             </div>
 
-            <div class="ot-seg" id="other-subnav">
-              <button class="settings-subnav-btn active" data-sub="general">通用功能</button>
-              <button class="settings-subnav-btn" data-sub="performance">性能与系统</button>
-            </div>
-
             <!-- 通用功能子页面 -->
-            <div class="subpage" id="subpage-general" data-subpage="general">
+            <div class="settings-subsection active" id="section-general" data-label="通用功能">
 <div class="settings-panel ot-card" id="enc-ai-panel">
                 <h3 class="sub-header"><span class="dv-tag">AI</span><span>问 AI（自带密钥）</span></h3>
                 <div class="ot-row">
@@ -2077,7 +2118,7 @@ body #section-background > div.settings-panel {
             </div>
 
             <!-- 性能与系统子页面 -->
-            <div class="subpage" id="subpage-performance" data-subpage="performance" style="display:none;">
+            <div class="settings-subsection" id="section-performance" data-label="性能与系统">
 
                             <div class="settings-panel ot-card">
                 <h3 class="sub-header"><span class="dv-tag">分析</span><span>性能分析器</span></h3>
@@ -2141,41 +2182,6 @@ body #section-background > div.settings-panel {
             </div>
             <!-- 性能子页面结束 -->
 </section>
-          <section class="settings-section" id="section-help">
-  <h2 class="section-header"><span class="sec-index">05</span><span>反馈与帮助</span></h2>
-
-  <div class="hp-hero">
-    <div class="hp-hero-main">
-      <p class="hp-eyebrow">帮助与反馈</p>
-      <h3 class="hp-title">先搜一下，再照着教程点</h3>
-      <p class="hp-sub">教程按任务场景拆开写：每条都标了入口、步骤和预期结果。搜不到就直接把运行日志发给开发者。</p>
-      <div class="hp-chip" id="hh-edition-chip">
-        <span class="hp-chip-name" id="hh-edition-name">—</span>
-        <span class="hp-chip-note" id="hh-edition-compat">—</span>
-      </div>
-    </div>
-    <nav class="hp-acts" aria-label="快捷入口">
-      <a class="hp-act" href="https://share.note.youdao.com/s/2gYrvtgr" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14.5"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M9 7h7"/><path d="M9 11h7"/></svg><span>在线帮助文档</span></a>
-      <a class="hp-act" href="javascript:void(0)" onclick="showChangelogModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg><span>查看更新日志</span></a>
-      <a class="hp-act" href="javascript:void(0)" id="restart-tutorial-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2 9l10 5 10-5-10-5z"/><path d="M6 11.5V17c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.5"/></svg><span>重新看新手引导</span></a>
-      <a class="hp-act" href="javascript:void(0)" onclick="copyErrorLog()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>复制运行日志</span></a>
-      <a class="hp-act" href="javascript:void(0)" onclick="(function(){var t=document.getElementById('tut-migrate');if(t)t.open=true;var n=document.querySelector('.settings-nav-item[data-section=data]');if(n)n.click();setTimeout(function(){var p=document.getElementById('enc-migrate-panel');if(p)p.scrollIntoView({behavior:'smooth',block:'center'});},90);})()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3.5-3.5"/><path d="M20 16H7l3.5 3.5"/></svg><span>数据迁移</span></a>
-    </nav>
-  </div>
-
-  <div class="hp-search">
-    <svg class="hp-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20.5 20.5 16.6 16.6"/></svg>
-    <input type="search" id="help-search" placeholder="搜索教程与常见问题，例如：考勤 / 备份 / 快捷键 / 背景" oninput="filterHelp()">
-    <div class="hp-search-actions">
-      <button type="button" class="hp-mini" onclick="expandHelp(true)">展开全部</button>
-      <button type="button" class="hp-mini" onclick="expandHelp(false)">收起全部</button>
-    </div>
-  </div>
-
-  <section class="hp-index">
-    <h4 class="hp-index-head">全部主题<span class="hp-index-count" id="help-rail-count"></span></h4>
-    <div class="hp-index-grid" id="help-rail"></div>
-  </section>
 
   <div class="hp-doc" id="help-tutorials">
     <p class="tutor-note">每条按「入口 → 操作 → 结果」排列：<b>粗体</b>是按钮或入口名，<span class="step">1</span> 是第几步，右侧带竖线的一段是预期结果。</p>
@@ -2410,7 +2416,7 @@ body #section-background > div.settings-panel {
 </section>
           <!-- 关于（含版本日志 + 实验性功能可收起） -->
           <section class="settings-section" id="section-about">
-            <h2 class="section-header"><span class="sec-index">06</span><span>关于</span></h2>
+            <h2 class="section-header"><span class="sec-index">07</span><span>关于</span></h2>
             <div class="about-hero">
               <div class="about-logo">ENC</div>
               <div class="about-hero-body">
@@ -3016,7 +3022,7 @@ defaultAttendanceStatuses: [
 ],
 ultraPlusDefaults: { blurMult: 2.4, saturate: 300, brightness: 1.3, sheenSpeed: 7, bandSpeed: 9, opacityFactor: 32, dispersion: 50 }
 };
-const APP_VERSION = '1.65';
+const APP_VERSION = '1.66';
 const APP_EDITION = 'legacy';
 const APP_EDITION_NAME = '精简版';
 const APP_EDITION_NAME_OTHER = 'OTTO版';
@@ -3040,6 +3046,28 @@ if (major === 4) return '夕阳之下';
 return '夕阳之下';
 }
 const VERSION_LOG = [
+{
+  version: '1.66-legacy',
+  date: '2026-11-08',
+  type: 'release',
+  summary: '设置页稳定性与更新日志体验：修复切换分类时侧栏像被收起、点分类写错误日志、启动卡顿，更新日志改为常驻面板',
+  items: [
+          { type: 'fix', text: '修复切换设置分类时侧栏像被收起：原先切分类会恢复该分类上次的滚动位置，窄屏下深滚动会把侧栏带出视野；现切分类一律回到内容区顶部' },
+          { type: 'improve', text: '设置分类点击全面加保护：保存滚动位置、分区切换、内容回顶、导航滚动各自独立容错，单个环节失败不再中断整次点击，也不再写运行错误日志' },
+          { type: 'improve', text: '更新日志不再每次打开设置自动弹出：改为常驻「设置 → 主题外观 → 更新日志」面板，默认显示最近 4 个版本，可一键展开全部' },
+          { type: 'improve', text: '启动不再因更新日志弹窗卡顿：去掉了初始化时按版本差异自动弹窗的逻辑' },
+          { type: 'fix', text: '修复搜索框放大镜图标偏上：去掉了重复的位移偏移，图标与输入文字垂直居中对齐' },
+          { type: 'improve', text: '搜索结果的「上一个 / 下一个」由整行大按钮改为右侧小胶囊按钮，不再挤占搜索框下方空间' },
+          { type: 'fix', text: '修复更新日志条目丢失：版本日志数组里残留一个孤立逗号造成数组空洞，导致部分版本在列表里被跳过（版本数与实际条目数不一致）' },
+  
+          { type: 'fix', text: '帮助页搜索命中滚动、资源包面板定位、设置导航自动滚动、设置搜索跳转四处直接调用 scrollIntoView 未做存在性判断，个别环境会抛错并写进错误日志；现统一加 typeof 守卫' },
+          { type: 'fix', text: '修复精简版（legacy）问 AI 渲染时报「encAiLogEl is not defined」：补上缺失的日志容器取值函数，提问后对话正常显示' }
+,
+          { type: 'fix', text: '设置侧栏「关于」原来排在「其他」前面、且与内容区 DOM 顺序不一致；现统一为 05反馈与帮助 / 06其他 / 07关于，内容区顺序同步对齐' },
+          { type: 'feature', text: '精简版补齐子页拆分：布局与内容拆为「卡片布局 / 内容与快捷栏」，考勤管理拆为「考勤卡片 / 名单与状态」，其他拆为「通用功能 / 性能与系统」，与完整版对齐；页内旧子标签条改为侧栏二级导航' }
+]
+},
+
     {
       version: '1.65-legacy',
       date: '2026-11-07',
@@ -3077,7 +3105,6 @@ const VERSION_LOG = [
         { type: 'improve', text: '清理废弃样式：已删除的卡片特效规则与旧关于页卡片样式' },
       ]
     },
-    ,
     {
       version: '1.59-legacy',
       date: '2026-11-06',
@@ -3223,8 +3250,7 @@ items: [
 { type: 'fix', text: '修复设计层权重不足导致部分界面仍显示旧皮肤：应用既有 CSS 用重复 id / 重复 class 抬高权重（实测旧 CSS 最高特异性 (3,9,1)），本层改为「设置弹窗 4 次重复 #settings-modal、其它弹窗按旧权重补足重复 id」+ 每条声明各自 !important；同时修复早期自动分组把 :hover / :focus / :active / :disabled 与基础态混进同一条规则导致的「按钮常驻悬浮底色 / 常驻 1px 位移 / 全部按钮半透明禁用态 / 输入框常驻焦点环」' },
 { type: 'fix', text: '帮助页样式层（<style id="enc-help">）补齐 !important 与权重前缀，避免被更早的 UI 统一层 / 打磨层以低权重盖住（教程提示与空状态字号曾被盖回旧值）' },
 { type: 'fix', text: '修复退出重新加载后随机背景图参数丢失：背景轮播的「当前第几张 / 轮播间隔 / 顺序（顺序或随机）/ 淡入淡出」原先没有落盘，重开后回到第 1 张且不再轮播；现随数据一起保存，轮播每次切换后立即记录当前图，重开仍停在关闭前随机到的那张并继续按原参数轮播' },
-{ type: 'fix', text: '修复「设置 → 背景 → 网络地址」背景图刷新即丢：网络地址（含随机图 1/2/3）此前只写内存，既未进 IndexedDB 也未写 localStorage；现与本地图片共用同一套持久化（通用 main / 主题专属 main@<主题>，IndexedDB 失败回退 localStorage），重新打开仍在' }
-,
+{ type: 'fix', text: '修复「设置 → 背景 → 网络地址」背景图刷新即丢：网络地址（含随机图 1/2/3）此前只写内存，既未进 IndexedDB 也未写 localStorage；现与本地图片共用同一套持久化（通用 main / 主题专属 main@<主题>，IndexedDB 失败回退 localStorage），重新打开仍在' },
 { type: 'fix', text: '修复「截图」输出异常（含贴到文档 / 微信后整张发黑、缺一块）：此前 snapdom 与 html2canvas 三处都传 backgroundColor:null，背景图设为「完整显示（留白）」时露出的页面底色、以及作业内容不足一屏时的底部留白，都会输出成透明像素；现按截图当时的页面真实底色（body 计算底色 → 主题 --bg-color → 白色）填充，PNG / JPG 一律带底色输出。同时修复截图偶发失败：snapdom 由 defer 加载，点得太早或 CDN 稍慢时会被判为不可用而退回 html2canvas（普通截图能出图，但这套老引擎兼容层更重、更易在超大画布上失败），现会最多等待 3 秒等它挂载（脚本加载失败时 onerror 已置 null，立即放行不多等）' }
 ]
 },
@@ -3461,7 +3487,7 @@ d.classList.remove('help-matched');
 void d.offsetWidth;
 d.classList.add('help-matched');
 setTimeout(() => d.classList.remove('help-matched'), 1600);
-d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+if (typeof d.scrollIntoView === 'function') d.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 function expandHelp(open) {
 document.querySelectorAll('section#section-help details.tutor, #section-help details.tutor').forEach(d => { d.open = open; });
@@ -3554,6 +3580,38 @@ closeModal(document.getElementById('changelog-modal'));
 };
 }
 }
+// 更新日志常驻面板：原「首次进入自动弹窗」改为「设置 → 主题外观 → 更新日志」
+(function encInitChangelogPanel() {
+  const box = document.getElementById('enc-changelog-panel');
+  if (!box) return;
+  const PREVIEW = 4;
+  const TYPE = { fix: '修复', improve: '优化', change: '变更', feature: '新增' };
+  let expanded = false;
+  function render() {
+    const list = expanded ? VERSION_LOG : VERSION_LOG.slice(0, PREVIEW);
+    box.innerHTML = list.map((e, idx) => `
+      <div class="cl-entry">
+        <div class="cl-head">
+          <span class="cl-version">${typeof versionLabel === 'function' ? versionLabel(e.version) : ''}${escapeHTML(e.version)}</span>
+          ${e.date ? `<span class="cl-date">${escapeHTML(e.date)}</span>` : ''}
+          ${idx === 0 && !expanded ? '<span style="font-size:10px;padding:1px 6px;border-radius:6px;background:var(--accent-color);color:var(--on-accent);">最新</span>' : ''}
+        </div>
+        ${e.summary ? `<div class="cl-summary">${escapeHTML(e.summary)}</div>` : ''}
+        <div>${(e.items || []).map(it => `<div class="cl-item"><span class="cl-tag ${it.type}">${TYPE[it.type] || '新增'}</span><span class="cl-text">${escapeHTML(it.text)}</span></div>`).join('')}</div>
+      </div>`).join('');
+    const more = document.getElementById('enc-changelog-more');
+    if (more) {
+      more.textContent = expanded ? '收起' : ('查看全部 ' + VERSION_LOG.length + ' 个版本');
+      more.hidden = VERSION_LOG.length <= PREVIEW;
+    }
+  }
+  const more = document.getElementById('enc-changelog-more');
+  if (more) more.onclick = function () { expanded = !expanded; render(); };
+  const cur = document.getElementById('enc-changelog-curver');
+  if (cur) cur.textContent = APP_VERSION;
+  try { render(); } catch (e) { console.warn('更新日志面板渲染失败：', e); }
+})();
+
 window.showChangelogModal = showChangelogModal;
 window.openHelp = openHelp;
 window.renderHelpRail = renderHelpRail;
@@ -10555,6 +10613,7 @@ function encAiContextSummary() {
         lines.push('作业：' + (hwLines.length ? '\n  ' + hwLines.join('\n  ') : '今天没有布置作业'));
         return lines.join('\n');
       }
+      function encAiLogEl() { return document.getElementById('ai-chat-log'); }
       function encAiRender() {
         const box = encAiLogEl(); if (!box) return;
         box.innerHTML = '';
@@ -13503,7 +13562,7 @@ const contentEl = document.querySelector('.settings-content');
 if (contentEl) contentEl.scrollTop = 0;
 const activeNav = document.querySelector('.settings-nav-item.active');
 if (activeNav && window.innerWidth <= 768) {
-setTimeout(() => activeNav.scrollIntoView({ block: 'nearest', inline: 'center' }), 50);
+setTimeout(() => { if (typeof activeNav.scrollIntoView === 'function') activeNav.scrollIntoView({ block: 'nearest', inline: 'center' }); }, 50);
 }
 try { injectPanels(); apply(); } catch (e) {}
 try { if (window.bindPerfAnalyzerSettings) window.bindPerfAnalyzerSettings(); } catch (e) {}
@@ -14277,11 +14336,13 @@ if (typeof tutorialStep !== 'undefined') { tutorialStep = tutSteps.length - 1; r
 };
 })();
 function showSettingsSub(sub) {
-document.querySelectorAll('.settings-subsection').forEach(el => {
+const target = document.getElementById('section-' + sub);
+const scope = target ? target.closest('.settings-section') : null;
+(scope || document).querySelectorAll('.settings-subsection').forEach(el => {
 el.classList.remove('active');
 });
-const target = document.getElementById('section-' + sub);
 if (target) target.classList.add('active');
+if (sub === 'performance' && typeof window.updateSystemInfo === 'function') setTimeout(window.updateSystemInfo, 100);
 const subnav = target ? target.closest('.settings-section').querySelector('.settings-subnav') : null;
 if (subnav) {
 subnav.querySelectorAll('.settings-subnav-btn').forEach(b => {
@@ -14334,18 +14395,6 @@ apply();
 contentEl.classList.remove('settings-restoring');
 }, 140);
 }
-document.querySelectorAll('#other-subnav .settings-subnav-btn').forEach(btn => {
-btn.addEventListener('click', () => {
-const sub = btn.dataset.sub;
-saveSettingsScroll();
-document.querySelectorAll('#other-subnav .settings-subnav-btn').forEach(b => {
-b.classList.toggle('active', b.dataset.sub === sub);
-});
-document.querySelectorAll('#section-other .subpage').forEach(page => {
-page.style.display = page.dataset.subpage === sub ? '' : 'none';
-});
-});
-});
 (function() {
 function renderPerfInfo() {
 const g = gpuInfo();
@@ -14377,24 +14426,17 @@ const degMap = { 0: '正常', 1: '轻度降级', 2: '重度降级' };
 degEl.textContent = degMap[_globalFpsLevel] || '正常';
 }
 }
-document.querySelectorAll('#other-subnav .settings-subnav-btn').forEach(btn => {
-btn.addEventListener('click', () => {
-if (btn.dataset.sub === 'performance') {
-setTimeout(updateSystemInfo, 100);
-}
-});
-});
 function applyCardOpacity() {
 if (typeof state.cardOpacity === 'number') {
 document.documentElement.style.setProperty('--card-opacity', state.cardOpacity);
 }
 }
+window.updateSystemInfo = updateSystemInfo;
 setTimeout(updateSystemInfo, 2000);
 })();
 $('settings-modal').addEventListener('click', (e) => {
 const btn = e.target.closest('.settings-subnav-btn');
 if (!btn) return;
-if (btn.closest('#other-subnav')) { restoreSettingsScroll(); return; }
 saveSettingsScroll();
 showSettingsSub(btn.dataset.sub);
 restoreSettingsScroll();
@@ -14505,7 +14547,8 @@ restoreSettingsScroll();
         })();
 document.querySelectorAll('.settings-nav-item').forEach(item => {
 item.onclick = () => {
-saveSettingsScroll();
+try { saveSettingsScroll(); } catch (e) { console.warn('保存设置滚动位置失败：', e); }
+try {
 document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
 document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
 item.classList.add('active');
@@ -14516,76 +14559,122 @@ if (p) p.classList.add('active');
 const activeSub = document.querySelector('.settings-subnav-btn.active');
 showSettingsSub(activeSub ? activeSub.dataset.sub : 'appearance');
 } else {
-document.getElementById('section-' + sec).classList.add('active');
+const secEl = document.getElementById('section-' + sec);
+if (secEl) secEl.classList.add('active');
 }
-restoreSettingsScroll();
+} catch (e) { console.warn('切换设置分区失败：', e); }
+// 切分区一律回到内容区顶部：恢复深滚动会让窄屏侧栏被内容带出视野，看起来像「侧栏被收起」
+try {
+const contentEl = document.querySelector('#settings-modal .settings-content');
+if (contentEl) contentEl.scrollTop = 0;
+} catch (e) { console.warn('重置设置滚动失败：', e); }
 if (window.__bdPageSwitch) window.__bdPageSwitch();
-if (window.innerWidth <= 768) {
-item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+if (window.innerWidth <= 768 && typeof item.scrollIntoView === 'function') {
+try { item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } catch (e) { console.warn('导航滚动失败：', e); }
 }
 };
 });
 // ===== 设置页快捷子页导航：侧栏分类下展开该分类的子页，点一下直达（宽屏生效，移动端保持顶部子页条）=====
 (function initSettingsQuickSubnav() {
-var navListQ = document.getElementById('settings-nav-list');
-if (!navListQ) return;
-var SUB_BARS = { personal: '#settings-subnav', other: '#other-subnav' };
-var built = [];
-function syncQuickSubnav() {
-var activeItem = navListQ.querySelector('.settings-nav-item.active');
-var sec = activeItem ? activeItem.getAttribute('data-section') : '';
-built.forEach(function (box) {
-var owner = box.getAttribute('data-owner');
-if (owner !== sec || !SUB_BARS[owner]) return;
-var bar = document.querySelector(SUB_BARS[owner]);
-if (!bar) return;
-var cur = bar.querySelector('.settings-subnav-btn.active');
-var curSub = cur ? cur.getAttribute('data-sub') : '';
-Array.prototype.forEach.call(box.children, function (b) {
-if (b.classList) b.classList.toggle('active', b.getAttribute('data-sub') === curSub);
-});
-});
-}
-Object.keys(SUB_BARS).forEach(function (sec) {
-var bar = document.querySelector(SUB_BARS[sec]);
-if (!bar) return;
-var item = navListQ.querySelector('.settings-nav-item[data-section="' + sec + '"]');
-if (!item) return;
-if (item.nextElementSibling && item.nextElementSibling.classList && item.nextElementSibling.classList.contains('settings-nav-sub')) return;
-var box = document.createElement('div');
-box.className = 'settings-nav-sub';
-box.setAttribute('data-owner', sec);
-Array.prototype.forEach.call(bar.querySelectorAll('.settings-subnav-btn'), function (src) {
-var subId = src.getAttribute('data-sub') || '';
-if (!subId) return;
-var b = document.createElement('button');
-b.type = 'button';
-b.className = 'settings-nav-sub-btn';
-b.setAttribute('data-sub', subId);
-b.textContent = (src.textContent || '').trim();
-b.addEventListener('click', function (ev) {
-ev.preventDefault();
-ev.stopPropagation();
-var nav = navListQ.querySelector('.settings-nav-item[data-section="' + sec + '"]');
-if (nav && !nav.classList.contains('active') && typeof nav.onclick === 'function') nav.onclick();
-var dst = bar.querySelector('.settings-subnav-btn[data-sub="' + subId + '"]');
-if (dst) dst.click();
-setTimeout(syncQuickSubnav, 0);
-});
-box.appendChild(b);
-});
-item.insertAdjacentElement('afterend', box);
-built.push(box);
-});
-var modalQ = document.getElementById('settings-modal');
-if (modalQ) modalQ.addEventListener('click', function (e) {
-if (!e.target || !e.target.closest || !e.target.closest('.settings-subnav-btn')) return;
-setTimeout(syncQuickSubnav, 0);
-});
-navListQ.addEventListener('click', function () { setTimeout(syncQuickSubnav, 0); });
-window.__encSyncQuickSubnav = syncQuickSubnav;
-syncQuickSubnav();
-})();
+          var navListQ = document.getElementById('settings-nav-list');
+          if (!navListQ) return;
+          var built = [];
+          function childrenOf(el, cls) {
+            var out = [];
+            for (var i = 0; i < el.children.length; i++) {
+              if (el.children[i].classList && el.children[i].classList.contains(cls)) out.push(el.children[i]);
+            }
+            return out;
+          }
+          function subIdOf(subEl) { return (subEl.id || '').replace('section-', ''); }
+          function build() {
+            var secEls = document.querySelectorAll('#settings-modal .settings-section');
+            Array.prototype.forEach.call(secEls, function (secEl) {
+              var subs = childrenOf(secEl, 'settings-subsection');
+              if (subs.length < 2) return;
+              var secName = (secEl.id || '').replace('section-', '');
+              var item = navListQ.querySelector('.settings-nav-item[data-section="' + secName + '"]');
+              if (!item) return;
+              var next = item.nextElementSibling;
+              if (next && next.classList && next.classList.contains('settings-nav-sub')) return;
+              var box = document.createElement('div');
+              box.className = 'settings-nav-sub';
+              box.setAttribute('data-owner', secName);
+              Array.prototype.forEach.call(subs, function (subEl) {
+                var subId = subIdOf(subEl);
+                if (!subId) return;
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'settings-nav-sub-btn';
+                b.setAttribute('data-sub', subId);
+                b.textContent = subEl.getAttribute('data-label') || subId;
+                b.addEventListener('click', function (ev) {
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  var nav = navListQ.querySelector('.settings-nav-item[data-section="' + secName + '"]');
+                  if (nav && !nav.classList.contains('active') && typeof nav.onclick === 'function') nav.onclick();
+                  if (typeof showSettingsSub === 'function') showSettingsSub(subId);
+                  setTimeout(syncQuickSubnav, 0);
+                });
+                box.appendChild(b);
+              });
+              item.insertAdjacentElement('afterend', box);
+              built.push(box);
+              // 窄屏没有纵向侧栏，把同一批子页做成内容区顶部的一条横向切换条（宽屏隐藏）
+              var headEl = secEl.querySelector('.settings-section-head') || secEl.querySelector('.ot-mast') || secEl.firstElementChild;
+              if (headEl && !headEl.querySelector('.settings-mobile-subnav')) {
+                var mbar = document.createElement('div');
+                mbar.className = 'settings-mobile-subnav';
+                mbar.setAttribute('data-owner', secName);
+                Array.prototype.forEach.call(subs, function (subEl) {
+                  var mId = subIdOf(subEl);
+                  if (!mId) return;
+                  var mb = document.createElement('button');
+                  mb.type = 'button';
+                  mb.className = 'settings-mobile-subnav-btn';
+                  mb.setAttribute('data-sub', mId);
+                  mb.textContent = subEl.getAttribute('data-label') || mId;
+                  mb.addEventListener('click', function (ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    if (typeof showSettingsSub === 'function') showSettingsSub(mId);
+                    setTimeout(syncQuickSubnav, 0);
+                  });
+                  mbar.appendChild(mb);
+                });
+                headEl.appendChild(mbar);
+                built.push(mbar);
+              }
+            });
+          }
+          function syncQuickSubnav() {
+            var activeItem = navListQ.querySelector('.settings-nav-item.active');
+            var sec = activeItem ? activeItem.getAttribute('data-section') : '';
+            var secEl = sec ? document.getElementById('section-' + sec) : null;
+            var cur = null;
+            if (secEl) {
+              var subs = childrenOf(secEl, 'settings-subsection');
+              for (var i = 0; i < subs.length; i++) { if (subs[i].classList.contains('active')) { cur = subs[i]; break; } }
+            }
+            var curSub = cur ? subIdOf(cur) : '';
+            built.forEach(function (box) {
+              var on = box.getAttribute('data-owner') === sec;
+              Array.prototype.forEach.call(box.children, function (b) {
+                if (b.classList) b.classList.toggle('active', on && b.getAttribute('data-sub') === curSub);
+              });
+            });
+          }
+          build();
+          var modalQ = document.getElementById('settings-modal');
+          if (modalQ) modalQ.addEventListener('click', function (e) {
+            if (!e.target || !e.target.closest) return;
+            if (!e.target.closest('.settings-subnav-btn, .settings-nav-sub-btn')) return;
+            setTimeout(syncQuickSubnav, 0);
+          });
+          navListQ.addEventListener('click', function () { setTimeout(syncQuickSubnav, 0); });
+          window.__encSyncQuickSubnav = syncQuickSubnav;
+          syncQuickSubnav();
+        })();
 const settingsSearchInput = document.getElementById('settings-search-input');
 const navList = document.getElementById('settings-nav-list');
 const searchClearBtn = document.getElementById('settings-search-clear');
@@ -14651,7 +14740,7 @@ document.querySelectorAll('.settings-hl.active').forEach(m => m.classList.remove
 if (_searchCurrentIdx >= 0 && _searchCurrentIdx < _searchMatches.length) {
 const current = _searchMatches[_searchCurrentIdx];
 current.classList.add('active');
-current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+if (typeof current.scrollIntoView === 'function') current.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 };
 const gotoMatch = (dir) => {
@@ -18429,11 +18518,7 @@ if (!state.hasOnboarded) {
 document.getElementById('onboarding-modal').classList.add('active');
 }
 }, 'onboarding');
-safeSync(() => {
-if (state.hasOnboarded && state.changelogSeenVer !== APP_VERSION) {
-showChangelogModal();
-}
-}, 'changelog');
+// 更新日志不再自动弹出：改为常驻在「设置 → 主题外观 → 更新日志」面板
 }
 window.deleteCustomFont = deleteCustomFont;
 window.state = state;

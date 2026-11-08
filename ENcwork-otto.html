@@ -5332,12 +5332,12 @@ html.theme-transition #dock {
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 16%, transparent);
     }
     #settings-modal .settings-search::before {
-      content: ''; position: absolute; left: 13px; top: calc(50% - 6px); transform: translateY(-50%);
+      content: ''; position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
       width: 12px; height: 12px; border: 1.6px solid var(--text-muted); border-radius: 50%;
       opacity: .7; pointer-events: none;
     }
     #settings-modal .settings-search::after {
-      content: ''; position: absolute; left: 23px; top: calc(50% + 1px); width: 6px; height: 1.6px;
+      content: ''; position: absolute; left: 23px; top: calc(50% + 7px); width: 6px; height: 1.6px;
       background: var(--text-muted); transform: rotate(45deg); opacity: .7; pointer-events: none; border-radius: 1px;
     }
     #settings-modal .settings-search-clear {
@@ -5350,10 +5350,10 @@ html.theme-transition #dock {
       position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
       font-family: var(--font-mono); font-size: 10px; color: var(--accent-color);
     }
-    #settings-modal .settings-search-nav { display: flex; gap: 6px; margin-top: 8px; }
+    #settings-modal .settings-search-nav { display: flex; gap: 6px; margin-top: 6px; justify-content: flex-end; }
     #settings-modal .settings-search-nav-btn {
-      flex: 1; padding: 7px 0; border-radius: 9px; border: 1px solid var(--border-color);
-      background: var(--card-bg); color: var(--text-color); font-size: 12px; cursor: pointer; font-family: inherit; transition: all .2s;
+      flex: 0 0 auto; min-width: 34px; height: 26px; padding: 0 10px; border-radius: 9px; border: 1px solid var(--border-color);
+      background: var(--card-bg); color: var(--text-color); font-size: 11px; line-height: 1; cursor: pointer; font-family: inherit; transition: all .2s;
     }
     #settings-modal .settings-search-nav-btn:hover { border-color: color-mix(in srgb, var(--accent-color) 50%, transparent); color: var(--accent-color); }
 
@@ -6015,7 +6015,7 @@ html.theme-transition #dock {
     #settings-modal .settings-search::after { background: var(--accent-color); }
     html[data-theme] #settings-modal .settings-search-clear,
     html[data-theme] #settings-modal .settings-search-nav-btn { border-radius: 5px !important; }
-    #settings-modal .settings-search-nav-btn { background: transparent; padding: 6px 0; font-size: 11.5px; }
+    #settings-modal .settings-search-nav-btn { background: transparent; padding: 0 10px; font-size: 11px; }
     #settings-modal .settings-search-count { right: 30px; font-size: 9.5px; letter-spacing: .04em; }
 
     #settings-modal #settings-nav-list { gap: 3px; padding: 2px 2px 2px 5px; }
@@ -8810,8 +8810,8 @@ body #section-background > div.settings-panel {
             <span id="settings-search-count" class="settings-search-count" style="display:none;"></span>
           </div>
           <div id="settings-search-nav" class="settings-search-nav" style="display:none;">
-            <button id="settings-search-prev" class="settings-search-nav-btn">↑ 上一个</button>
-            <button id="settings-search-next" class="settings-search-nav-btn">下一个 ↓</button>
+            <button id="settings-search-prev" class="settings-search-nav-btn" title="上一个" aria-label="上一个">↑</button>
+            <button id="settings-search-next" class="settings-search-nav-btn" title="下一个" aria-label="下一个">↓</button>
           </div>
           <div id="settings-nav-list">
           <div class="settings-nav-item active" data-section="personal"><span class="nav-index">01</span><span>个性化</span></div>
@@ -9083,6 +9083,13 @@ body #section-background > div.settings-panel {
                 <button class="btn btn-primary" id="extract-color-theme">提取并应用主题</button>
                 <div id="extract-result" style="margin-top: 12px; padding: 12px; border-radius: 2px; background: var(--surface-subtle); display: none;"></div>
               </div>
+            </div>
+
+            <div class="settings-panel ot-card" id="enc-changelog-panel-box">
+              <style>#enc-changelog-panel .cl-head{cursor:default}#enc-changelog-panel .cl-head:hover{background:transparent}#enc-changelog-panel .cl-entry:last-child{margin-bottom:0}</style>
+              <div class="ot-row"><div class="rl"><div class="rt">更新日志</div><div class="rd">当前版本 v<span id="enc-changelog-curver"></span>，默认显示最近 4 个版本</div></div></div>
+              <div id="enc-changelog-panel"></div>
+              <div class="form-group"><button class="btn" id="enc-changelog-more">查看全部版本</button></div>
             </div>
           </div>
 
@@ -11580,7 +11587,7 @@ body #section-background > div.settings-panel {
       // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
       // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-      const APP_VERSION = '1.65';
+      const APP_VERSION = '1.66';
       const APP_NAME = '月行水上';
 
       // ===== 版本标识：OTTO版 / 精简版 =====
@@ -11635,6 +11642,25 @@ body #section-background > div.settings-panel {
         return '夕阳之下';
       }
       const VERSION_LOG = [
+      {
+        version: '1.66-otto',
+        date: '2026-11-08',
+        type: 'release',
+        summary: '设置页稳定性与更新日志体验：修复切换分类时侧栏像被收起、点分类写错误日志、启动卡顿，更新日志改为常驻面板',
+        items: [
+          { type: 'fix', text: '修复切换设置分类时侧栏像被收起：原先切分类会恢复该分类上次的滚动位置，窄屏下深滚动会把侧栏带出视野；现切分类一律回到内容区顶部' },
+          { type: 'improve', text: '设置分类点击全面加保护：保存滚动位置、分区切换、内容回顶、导航滚动各自独立容错，单个环节失败不再中断整次点击，也不再写运行错误日志' },
+          { type: 'improve', text: '更新日志不再每次打开设置自动弹出：改为常驻「设置 → 主题外观 → 更新日志」面板，默认显示最近 4 个版本，可一键展开全部' },
+          { type: 'improve', text: '启动不再因更新日志弹窗卡顿：去掉了初始化时按版本差异自动弹窗的逻辑' },
+          { type: 'fix', text: '修复搜索框放大镜图标偏上：去掉了重复的位移偏移，图标与输入文字垂直居中对齐' },
+          { type: 'improve', text: '搜索结果的「上一个 / 下一个」由整行大按钮改为右侧小胶囊按钮，不再挤占搜索框下方空间' },
+          { type: 'fix', text: '修复更新日志条目丢失：版本日志数组里残留一个孤立逗号造成数组空洞，导致部分版本在列表里被跳过（版本数与实际条目数不一致）' },
+        
+          { type: 'fix', text: '帮助页搜索命中滚动、资源包面板定位、设置导航自动滚动、设置搜索跳转四处直接调用 scrollIntoView 未做存在性判断，个别环境会抛错并写进错误日志；现统一加 typeof 守卫' },
+          { type: 'fix', text: '修复精简版（legacy）问 AI 渲染时报「encAiLogEl is not defined」：补上缺失的日志容器取值函数，提问后对话正常显示' }
+]
+      },
+
     {
       version: '1.65-otto',
       date: '2026-11-07',
@@ -11676,7 +11702,6 @@ body #section-background > div.settings-panel {
         { type: 'improve', text: '清理废弃样式：已删除的卡片特效规则与旧关于页卡片样式' },
       ]
     },
-    ,
       {
       version: '1.59-otto',
       date: '2026-11-06',
@@ -11849,8 +11874,7 @@ body #section-background > div.settings-panel {
       { type: 'fix', text: '修复设计层权重不足导致部分界面仍显示旧皮肤：应用既有 CSS 用重复 id / 重复 class 抬高权重（实测旧 CSS 最高特异性 (3,9,1)），本层改为「设置弹窗 4 次重复 #settings-modal、其它弹窗按旧权重补足重复 id」+ 每条声明各自 !important；同时修复早期自动分组把 :hover / :focus / :active / :disabled 与基础态混进同一条规则导致的「按钮常驻悬浮底色 / 常驻 1px 位移 / 全部按钮半透明禁用态 / 输入框常驻焦点环」' },
       { type: 'fix', text: '帮助页样式层（<style id="enc-help">）补齐 !important 与权重前缀，避免被更早的 UI 统一层 / 打磨层以低权重盖住（教程提示与空状态字号曾被盖回旧值）' },
       { type: 'fix', text: '修复退出重新加载后随机背景图参数丢失：背景轮播的「当前第几张 / 轮播间隔 / 顺序（顺序或随机）/ 淡入淡出」原先没有落盘，重开后回到第 1 张且不再轮播；现随数据一起保存，轮播每次切换后立即记录当前图，重开仍停在关闭前随机到的那张并继续按原参数轮播' },
-      { type: 'fix', text: '修复「设置 → 背景 → 网络地址」背景图刷新即丢：网络地址（含随机图 1/2/3）此前只写内存，既未进 IndexedDB 也未写 localStorage；现与本地图片共用同一套持久化（通用 main / 主题专属 main@<主题>，IndexedDB 失败回退 localStorage），重新打开仍在' }
-    ,
+      { type: 'fix', text: '修复「设置 → 背景 → 网络地址」背景图刷新即丢：网络地址（含随机图 1/2/3）此前只写内存，既未进 IndexedDB 也未写 localStorage；现与本地图片共用同一套持久化（通用 main / 主题专属 main@<主题>，IndexedDB 失败回退 localStorage），重新打开仍在' },
       { type: 'fix', text: '修复「截图」与「特效截图」输出异常（含贴到文档 / 微信后整张发黑、缺一块）：此前 snapdom 与 html2canvas 三处都传 backgroundColor:null，背景图设为「完整显示（留白）」时露出的页面底色、以及作业内容不足一屏时的底部留白，都会输出成透明像素；现按截图当时的页面真实底色（body 计算底色 → 主题 --bg-color → 白色）填充，PNG / JPG 一律带底色输出。同时修复特效截图偶发失败：snapdom 由 defer 加载，点得太早或 CDN 稍慢时会被判为不可用而退回 html2canvas —— 该引擎解析不了 color-mix() / backdrop-filter，保留玻璃与泛光的特效截图会整张失败；现会最多等待 3 秒等它挂载（脚本加载失败时 onerror 已置 null，立即放行不多等）' }
 ]
   },
@@ -12123,7 +12147,7 @@ body #section-background > div.settings-panel {
         void d.offsetWidth;
         d.classList.add('help-matched');
         setTimeout(() => d.classList.remove('help-matched'), 1600);
-        d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (typeof d.scrollIntoView === 'function') d.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       // 帮助中心：全部展开 / 全部收起
       function expandHelp(open) {
@@ -12231,6 +12255,38 @@ body #section-background > div.settings-panel {
       }
 
       // 暴露到全局，供内联 onclick / oninput 调用（本脚本整体包在 IIFE 内，函数默认不外泄）
+      // 更新日志常驻面板：原「首次进入自动弹窗」改为「设置 → 主题外观 → 更新日志」
+      (function encInitChangelogPanel() {
+        const box = document.getElementById('enc-changelog-panel');
+        if (!box) return;
+        const PREVIEW = 4;
+        const TYPE = { fix: '修复', improve: '优化', change: '变更', feature: '新增' };
+        let expanded = false;
+        function render() {
+          const list = expanded ? VERSION_LOG : VERSION_LOG.slice(0, PREVIEW);
+          box.innerHTML = list.map((e, idx) => `
+            <div class="cl-entry">
+              <div class="cl-head">
+                <span class="cl-version">${typeof versionLabel === 'function' ? versionLabel(e.version) : ''}${escapeHTML(e.version)}</span>
+                ${e.date ? `<span class="cl-date">${escapeHTML(e.date)}</span>` : ''}
+                ${idx === 0 && !expanded ? '<span style="font-size:10px;padding:1px 6px;border-radius:6px;background:var(--accent-color);color:var(--on-accent);">最新</span>' : ''}
+              </div>
+              ${e.summary ? `<div class="cl-summary">${escapeHTML(e.summary)}</div>` : ''}
+              <div>${(e.items || []).map(it => `<div class="cl-item"><span class="cl-tag ${it.type}">${TYPE[it.type] || '新增'}</span><span class="cl-text">${escapeHTML(it.text)}</span></div>`).join('')}</div>
+            </div>`).join('');
+          const more = document.getElementById('enc-changelog-more');
+          if (more) {
+            more.textContent = expanded ? '收起' : ('查看全部 ' + VERSION_LOG.length + ' 个版本');
+            more.hidden = VERSION_LOG.length <= PREVIEW;
+          }
+        }
+        const more = document.getElementById('enc-changelog-more');
+        if (more) more.onclick = function () { expanded = !expanded; render(); };
+        const cur = document.getElementById('enc-changelog-curver');
+        if (cur) cur.textContent = APP_VERSION;
+        try { render(); } catch (e) { console.warn('更新日志面板渲染失败：', e); }
+      })();
+
       window.showChangelogModal = showChangelogModal;
       window.openHelp = openHelp;
       window.renderHelpRail = renderHelpRail;
@@ -15876,7 +15932,7 @@ const _fade = (rgb, deg) => 'linear-gradient(' + deg + ', rgba(' + rgb + ',1) 0%
           setTimeout(function () {
             const panel = document.getElementById('enc-pack-panel');
             if (panel) {
-              panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              if (typeof panel.scrollIntoView === 'function') panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
               panel.style.transition = 'box-shadow .3s ease';
               panel.style.boxShadow = '0 0 0 2px var(--accent-color)';
               setTimeout(function () { panel.style.boxShadow = ''; }, 1800);
@@ -24968,7 +25024,7 @@ window.__ENC_DEBUG__ = {
           if (contentEl) contentEl.scrollTop = 0;
           const activeNav = document.querySelector('.settings-nav-item.active');
           if (activeNav && window.innerWidth <= 768) {
-            setTimeout(() => activeNav.scrollIntoView({ block: 'nearest', inline: 'center' }), 50);
+            setTimeout(() => { if (typeof activeNav.scrollIntoView === 'function') activeNav.scrollIntoView({ block: 'nearest', inline: 'center' }); }, 50);
           }
           // 同步性能预设选中态
           if (['eco', 'ultra', 'fancy', 'standard', 'minimal', 'none'].includes(state.perfPreset)) {
@@ -26502,28 +26558,30 @@ window.__ENC_DEBUG__ = {
       })();
         document.querySelectorAll('.settings-nav-item').forEach(item => {
           item.onclick = () => {
-            saveSettingsScroll();
-            document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
-            item.classList.add('active');
-            const sec = item.dataset.section;
-            const secEl = document.getElementById('section-' + sec);
-            if (secEl) secEl.classList.add('active');
-            // 收尾：若该分区有子页但没有激活项，默认激活第一个子页
-            if (secEl) {
-              const subs = secEl.querySelectorAll('.settings-subsection');
-              if (subs.length && !secEl.querySelector('.settings-subsection.active')) {
-                subs[0].classList.add('active');
+            try { saveSettingsScroll(); } catch (e) { console.warn('保存设置滚动位置失败：', e); }
+            try {
+              document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+              document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+              item.classList.add('active');
+              const sec = item.dataset.section;
+              const secEl = document.getElementById('section-' + sec);
+              if (secEl) secEl.classList.add('active');
+              if (secEl) {
+                const subs = secEl.querySelectorAll('.settings-subsection');
+                if (subs.length && !secEl.querySelector('.settings-subsection.active')) {
+                  subs[0].classList.add('active');
+                }
               }
-            }
+            } catch (e) { console.warn('切换设置分区失败：', e); }
             if (window.__encSyncQuickSubnav) setTimeout(window.__encSyncQuickSubnav, 0);
-            // 切换分类时还原该分类此前的滚动位置（无记录则回到顶部）
-            restoreSettingsScroll();
-            // 切换设置分类视为切换“页面”：轮换邦多利成员背景
+            // 切分区一律回到内容区顶部：恢复深滚动会让窄屏侧栏被内容带出视野，看起来像「侧栏被收起」
+            try {
+              const contentEl = document.querySelector('#settings-modal .settings-content');
+              if (contentEl) contentEl.scrollTop = 0;
+            } catch (e) { console.warn('重置设置滚动失败：', e); }
             if (window.__bdPageSwitch) window.__bdPageSwitch();
-            // 移动端横向导航：把当前分类滚动到可见区域中央
-            if (window.innerWidth <= 768) {
-              item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            if (window.innerWidth <= 768 && typeof item.scrollIntoView === 'function') {
+              try { item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } catch (e) { console.warn('导航滚动失败：', e); }
             }
           };
         });
@@ -26699,7 +26757,7 @@ window.__ENC_DEBUG__ = {
             if (_searchCurrentIdx >= 0 && _searchCurrentIdx < _searchMatches.length) {
               const current = _searchMatches[_searchCurrentIdx];
               current.classList.add('active');
-              current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              if (typeof current.scrollIntoView === 'function') current.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
           };
 
@@ -32648,13 +32706,7 @@ const SEKAI_UNIT_LOGOS = {
             document.getElementById('onboarding-modal').classList.add('active');
           }
         }, 'onboarding');
-        safeSync(() => {
-          if (state.hasOnboarded && state.changelogSeenVer !== APP_VERSION) {
-            showChangelogModal();
-          }
-          // 不在此写入 changelogSeenVer，改为用户点击"知道了"后才标记已读
-          // 确保新用户完成引导后首次进入能看到更新日志
-        }, 'changelog');
+        // 更新日志不再自动弹出：改为常驻在「设置 → 主题外观 → 更新日志」面板
         
       }
 
