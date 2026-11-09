@@ -8368,49 +8368,6 @@ html[data-aurora="on"][data-anim="off"] #enc-aurora-bg { animation: none !import
 #settings-modal #settings-nav-list .settings-nav-sub-btn,
 #settings-modal #settings-nav-list .settings-nav-sub-btn.active { border-radius: 10px !important; }
 #settings-modal .settings-nav-item.active::before { border-radius: 3px !important; }
-/* 侧栏收起 / 展开 */
-#settings-modal #settings-sidebar-collapse {
-  display: none; width: 100%; margin: 0 0 8px; padding: 6px 10px;
-  font-size: 12px; color: var(--text-muted); background: transparent;
-  border: 1px dashed color-mix(in srgb, var(--border-color, #ccc) 60%, transparent);
-  border-radius: 8px; cursor: pointer;
-}
-#settings-modal #settings-sidebar-expand {
-  display: none; width: 28px; height: 28px; margin: 0 0 8px; padding: 0;
-  font-size: 14px; line-height: 1; color: var(--text-muted); background: transparent;
-  border: 1px dashed color-mix(in srgb, var(--border-color, #ccc) 60%, transparent);
-  border-radius: 8px; cursor: pointer;
-}
-@media (min-width: 769px) {
-  #settings-modal #settings-sidebar-collapse { display: block; }
-}
-/* 收起：侧栏整体消失，内容区占满 */
-#settings-modal .settings-layout.sidebar-collapsed > .settings-sidebar { display: none !important; }
-#settings-modal .settings-layout.sidebar-collapsed > .settings-content {
-  flex: 1 1 auto !important; width: 100% !important; min-width: 0 !important;
-  max-width: 100% !important; overflow-y: auto !important; overflow-x: hidden !important;
-  -webkit-overflow-scrolling: touch;
-}
-/* 收起后，在内容区左上角留一个展开按钮 */
-#settings-modal .settings-content > #settings-sidebar-expand { display: none; }
-#settings-modal .settings-layout.sidebar-collapsed #settings-sidebar-expand.show {
-  display: inline-flex !important; align-items: center; justify-content: center;
-}
-/* 展开按钮钉在弹窗头部左侧，与关闭按钮一样不随内容滚动 */
-#settings-modal > .modal > .modal-header { position: relative; padding-left: 52px; }
-#settings-modal > .modal > .modal-header > #settings-sidebar-expand {
-  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-  width: 30px; height: 30px; margin: 0; padding: 0; z-index: 55;
-  display: none; align-items: center; justify-content: center;
-  font-size: 15px; line-height: 1; color: var(--text-color);
-  background: color-mix(in srgb, var(--accent-color, #6750A4) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent-color, #6750A4) 34%, transparent);
-  border-radius: 9px; cursor: pointer;
-}
-/* 仅在收起状态显示展开按钮（:has 从弹窗往下判，header 在 layout 之前，不能用 ~） */
-#settings-modal > .modal:has(> .settings-layout.sidebar-collapsed) > .modal-header > #settings-sidebar-expand {
-  display: inline-flex !important;
-}
 </style>
 <style id="enc-bdcardbg-glass-off">
 /* 作业卡片铺了乐队舞台图时，只让作业卡片本身退出液态玻璃，其余界面不受影响 */
@@ -8802,8 +8759,6 @@ body #section-background > div.settings-panel {
       </div>
       <div class="settings-layout">
         <aside class="settings-sidebar">
-          <button type="button" id="settings-sidebar-collapse" title="收起侧栏" aria-label="收起侧栏">‹ 收起</button>
-          <button type="button" id="settings-sidebar-expand" title="展开侧栏" aria-label="展开侧栏">›</button>
           <div class="settings-search">
             <input type="text" id="settings-search-input" class="settings-search-input" placeholder="搜索设置项…" aria-label="搜索设置">
             <button id="settings-search-clear" class="settings-search-clear" style="display:none;" aria-label="清除搜索">✕</button>
@@ -9085,12 +9040,7 @@ body #section-background > div.settings-panel {
               </div>
             </div>
 
-            <div class="settings-panel ot-card" id="enc-changelog-panel-box">
-              <style>#enc-changelog-panel .cl-head{cursor:default}#enc-changelog-panel .cl-head:hover{background:transparent}#enc-changelog-panel .cl-entry:last-child{margin-bottom:0}</style>
-              <div class="ot-row"><div class="rl"><div class="rt">更新日志</div><div class="rd">当前版本 v<span id="enc-changelog-curver"></span>，默认显示最近 4 个版本</div></div></div>
-              <div id="enc-changelog-panel"></div>
-              <div class="form-group"><button class="btn" id="enc-changelog-more">查看全部版本</button></div>
-            </div>
+            
           </div>
 
           <div class="settings-subsection" id="section-background" data-label="背景与壁纸">
@@ -9990,10 +9940,10 @@ body #section-background > div.settings-panel {
               </div>
           
           
-</section>
+</div>
 
 
-          </div>
+          </section>
 <section class="settings-section" id="section-attendance">
           <div class="settings-section-head">
             <h2 class="section-header"><span class="sec-index">03</span><span>考勤管理</span></h2>
@@ -10928,10 +10878,15 @@ body #section-background > div.settings-panel {
               <div class="about-row"><span class="k">账号与上传</span><span class="v">无账号 · 不上传</span></div>
             </div>
             <div class="about-actions">
-              <button type="button" class="btn about-btn" onclick="showChangelogModal()">更新日志</button>
               <button type="button" class="btn about-btn" id="reopen-onboarding">首次使用说明</button>
             </div>
             <p class="about-foot">© ENcwork · 月行水上　|　数据保存在本地浏览器，清理浏览器数据会一并清除，请定期备份。</p>
+          <div class="settings-panel ot-card" id="enc-changelog-panel-box">
+              <style>#enc-changelog-panel .cl-head{cursor:default}#enc-changelog-panel .cl-head:hover{background:transparent}#enc-changelog-panel .cl-entry:last-child{margin-bottom:0}</style>
+              <div class="ot-row"><div class="rl"><div class="rt">更新日志</div><div class="rd">当前版本 v<span id="enc-changelog-curver"></span>，默认显示最近 4 个版本</div></div></div>
+              <div id="enc-changelog-panel"></div>
+              <div class="form-group"><button class="btn" id="enc-changelog-more">查看全部版本</button></div>
+            </div>
           </section>
 
         </main>
@@ -11587,7 +11542,7 @@ body #section-background > div.settings-panel {
       // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
       // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
       // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-      const APP_VERSION = '1.66';
+      const APP_VERSION = '1.67';
       const APP_NAME = '月行水上';
 
       // ===== 版本标识：OTTO版 / 精简版 =====
@@ -11642,6 +11597,18 @@ body #section-background > div.settings-panel {
         return '夕阳之下';
       }
       const VERSION_LOG = [
+      {
+        version: '1.67-otto',
+        date: '2026-11-09',
+        type: 'release',
+        summary: '设置页结构修复：移除侧栏收起功能，修复多个分区变成无法滚动的单页，更新日志移入关于页',
+        items: [
+          { type: 'fix', text: '移除设置侧栏收起/展开功能：侧栏常驻显示，不再有「‹ 收起 / › 展开」按钮，也不会因为历史遗留的收起标记变成单页' },
+          { type: 'fix', text: '修复点数据管理、考勤管理、反馈与帮助、其他、关于后设置页变成「侧栏消失的单页」且无法上下滑动：根因是这几个分区被错误嵌套在彼此内部（布局与内容缺一个闭合的 div、个性化的标题块漏了闭合、其他分区被塞进了反馈与帮助里），现已全部拉平为设置的直接子分区' },
+          { type: 'improve', text: '更新日志从「主题外观」移到「关于」：关于页内直接常驻显示最近 4 个版本，可一键展开全部，不再需要额外弹窗' },
+          { type: 'improve', text: '清理侧栏历史兼容代码：启动时自动清除旧版本写入的侧栏收起状态' },
+        ]
+      }, 
       {
         version: '1.66-otto',
         date: '2026-11-08',
@@ -26451,25 +26418,14 @@ window.__ENC_DEBUG__ = {
 
         // 设置侧边栏
 
-        // 设置侧栏收起 / 展开（宽屏可用，收起后内容区占满）
-        (function () {
-          var layout = document.querySelector('#settings-modal .settings-layout');
-          var cBtn = document.getElementById('settings-sidebar-collapse');
-          var eBtn = document.getElementById('settings-sidebar-expand');
-          if (!layout || !cBtn) return;
-          var KEY = 'enc.settings.sidebarCollapsed.v2';
-          function apply(collapsed) {
-            layout.classList.toggle('sidebar-collapsed', !!collapsed);
-            try { localStorage.setItem(KEY, collapsed ? '1' : '0'); } catch (e) {}
-          }
-          try { if (localStorage.getItem(KEY) === '1') apply(true); } catch (e) {}
-          cBtn.addEventListener('click', function () { apply(true); });
-          if (eBtn) {
-            eBtn.addEventListener('click', function () { apply(false); });
-            // 展开按钮钉在弹窗头部左侧：不随内容滚动，收起后也一定点得到
-            var header = document.querySelector('#settings-modal > .modal > .modal-header');
-            if (header && eBtn.parentElement !== header) { header.appendChild(eBtn); }
-          }
+        // 侧栏收起功能已移除：侧栏常驻，避免误触后变成单页且内容无法滚动
+        (function encDropSidebarCollapsedFlag() {
+          try {
+            localStorage.removeItem('enc.settings.sidebarCollapsed');
+            localStorage.removeItem('enc.settings.sidebarCollapsed.v2');
+          } catch (e) {}
+          var lay = document.querySelector('#settings-modal .settings-layout');
+          if (lay && lay.classList) lay.classList.remove('sidebar-collapsed');
         })();
 
       // 背景像素粒子：独立 canvas 覆盖层，按 speed/density 渲染
