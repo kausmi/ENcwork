@@ -4,8 +4,6 @@
 
 一个 `.html` 文件，双击就能用。作业、考勤、考试倒计时、节假日、时钟放一屏上，数据全都存在自己的浏览器里，不联网也不上传。
 
-起因很土：黑板写作业擦得又快又乱，学生记不全，老师每天重抄一遍。后来教室装了块大屏，就想着把这件事搬到屏上。
-
 ![version](https://img.shields.io/badge/version-1.67-6750A4)
 ![single file](https://img.shields.io/badge/single--file-yes-2E7D32)
 ![offline](https://img.shields.io/badge/offline-yes-1976D2)
