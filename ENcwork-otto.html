@@ -146,7 +146,79 @@ document.addEventListener('animationcancel', release, true);
 <style id="enc-tutor-trim">#section-help .tutor-lead{display:none !important;}#section-help .tutor-body{font-size:13.5px;line-height:1.8;}#section-help .tutor-body>p{margin:0 0 7px;}#section-help .tutor-body>p.mt{margin-top:12px;}#section-help .tutor summary{font-weight:600;}</style>
 <style id="enc-dock-ring-fix">#dock .dock-item,#dock .dock-item *{-webkit-tap-highlight-color:transparent !important;-webkit-touch-callout:none;}#dock .dock-item:focus{outline:none !important;}#dock .dock-item:focus-visible{outline:2px solid color-mix(in srgb,var(--accent-color,#6750A4)60%,transparent)!important;outline-offset:2px;}</style>
 
-<style id="enc-bg-layer-visible">html[data-aurora="on"] #app,html[data-pixel="on"] #app{background-color:transparent !important;}</style><style id="enc-bg-page-redo2">#section-background.active{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(330px,1fr))!important;gap:14px !important;align-items:start !important;flex-direction:initial !important;}@media (max-width:720px){#section-background.active{grid-template-columns:1fr !important;}}#section-background>#bg-panel-preview{grid-column:1 / -1 !important;order:-10 !important;}#section-background>#bg-panel-custom{order:1 !important;}#section-background>#bg-source-local{order:2 !important;}#section-background>#bg-multi-group{order:8 !important;}#section-background>#bg-grid-layout-group{order:9 !important;}#section-background>#bg-panel-display{order:5 !important;}#section-background>#bg-image-list-panel{order:6 !important;}#section-background>#bg-preset-panel{order:7 !important;}#section-background>#bg-rotate-group{order:6 !important;}#section-background>#bg-rotate-mode-group{order:7 !important;}#section-background>#bg-panel-crop{order:10 !important;}#section-background>#bg-panel-gif{order:11 !important;}#section-background>#bg-panel-video{order:12 !important;}#section-background>#enc-aurora-panel{order:80 !important;}#section-background>#enc-pixel-panel{order:81 !important;}#section-background>#bg-panel-preview{order:2 !important;}#section-background>#bg-panel-source{order:3 !important;}#section-background>#bg-panel-static{order:4 !important;}#section-background>.settings-panel,body #section-background>div.settings-panel{margin:0 !important;padding:15px 16px 13px !important;border-radius:14px !important;background:var(--card-bg,#fff)!important;border:1px solid color-mix(in srgb,var(--text-color,#333)10%,transparent)!important;box-shadow:0 1px 2px rgba(0,0,0,.045)!important;transition:box-shadow .22s ease,transform .22s ease,border-color .22s ease !important;content-visibility:visible !important;}#section-background>.settings-panel:hover{box-shadow:0 8px 24px rgba(0,0,0,.09)!important;transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent-color,#6750A4)34%,transparent)!important;}#section-background>.settings-panel>h3{position:relative;margin:0 0 13px !important;padding-left:11px !important;font-size:13.5px !important;font-weight:700 !important;letter-spacing:.02em;line-height:1.35;color:var(--text-color)!important;border:0 !important;}#section-background>.settings-panel>h3::before{content:'';position:absolute;left:0;top:50%;width:3px;height:15px;transform:translateY(-50%);border-radius:2px;background:var(--accent-color,#6750A4);}#section-background>.settings-panel>h3 .dv-tag,#section-background>.settings-panel>h3>span.dv-tag{font-size:10.5px;padding:1px 6px;margin-right:5px;border-radius:5px;vertical-align:1px;}#section-background .form-group{margin:0 0 12px !important;}#section-background .form-group:last-child{margin-bottom:0 !important;}#section-background .form-label{font-size:12px !important;opacity:.78 !important;margin-bottom:5px !important;}#section-background .form-hint{font-size:11.5px !important;opacity:.58 !important;margin-top:4px !important;line-height:1.55;}#section-background .form-control{font-size:13px !important;padding:8px 11px !important;border-radius:9px !important;}#section-background .checkbox-label{padding:3px 0 !important;}#section-background>.form-group,#section-background>.bg-rotate-row{margin:0 !important;padding:14px 16px !important;border-radius:14px !important;background:var(--card-bg,#fff)!important;border:1px solid color-mix(in srgb,var(--text-color,#333)10%,transparent)!important;box-shadow:0 1px 2px rgba(0,0,0,.045)!important;}#section-background .enc-bg-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}@media (max-width:480px){#section-background .enc-bg-row2{grid-template-columns:1fr;}}#section-background .btn{border-radius:9px !important;font-size:12.5px !important;}#section-background .settings-panel .btn + .btn{margin-left:6px;}#section-background:not(:has(#bg-enabled-toggle:checked))>#bg-panel-preview::before{content:'开启「自定义背景」后，这里会显示实时预览';display:block;padding:22px 12px;text-align:center;font-size:12px;color:color-mix(in srgb,var(--text-color)55%,transparent);}#section-background>#enc-bg-hero{grid-column:1 / -1 !important;order:-20 !important;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:13px 16px;border-radius:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent-color,#6750A4)12%,var(--card-bg,#fff)),var(--card-bg,#fff));border:1px solid color-mix(in srgb,var(--accent-color,#6750A4)26%,transparent);}#section-background>#enc-bg-hero .enc-bg-hero-title{font-size:13px;font-weight:700;margin-right:6px;color:var(--text-color);}#section-background>#enc-bg-hero .enc-bg-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11.5px;line-height:1.4;background:color-mix(in srgb,var(--text-color,#333)8%,transparent);color:var(--text-color);}#section-background>#enc-bg-hero .enc-bg-chip[data-on="1"]{background:color-mix(in srgb,var(--accent-color,#6750A4)20%,transparent);color:var(--text-color);font-weight:600;}/* 背景与壁纸：分组标题与面板统一视觉，滚动区更松快 */#section-background>.form-group>.form-label,#section-background>.form-group>.checkbox-label:first-child{font-weight:600 !important;letter-spacing:.01em;}#section-background .settings-panel>h3 .dv-tag{opacity:.95;}#section-background .enc-range-row{align-items:center;gap:10px;}#section-background .enc-range-row>.enc-range-val,#section-background .enc-range-row>span{min-width:56px !important;text-align:right;font-variant-numeric:tabular-nums;}#section-background .btn{min-height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;}#section-background .bg-rotate-row{gap:10px;flex-wrap:wrap;}@media (max-width:720px){#section-background>.form-group,#section-background>.settings-panel{padding:13px 14px !important;border-radius:12px !important;}}
+<style id="enc-bg-layer-visible">html[data-aurora="on"] #app,html[data-pixel="on"] #app{background-color:transparent !important;}</style><style id="enc-eb-opaque">/* 考试看板：整个看板背景 100% 不透明（原先半透明会透出主界面，看不清） */html body #exam-board-modal.modal-overlay{background:var(--bg-color,#f4f5f7) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}html body #exam-board-modal.modal-overlay>.enc-exam-modal,html body #exam-board-modal>.modal.enc-exam-modal{background:var(--bg-color,#f4f5f7) !important;box-shadow:none !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}html body #exam-board-modal .enc-eb-head{background:var(--bg-color,#f4f5f7) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}html body #exam-board-modal .enc-eb-body,html body #exam-board-modal .enc-eb-view{background:var(--bg-color,#f4f5f7) !important;}html body #exam-board-modal .enc-eb-hero,html body #exam-board-modal .enc-eb-left,html body #exam-board-modal .enc-eb-right,html body #exam-board-modal .enc-eb-card,html body #exam-board-modal .enc-eb-stats{background:var(--card-bg,#fff) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}html body #exam-board-modal .enc-eb-drawer{background:var(--card-bg,#fff) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}</style>
+<style id="enc-card-lazy">/* 主界面卡片超过 50 张：视口外的卡片跳过绘制，滚到该位置才渲染 *//* content-visibility 由浏览器按滚动位置自动决定绘制时机，contain-intrinsic-size 提供占位高度避免瀑布流跳动 */html[data-card-lazy="on"] .subject-card{content-visibility:auto;contain-intrinsic-size:auto 320px;}html[data-card-lazy="on"] .subject-card[data-inview="1"]{content-visibility:visible;}/* 截图时会移除 data-virtual-scroll，这里同步保证截图完整 */html[data-shotting="1"][data-card-lazy="on"] .subject-card{content-visibility:visible !important;}</style>
+<style id="enc-perf-ext">/* 性能自定义新增项：像素粒子 / 动态流光 / 炫彩模式 / 卡片延迟渲染 */html[data-perf-pixeloff="on"] #enc-pixel-canvas{display:none !important;}html[data-perf-auroraoff="on"] #enc-aurora-bg{display:none !important;}html[data-perf-rainbowoff="on"][data-rainbow="on"] body *:not(script):not(style):not(svg){animation:none !important;background-image:none !important;-webkit-text-fill-color:currentColor !important;color:inherit !important;}html[data-perf-cardlazyoff="on"][data-card-lazy="on"] .subject-card{content-visibility:visible !important;}</style>
+<style id="enc-eb-polish">/* 考试看板：各样式统一调优 —— 收紧文字与按钮边距、加密按钮间距、表格行更透气 *//* 头部：题目区与操作按钮之间留足呼吸感，按钮之间的间距不小于 8px */
+html body #exam-board-modal .enc-eb-head{padding:14px 20px !important;gap:14px !important;align-items:center !important;}
+html body #exam-board-modal .enc-eb-head .modal-title{display:flex;align-items:center;gap:10px !important;font-size:15px !important;font-weight:700 !important;line-height:1.3 !important;}
+html body #exam-board-modal .enc-eb-tabs{gap:6px !important;padding:3px !important;border-radius:11px !important;}
+html body #exam-board-modal .enc-eb-tab{padding:6px 16px !important;border-radius:9px !important;font-size:12.5px !important;line-height:1.5 !important;min-height:30px !important;}
+html body #exam-board-modal .enc-eb-actions{gap:8px !important;}
+html body #exam-board-modal .enc-eb-act{width:34px !important;height:34px !important;min-width:34px !important;border-radius:11px !important;font-size:15px !important;line-height:1 !important;}
+/* 主体与两侧栏 */
+html body #exam-board-modal .enc-eb-body{padding:16px 20px 20px !important;}
+html body #exam-board-modal .enc-eb-board{gap:14px !important;}
+html body #exam-board-modal .enc-eb-left{padding:22px 22px !important;gap:calc(12px * var(--eb-fs)) !important;border-radius:16px !important;}
+html body #exam-board-modal .enc-eb-right{padding:16px 18px !important;border-radius:16px !important;overflow:hidden !important;}
+html body #exam-board-modal .enc-eb-hero{gap:6px !important;margin-bottom:14px !important;}
+html body #exam-board-modal .enc-eb-name{font-size:calc(17px * var(--eb-fs)) !important;line-height:1.35 !important;}
+html body #exam-board-modal .enc-eb-msg{font-size:calc(12.5px * var(--eb-fs)) !important;line-height:1.6 !important;margin:0 !important;opacity:.72 !important;}
+/* 左栏文字层级与间距 */
+html body #exam-board-modal .enc-eb-clock{font-size:calc(52px * var(--eb-fs)) !important;line-height:1.05 !important;letter-spacing:-.02em !important;margin:0 !important;}
+html body #exam-board-modal .enc-eb-subject{font-size:calc(20px * var(--eb-fs)) !important;line-height:1.3 !important;margin:0 !important;font-weight:700 !important;}
+html body #exam-board-modal .enc-eb-timing,html body #exam-board-modal .enc-eb-status{font-size:calc(12.5px * var(--eb-fs)) !important;line-height:1.55 !important;margin:0 !important;opacity:.8 !important;}
+html body #exam-board-modal .enc-eb-remain{font-size:calc(28px * var(--eb-fs)) !important;line-height:1.2 !important;margin:0 !important;font-weight:700 !important;}
+/* 表格：行高放宽、单元格内边距均匀、表头与首行分开 */
+html body #exam-board-modal .enc-eb-table{width:100% !important;border-collapse:separate !important;border-spacing:0 !important;font-size:calc(12.5px * var(--eb-fs)) !important;}
+html body #exam-board-modal .enc-eb-table thead th{padding:9px 10px !important;font-size:calc(11.5px * var(--eb-fs)) !important;font-weight:600 !important;letter-spacing:.02em !important;text-align:left !important;opacity:.72 !important;border-bottom:1px solid color-mix(in srgb,var(--text-color,#333) 12%,transparent) !important;}
+html body #exam-board-modal .enc-eb-table tbody td{padding:11px 10px !important;line-height:1.5 !important;vertical-align:middle !important;border-bottom:1px solid color-mix(in srgb,var(--text-color,#333) 8%,transparent) !important;}
+html body #exam-board-modal .enc-eb-table tbody tr:last-child td{border-bottom:0 !important;}
+html body #exam-board-modal .enc-eb-table tbody tr.now td{background:color-mix(in srgb,var(--accent-color,#6750A4) 10%,transparent) !important;font-weight:600 !important;}
+/* 底部四格统计：格子之间留缝，数字与标签分层 */
+html body #exam-board-modal .enc-eb-stats{gap:10px !important;margin-top:14px !important;}
+html body #exam-board-modal .enc-eb-stat{padding:12px 14px !important;border-radius:13px !important;min-width:0 !important;}
+html body #exam-board-modal .enc-eb-stat b{display:block !important;font-size:calc(17px * var(--eb-fs)) !important;line-height:1.25 !important;margin-bottom:3px !important;}
+html body #exam-board-modal .enc-eb-stat span{display:block !important;font-size:calc(11.5px * var(--eb-fs)) !important;line-height:1.5 !important;opacity:.72 !important;}
+/* 配置页：卡片内边距统一，行与行之间不少于 10px，按钮之间不少于 8px */
+html body #exam-board-modal .enc-eb-view{padding:0 !important;}
+html body #exam-board-modal .enc-eb-card{padding:16px 18px !important;border-radius:16px !important;margin:0 !important;}
+html body #exam-board-modal .enc-eb-card+.enc-eb-card{margin-top:14px !important;}
+html body #exam-board-modal .enc-eb-card h4,html body #exam-board-modal .enc-eb-card h3{margin:0 0 12px !important;font-size:13px !important;line-height:1.4 !important;font-weight:700 !important;}
+html body #exam-board-modal .enc-eb-card .form-group,html body #exam-board-modal .enc-eb-card .ot-row{margin:0 0 10px !important;}
+html body #exam-board-modal .enc-eb-card .form-group:last-child,html body #exam-board-modal .enc-eb-card .ot-row:last-child{margin-bottom:0 !important;}
+html body #exam-board-modal .enc-eb-row{gap:10px !important;padding:10px 0 !important;grid-template-columns:24px minmax(90px,1.1fr) 140px 96px 96px auto !important;align-items:center !important;}
+html body #exam-board-modal .enc-eb-row+.enc-eb-row{border-top:1px solid color-mix(in srgb,var(--text-color,#333) 8%,transparent) !important;}
+html body #exam-board-modal .enc-eb-card .btn,html body #exam-board-modal .enc-eb-card button{padding:7px 14px !important;min-height:32px !important;line-height:1.4 !important;font-size:12.5px !important;}
+html body #exam-board-modal .enc-eb-card .btn+.btn,html body #exam-board-modal .enc-eb-card button+button{margin-left:2px !important;}
+html body #exam-board-modal .enc-eb-ro{padding:2px 0 !important;margin:0 !important;line-height:1.6 !important;font-size:12.5px !important;}
+/* 右侧抽屉：滑块与按钮之间的间距 */
+html body #exam-board-modal .enc-eb-drawer{padding:16px 18px !important;border-radius:16px !important;gap:12px !important;}
+html body #exam-board-modal .enc-eb-drawer .enc-eb-styles{gap:8px !important;flex-wrap:wrap !important;}
+html body #exam-board-modal .enc-eb-drawer .enc-eb-styles button{padding:7px 12px !important;min-height:32px !important;border-radius:9px !important;font-size:12.5px !important;}
+/* 窄屏：单列时各块之间同样留 12px */
+@media (max-width:760px){html body #exam-board-modal .enc-eb-body{padding:12px 14px 16px !important;}html body #exam-board-modal .enc-eb-board{gap:12px !important;}html body #exam-board-modal .enc-eb-stats{grid-template-columns:repeat(2,1fr) !important;gap:10px !important;}}</style>
+<style id="enc-tier-settings">
+.enc-tier-switch{display:flex;gap:6px;padding:0 0 10px;margin:0 0 10px;border-bottom:1px solid color-mix(in srgb,var(--text-color,#333) 10%,transparent);}
+.enc-tier-switch button{flex:1 1 0;padding:7px 4px;border:1px solid color-mix(in srgb,var(--text-color,#333) 14%,transparent);background:transparent;color:inherit;border-radius:9px;font-size:12.5px;font-family:inherit;cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease;}
+.enc-tier-switch button.on{background:var(--accent-color,#6750A4);color:var(--on-accent,#fff);border-color:var(--accent-color,#6750A4);font-weight:600;}
+.enc-tier-tag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:5px;font-size:10px;font-weight:600;vertical-align:1px;background:color-mix(in srgb,var(--accent-color,#6750A4) 16%,transparent);color:color-mix(in srgb,var(--accent-color,#6750A4) 82%,var(--text-color,#333));}
+.enc-tier-tag[data-tier="basic"]{background:color-mix(in srgb,var(--text-color,#333) 9%,transparent);color:inherit;opacity:.75;}
+html[data-enc-tier="basic"] #settings-modal .settings-panel[data-tier="advanced"]{display:none !important;}html[data-enc-tier="basic"] #settings-modal .settings-subsection[data-tier="advanced"]{display:none !important;}html[data-enc-tier="basic"] #settings-modal .settings-nav-sub-btn[data-tier="advanced"],html[data-enc-tier="basic"] #settings-modal .settings-mobile-subnav-btn[data-tier="advanced"]{display:none !important;}/* 炫彩模式：所有文字彩虹色流动（background-clip:text 方案，不改动布局与字号） */
+html[data-rainbow="on"] body *:not(script):not(style):not(svg):not(path):not(use){
+-webkit-background-clip:text !important;background-clip:text !important;
+-webkit-text-fill-color:transparent !important;color:transparent !important;
+background-image:linear-gradient(90deg,#ff4d4d,#ffb300,#ffe600,#4ddb4d,#33c4ff,#7a5cff,#ff4dd2,#ff4d4d) !important;
+background-size:400% 100% !important;background-position:0% 50% !important;
+animation:encRainbowFlow var(--enc-rainbow-speed,8s) linear infinite !important;
+}
+@keyframes encRainbowFlow{0%{background-position:0% 50%;}100%{background-position:400% 50%;}}
+/* 输入类控件仍保留可读的实色光标与选区 */
+html[data-rainbow="on"] input,html[data-rainbow="on"] textarea{caret-color:auto !important;}
+html[data-rainbow="on"] ::selection{background:color-mix(in srgb,var(--accent-color,#6750A4) 40%,transparent) !important;}
+html[data-rainbow="on"][data-anim="off"] body *:not(script):not(style):not(svg){animation:none !important;}</style>
+<style id="enc-layout-gapfix">/* 背景与壁纸 / 动效与特效：消除删掉说明文字后左侧出现的大空档 *//* 背景页是 grid，全宽面板（总览条、预览）后面若还有半宽面板，默认 sparse 排布会留下空格 */html body #section-background.active{grid-auto-flow:row dense !important;align-content:start !important;}/* 动效页原先是 column-count:2 多列布局，删掉文字后某一项变矮会把左列提前截断形成大空档，改为与背景页一致的 grid */html body #section-effects{column-count:unset !important;column-gap:unset !important;column-rule:unset !important;display:grid !important;grid-template-columns:repeat(auto-fit,minmax(330px,1fr)) !important;gap:14px !important;align-items:start !important;align-content:start !important;grid-auto-flow:row dense !important;}html body #section-effects>.section-header.sub{grid-column:1 / -1 !important;}@media (max-width:720px){html body #section-effects{grid-template-columns:1fr !important;}}</style>
+<style id="enc-bg-page-redo2">#section-background.active{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(330px,1fr))!important;gap:14px !important;align-items:start !important;flex-direction:initial !important;}@media (max-width:720px){#section-background.active{grid-template-columns:1fr !important;}}#section-background>#bg-panel-preview{grid-column:1 / -1 !important;order:-10 !important;}#section-background>#bg-panel-custom{order:1 !important;}#section-background>#bg-source-local{order:2 !important;}#section-background>#bg-multi-group{order:8 !important;}#section-background>#bg-grid-layout-group{order:9 !important;}#section-background>#bg-panel-display{order:5 !important;}#section-background>#bg-image-list-panel{order:6 !important;}#section-background>#bg-preset-panel{order:7 !important;}#section-background>#bg-rotate-group{order:6 !important;}#section-background>#bg-rotate-mode-group{order:7 !important;}#section-background>#bg-panel-crop{order:10 !important;}#section-background>#bg-panel-gif{order:11 !important;}#section-background>#bg-panel-video{order:12 !important;}#section-background>#enc-aurora-panel{order:80 !important;}#section-background>#enc-pixel-panel{order:81 !important;}#section-background>#bg-panel-preview{order:2 !important;}#section-background>#bg-panel-source{order:3 !important;}#section-background>#bg-panel-static{order:4 !important;}#section-background>.settings-panel,body #section-background>div.settings-panel{margin:0 !important;padding:15px 16px 13px !important;border-radius:14px !important;background:var(--card-bg,#fff)!important;border:1px solid color-mix(in srgb,var(--text-color,#333)10%,transparent)!important;box-shadow:0 1px 2px rgba(0,0,0,.045)!important;transition:box-shadow .22s ease,transform .22s ease,border-color .22s ease !important;content-visibility:visible !important;}#section-background>.settings-panel:hover{box-shadow:0 8px 24px rgba(0,0,0,.09)!important;transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent-color,#6750A4)34%,transparent)!important;}#section-background>.settings-panel>h3{position:relative;margin:0 0 13px !important;padding-left:11px !important;font-size:13.5px !important;font-weight:700 !important;letter-spacing:.02em;line-height:1.35;color:var(--text-color)!important;border:0 !important;}#section-background>.settings-panel>h3::before{content:'';position:absolute;left:0;top:50%;width:3px;height:15px;transform:translateY(-50%);border-radius:2px;background:var(--accent-color,#6750A4);}#section-background>.settings-panel>h3 .dv-tag,#section-background>.settings-panel>h3>span.dv-tag{font-size:10.5px;padding:1px 6px;margin-right:5px;border-radius:5px;vertical-align:1px;}#section-background .form-group{margin:0 0 12px !important;}#section-background .form-group:last-child{margin-bottom:0 !important;}#section-background .form-label{font-size:12px !important;opacity:.78 !important;margin-bottom:5px !important;}#section-background .form-hint{font-size:11.5px !important;opacity:.58 !important;margin-top:4px !important;line-height:1.55;}#section-background .form-control{font-size:13px !important;padding:8px 11px !important;border-radius:9px !important;}#section-background .checkbox-label{padding:3px 0 !important;}#section-background>.form-group,#section-background>.bg-rotate-row{margin:0 !important;padding:14px 16px !important;border-radius:14px !important;background:var(--card-bg,#fff)!important;border:1px solid color-mix(in srgb,var(--text-color,#333)10%,transparent)!important;box-shadow:0 1px 2px rgba(0,0,0,.045)!important;}#section-background .enc-bg-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}@media (max-width:480px){#section-background .enc-bg-row2{grid-template-columns:1fr;}}#section-background .btn{border-radius:9px !important;font-size:12.5px !important;}#section-background .settings-panel .btn + .btn{margin-left:6px;}#section-background:not(:has(#bg-enabled-toggle:checked))>#bg-panel-preview::before{content:'开启「自定义背景」后，这里会显示实时预览';display:block;padding:22px 12px;text-align:center;font-size:12px;color:color-mix(in srgb,var(--text-color)55%,transparent);}#section-background>#enc-bg-hero{grid-column:1 / -1 !important;order:-20 !important;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:13px 16px;border-radius:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent-color,#6750A4)12%,var(--card-bg,#fff)),var(--card-bg,#fff));border:1px solid color-mix(in srgb,var(--accent-color,#6750A4)26%,transparent);}#section-background>#enc-bg-hero .enc-bg-hero-title{font-size:13px;font-weight:700;margin-right:6px;color:var(--text-color);}#section-background>#enc-bg-hero .enc-bg-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11.5px;line-height:1.4;background:color-mix(in srgb,var(--text-color,#333)8%,transparent);color:var(--text-color);}#section-background>#enc-bg-hero .enc-bg-chip[data-on="1"]{background:color-mix(in srgb,var(--accent-color,#6750A4)20%,transparent);color:var(--text-color);font-weight:600;}/* 背景与壁纸：分组标题与面板统一视觉，滚动区更松快 */#section-background>.form-group>.form-label,#section-background>.form-group>.checkbox-label:first-child{font-weight:600 !important;letter-spacing:.01em;}#section-background .settings-panel>h3 .dv-tag{opacity:.95;}#section-background .enc-range-row{align-items:center;gap:10px;}#section-background .enc-range-row>.enc-range-val,#section-background .enc-range-row>span{min-width:56px !important;text-align:right;font-variant-numeric:tabular-nums;}#section-background .btn{min-height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;}#section-background .bg-rotate-row{gap:10px;flex-wrap:wrap;}@media (max-width:720px){#section-background>.form-group,#section-background>.settings-panel{padding:13px 14px !important;border-radius:12px !important;}}
 /* 背景与壁纸：hero 状态条细化 + 预览自适应 + 主开关行强化 */
 #section-background>#enc-bg-hero{gap:7px 8px;padding:12px 15px;}
 #section-background>#enc-bg-hero .enc-bg-hero-title{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;letter-spacing:.01em;}
@@ -343,6 +415,10 @@ document.addEventListener('animationcancel', release, true);
           <div id="settings-search-nav" class="settings-search-nav" style="display:none;">
             <button id="settings-search-prev" class="settings-search-nav-btn" title="上一个" aria-label="上一个">↑</button>
             <button id="settings-search-next" class="settings-search-nav-btn" title="下一个" aria-label="下一个">↓</button>
+          </div>
+          <div class="enc-tier-switch" id="enc-tier-switch">
+            <button type="button" data-tier="basic" class="on">普通设置</button>
+            <button type="button" data-tier="advanced">高级设置</button>
           </div>
           <div id="settings-nav-list">
           <div class="settings-nav-item active" data-section="personal"><span class="nav-index">01</span><span>个性化</span></div>
@@ -684,6 +760,10 @@ document.addEventListener('animationcancel', release, true);
                 <div class="rc"><input type="range" id="bg-pixel-density" class="form-range" min="10" max="200" step="10" style="width:140px;" value="60"> <span id="bg-pixel-density-val" style="font-size:12px;opacity:.7;">60</span></div>
               </div>
               <div class="ot-row">
+                <div><div class="rl">粒子大小</div><div class="rd">数值越大像素点越大（1–10）。</div></div>
+                <div class="rc"><input type="range" id="bg-pixel-size" class="form-range" min="1" max="10" step="1" style="width:140px;" value="3"> <span id="bg-pixel-size-val" style="font-size:12px;opacity:.7;">3</span></div>
+              </div>
+              <div class="ot-row">
                 <div><div class="rl">粒子颜色</div><div class="rd">留空则跟随主题强调色。</div></div>
                 <div class="rc"><input type="color" id="bg-pixel-color" class="form-control" style="width:52px;height:34px;padding:2px;"></div>
               </div>
@@ -959,6 +1039,16 @@ document.addEventListener('animationcancel', release, true);
                   <option value="standard">标准</option>
                   <option value="fancy">华丽</option>
                 </select>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label"><input type="checkbox" id="rainbow-text-toggle"><span>炫彩模式（所有文字变成流动的彩虹色）</span></label>
+              </div>
+              <div class="form-group" id="rainbow-speed-group">
+                <label class="form-label">彩虹流动速度</label>
+                <div class="enc-range-row">
+                  <input type="range" id="rainbow-speed-range" class="form-range" min="2" max="20" step="1" value="8">
+                  <span id="rainbow-speed-val" style="opacity:0.7;font-size:12.5px;min-width:32px;display:inline-block;text-align:center;">8s</span>
+                </div>
               </div>
             </div><div class="settings-panel">
               <h3 class="sub-header">快捷栏效果</h3>
@@ -1327,6 +1417,23 @@ document.addEventListener('animationcancel', release, true);
             </div>
             
 
+          </div>
+          <div class="settings-panel" id="enc-imgcard-panel">
+            <h3 class="sub-header">图片卡片</h3>
+            <div class="form-group">
+              <label class="checkbox-label"><input type="checkbox" id="image-card-enabled-toggle"><span>启用图片卡片（关闭后主界面不显示图片卡片，数据保留）</span></label>
+            </div>
+            <div class="form-group">
+              <label class="form-label">批量操作</label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn" id="enc-imgcard-clear-all" type="button">一键清除所有图片</button>
+                <button class="btn" id="enc-imgcard-apply-all" type="button">一键套用同一张图</button>
+                <button class="btn" id="enc-imgcard-remove-all" type="button" style="color:#d33;">一键清除图片卡片</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <span id="enc-imgcard-status" style="opacity:0.7;font-size:12.5px;">当前没有图片卡片</span>
+            </div>
           </div>
           <div class="settings-subsection" id="section-layout-quickbar" data-label="快捷栏">
           <h3 class="sub-header">快捷栏自定义</h3>
@@ -2113,6 +2220,10 @@ document.addEventListener('animationcancel', release, true);
                   <label class="checkbox-label"><input type="checkbox" class="perf-custom" data-key="bgVideoOff"> <span>背景视频 / GIF 动画（关闭大幅省资源）</span></label>
                   <label class="checkbox-label"><input type="checkbox" class="perf-custom" data-key="transitions"> <span>全局 CSS 过渡（hover / focus 动效）</span></label>
                   <label class="checkbox-label"><input type="checkbox" class="perf-custom" data-key="bgMaskOff"> <span>背景遮罩叠层（径向 / 线性渐变）</span></label>
+                  <label class="checkbox-label"><input type="checkbox" class="perf-custom" data-key="pixel"> <span>像素粒子（背景飘落粒子）</span></label>
+                  <label class="checkbox-label"><input type="checkbox" class="perf-custom" data-key="aurora"> <span>背景动态流光</span></label>
+                  <label class="checkbox-label"><input type="checkbox" class="perf-custom" data-key="rainbow"> <span>炫彩模式（彩虹文字流动动画）</span></label>
+                  <label class="checkbox-label"><input type="checkbox" class="perf-custom" data-key="cardLazy"> <span>卡片延迟渲染（卡片多时只渲染视口内）</span></label>
                 </div>
               </div><div class="settings-panel ot-card">
                 <h3 class="sub-header"><span class="dv-tag">信息</span><span>系统信息</span></h3>
@@ -2329,6 +2440,23 @@ document.addEventListener('animationcancel', release, true);
 <p>如果更新后界面打不开，把旧文件换回来，数据还在。</p>
 <span class="expect">用「恢复默认设置」而不是直接清浏览器数据，清浏览器数据会把作业一起清掉。</span>
 <p>版本号在设置 → 关于里能看到，也可以看更新日志确认当前版本。</p>
+      </div>
+    </details>
+
+    <details class="tutor" id="tut-new167">
+      <summary>1.67 新版功能：图片卡片 / 普通高级设置 / 炫彩模式 / 卡片延迟渲染</summary>
+      <div class="tutor-body">
+<p><b>图片卡片</b>：快捷栏「+ 学科」输入「图片」，就得到一张只能放图、不能写字的卡片。点卡片即可选图上传；卡片右上角「…」里可以「更换图片」或「移除图片」。</p>
+<span class="expect">图片卡片只在你创建它的那一天显示，第二天不会自动继承，避免每天都挂着一张没用的图。</span>
+<p><b>批量管理</b>：设置 → 布局与内容 → 卡片布局 → 「图片卡片」面板。三个按钮：「一键清除所有图片」把图片从卡片里清空但保留卡片；「一键套用同一张图」选一张图套到当天所有图片卡片上；「一键清除图片卡片」把当天的图片卡片连卡片本身一起删掉。</p>
+<span class="expect">只会影响当天创建的图片卡片，其他日期的图片卡片不受影响；两个清除操作都会先弹确认框。</span>
+<p><b>启用图片卡片</b>：同一个面板最上面的开关。关掉后主界面不再显示图片卡片，但图片数据保留，随时可以打开恢复。</p>
+<p><b>普通设置 / 高级设置</b>：设置页左侧栏最上方有一个切换条。普通设置只留基础常用项（主题、背景、字体、卡片布局、考勤、数据管理这些），高级设置才显示进阶项（卡片样式、乐队切换、液态玻璃、性能分析、运行日志等）。</p>
+<span class="expect">切换会记住，下次打开设置还是上次选的那一档；每个面板标题右侧的「常用 / 高级」小标签就是它属于哪一档。</span>
+<p><b>炫彩模式</b>：设置 → 个性化 → 动效与特效 → 「全局动效等级」面板里，勾上「炫彩模式」，界面上所有文字都会变成流动的彩虹色。「彩虹流动速度」滑块可以调快慢（2 到 20 秒走完一圈）。</p>
+<span class="expect">炫彩只改文字颜色，不改字号和布局；关掉开关立刻恢复原样。</span>
+<p><b>卡片太多时自动降负载</b>：主界面卡片超过 50 张时，屏幕外的卡片会跳过绘制，滚到那个位置才真正渲染。</p>
+<span class="expect">滑动时会看到卡片「补上来」，这是正常的按需渲染；截图时会临时全部渲染，不会缺卡片。</span>
       </div>
     </details>
 
@@ -3243,7 +3371,7 @@ ultraPlusDefaults: { blurMult: 2.4, saturate: 300, brightness: 1.3, sheenSpeed: 
 // 版本号规则：主.次（从0.01测试版到9.9正式版）；当前版本 1.0
 // 每次更新在此追加一条版本记录（新版本放数组最前），并在「关于」页同步当前版本号
 // 版本命名格式：0.x → 月影（测试版），1.x → 月行水上，2.x → 浮生听梦，3.x → 月华流转，4.x → 夕阳之下
-const APP_VERSION = '1.66';
+const APP_VERSION = '1.67';
 const APP_NAME = '月行水上';
 
 // ===== 版本标识：OTTO版 / 精简版 =====
@@ -3302,10 +3430,10 @@ const CL_TYPE_NAME = { fix: '修复', improve: '优化', change: '变更', featu
 
 const VERSION_LOG = [
     {
-      version: '1.66-otto',
+      version: '1.67-otto',
       date: '2026-11-11',
       type: 'release',
-      summary: '设置页结构修复与全面重排、考试看板全屏化重做、八项新功能上线、代码大幅瘦身；本版本合并记录 1.66–1.69 的全部改动',
+      summary: '设置页结构修复与全面重排、考试看板全屏化重做、八项新功能上线、代码大幅瘦身；合并记录 1.66–1.69 的全部改动，并新增图片卡片管理、普通/高级设置、炫彩模式等',
       items: [
         { type: 'fix', text: '移除设置侧栏收起/展开功能：侧栏常驻显示，不再有「‹ 收起 / › 展开」按钮，也不会因为历史遗留的收起标记变成单页' },
         { type: 'fix', text: '修复点数据管理、考勤管理、反馈与帮助、其他、关于后设置页变成「侧栏消失的单页」且无法上下滑动：根因是这几个分区被错误嵌套在彼此内部（缺闭合 div），现全部修复为内容区的直接子节点' },
@@ -3792,7 +3920,7 @@ const HELP_TOPICS = [
 { id: 'tut-perf', t: '性能与卡顿' }, { id: 'tut-backup', t: '更新前备份' },
 { id: 'tut-faq', t: '常见问题' }, { id: 'tut-ai', t: '问AI · 数据分析' },
 { id: 'tut-stat', t: '作业统计与历史' }, { id: 'tut-sys', t: '系统检测与日志' },
-{ id: 'tut-subject', t: '学科自定义' }, { id: 'tut-migrate', t: '版本与迁移' }, { id: 'tut-helpdoc', t: '帮助与反馈' },
+{ id: 'tut-subject', t: '学科自定义' }, { id: 'tut-new167', t: '1.67 新版功能' }, { id: 'tut-migrate', t: '版本与迁移' }, { id: 'tut-helpdoc', t: '帮助与反馈' },
 ];
 function renderHelpRail() {
 const rail = document.getElementById('help-rail');
@@ -4012,6 +4140,9 @@ fontSizeAuto: true, // 字号自适应屏幕：开启时根据视口宽度自动
 actionBtnsPos: 'dock', // 「添加学科/设置」按钮位置：'dock'（默认，快捷栏）/ 'topbar'（右上角）
 screenshotFormat: 'png', // 截图输出格式：'png' / 'jpeg' / 'clipboard'
 screenshotIncludeImageCards: true, // 截图时是否包含图片卡片
+imageCardEnabled: true, // 图片卡片总开关（关闭后主界面不显示图片卡片）
+rainbowText: false, // 炫彩模式：所有文字彩虹色流动
+rainbowSpeed: 8, // 彩虹流动一圈的秒数
 cardStyle: 'old', // 卡片样式：'new' 新版（无左侧竖条）/ 'old' 旧版（左侧带学科色竖条）
 fontFamily: 'system',
 fontGlobal: false, // 选中字体是否设为全局字体（开启后标题/按钮/弹窗/输入框等所有元素均使用该字体；关闭时仅作用于正文）
@@ -4158,6 +4289,7 @@ bgPixelOn: false,
 bgPixelSpeed: 100,
 bgPixelDensity: 60,
 bgPixelColor: '#4a8cff',
+bgPixelSize: 3, // 粒子大小（1–10）
 bgAuroraOn: false,
 bgAuroraColors: ['#6a5acd', '#00c6ff', '#ff6ec7'],
 bgAuroraQuality: 'medium',
@@ -4198,7 +4330,7 @@ particleSimple: false, // 简化渲染（关闭渐变光晕）
 hasOnboarded: false,
 perfPreset: '', // 首次进入选择的性能预设：fancy / standard / minimal / none（空=未选择）
 perfAutoMode: 'conservative', // GPU 自动降级：off / conservative / aggressive
-perfCustom: { blur:false, glass:false, bloom:false, edgeLight:false, dockRainbow:false, anim:false, parallax:false, noShadow:false, entrance:false, textShadow:false, bgLowQuality:false, hoverLift:false, bgVideoOff:false, transitions:false, bgMaskOff:false },
+perfCustom: { blur:false, glass:false, bloom:false, edgeLight:false, dockRainbow:false, anim:false, parallax:false, noShadow:false, entrance:false, textShadow:false, bgLowQuality:false, hoverLift:false, bgVideoOff:false, transitions:false, bgMaskOff:false  , pixel:false, aurora:false, rainbow:false, cardLazy:false },
 memberArtX: 0, // 背景卡面/立绘层水平偏移（像素）——非联动主题 / 旧数据兼容位
 memberArtY: 0, // 垂直偏移
 // 联动主题位移各自独立：邦多利 / 世界计划 / Our Notes 互不影响
@@ -4558,6 +4690,9 @@ fontSize: state.fontSize,
 fontSizeAuto: state.fontSizeAuto,
 actionBtnsPos: state.actionBtnsPos,
 screenshotIncludeImageCards: state.screenshotIncludeImageCards,
+imageCardEnabled: state.imageCardEnabled !== false,
+rainbowText: state.rainbowText === true,
+rainbowSpeed: state.rainbowSpeed || 8,
 cardStyle: state.cardStyle,
 gridEditMode: state.gridEditMode,
 gridEditSize: state.gridEditSize,
@@ -4906,6 +5041,16 @@ Object.keys(state.hiddenSubjects).forEach(function (d) { if (d < cutoff) delete 
 } catch (e) {}
 // 图片卡片截图开关兜底（默认值见 state 定义）
 if (typeof state.screenshotIncludeImageCards !== 'boolean') state.screenshotIncludeImageCards = true;
+if (typeof state.imageCardEnabled !== 'boolean') state.imageCardEnabled = true;
+// 图片卡片按天独立：老数据没有 createdDate 的补成当天，避免此前的卡片凭空消失
+if (Array.isArray(state.subjects)) {
+  state.subjects.forEach(function (sb) {
+    if (sb && sb.type === 'image' && !sb.createdDate) sb.createdDate = state.currentDate;
+  });
+}
+if (typeof state.rainbowText !== 'boolean') state.rainbowText = false;
+if (typeof state.rainbowSpeed !== 'number' || !isFinite(state.rainbowSpeed)) state.rainbowSpeed = 8;
+state.rainbowSpeed = Math.max(2, Math.min(20, state.rainbowSpeed));
 if (state.cardStyle !== 'new' && state.cardStyle !== 'old') state.cardStyle = 'old';
 if (typeof state.showClock === 'undefined') {
 state.showClock = true;
@@ -5232,6 +5377,8 @@ if (typeof state.bgPixelOn !== 'boolean') state.bgPixelOn = false;
 if (typeof state.bgPixelSpeed !== 'number' || !isFinite(state.bgPixelSpeed)) state.bgPixelSpeed = 100;
 if (typeof state.bgPixelDensity !== 'number' || !isFinite(state.bgPixelDensity)) state.bgPixelDensity = 60;
 if (typeof state.bgPixelColor !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(state.bgPixelColor)) state.bgPixelColor = '#4a8cff';
+if (typeof state.bgPixelSize !== 'number' || !isFinite(state.bgPixelSize)) state.bgPixelSize = 3;
+state.bgPixelSize = Math.max(1, Math.min(10, state.bgPixelSize));
 if (typeof state.aiKey !== 'string') state.aiKey = '';
 if (!Array.isArray(state.aiHistory)) state.aiHistory = [];
 if (typeof state.bgAuroraOn !== 'boolean') state.bgAuroraOn = false;
@@ -8547,7 +8694,7 @@ let _gpuInfo = null;
 function gpuInfo() { if (!_gpuInfo) _gpuInfo = detectGpuCapability(); return _gpuInfo; }
 window.gpuInfo = gpuInfo;
 
-const PERF_FX_KEYS = ['blur','glass','bloom','edgeLight','dockRainbow','anim','parallax','noShadow','entrance','textShadow','bgLowQuality','hoverLift','bgVideoOff','transitions','bgMaskOff'];
+const PERF_FX_KEYS = ['blur','glass','bloom','edgeLight','dockRainbow','anim','parallax','noShadow','entrance','textShadow','bgLowQuality','hoverLift','bgVideoOff','transitions','bgMaskOff','pixel','aurora','rainbow','cardLazy'];
 // conservative: weak 全关；medium 只关 blur + parallax + noShadow(阴影是次要优化)；strong 不关
 // aggressive: 只要 tier!=='strong' 就关全部；unknown 视为 medium
 // off: 永不自动降级
@@ -8578,6 +8725,10 @@ hoverLift:  { weak:true,  medium:false },
 bgVideoOff: { weak:true,  medium:false },
 transitions:{ weak:true,  medium:false },
 bgMaskOff:  { weak:true,  medium:false },
+pixel:      { weak:true,  medium:true  },
+aurora:     { weak:true,  medium:false },
+rainbow:    { weak:true,  medium:false },
+cardLazy:   { weak:false, medium:false },
 };
 const m = map[key]; if (!m) return false;
 if (tier === 'weak') return m.weak === true;
@@ -8602,6 +8753,10 @@ setOr('data-perf-hoverlift', shouldReduceFx('hoverLift'));
 setOr('data-perf-bgvideooff', shouldReduceFx('bgVideoOff'));
 setOr('data-perf-transitions', shouldReduceFx('transitions'));
 setOr('data-perf-bgmaskoff', shouldReduceFx('bgMaskOff'));
+setOr('data-perf-pixeloff', shouldReduceFx('pixel'));
+setOr('data-perf-auroraoff', shouldReduceFx('aurora'));
+setOr('data-perf-rainbowoff', shouldReduceFx('rainbow'));
+setOr('data-perf-cardlazyoff', shouldReduceFx('cardLazy'));
 // 背景模糊上限档位变化时重算背景模糊（applyBackground() 依该属性计算上限）
 if (_bglowqWas !== (root.getAttribute('data-perf-bglowq') === 'on')) {
 try { if (typeof applyBackground === 'function') applyBackground(); } catch (e) {}
@@ -11059,6 +11214,10 @@ visibleSubjects.forEach((sub, idx) => {
 const list = dayHws[sub.id] || [];
 // 未布置单科作业前：dock 模式隐藏空卡片（手动排布时仍保留全部卡片，便于排版）
 if (!state.editMode && state.emptyCardMode === 'dock' && list.length === 0) return;
+// 图片卡片总开关：关闭时主界面不渲染图片卡片（数据保留，可随时恢复）
+if (sub && sub.type === 'image' && state.imageCardEnabled === false) return;
+// 图片卡片按天独立：只显示当天创建的图片卡片，不继承到第二天
+if (sub && sub.type === 'image' && sub.createdDate && sub.createdDate !== state.currentDate) return;
 const card = createSubjectCard(sub, list, displayIdx + 1);
 displayIdx++;
 if (positioned) {
@@ -11092,8 +11251,10 @@ applyCardFontColors();
 // 虚拟滚动：卡片数量达到阈值时自动开启视口外跳渲染（content-visibility，不动布局引擎）；
 // 卡片少时关闭，避免 contain-intrinsic 估算高度参与瀑布流测量引入误差
 const _cardCount = grid.querySelectorAll('.subject-card').length;
-if (_cardCount >= 14) document.documentElement.setAttribute('data-virtual-scroll', 'on');
-else document.documentElement.removeAttribute('data-virtual-scroll');
+// 卡片较多时（≥50 张）启用视口外延迟渲染：屏幕外的卡片由浏览器跳过绘制与布局，滚到该处才真正渲染
+if (_cardCount >= 50) { document.documentElement.setAttribute('data-virtual-scroll', 'on'); document.documentElement.setAttribute('data-card-lazy', 'on'); }
+else if (_cardCount >= 14) { document.documentElement.setAttribute('data-virtual-scroll', 'on'); document.documentElement.removeAttribute('data-card-lazy'); }
+else { document.documentElement.removeAttribute('data-virtual-scroll'); document.documentElement.removeAttribute('data-card-lazy'); }
 // 渲染完成后统一重排瀑布流：确保长文本
 // 性能统计
 const _renderDuration = performance.now() - _renderStart;
@@ -12401,6 +12562,99 @@ const old = _imgCardCache.map[subjectId];
 if (old && old.url) URL.revokeObjectURL(old.url);
 delete _imgCardCache.map[subjectId];
 }
+
+// ===== 图片卡片批量管理：总开关 / 一键清除所有图片 / 一键套用同一张图 =====
+function encImgCards() {
+return (state.subjects || []).filter(function (s) { return s && s.type === 'image'; });
+}
+function encImgCardStatus(text) {
+var el = document.getElementById('enc-imgcard-status');
+if (el && typeof text === 'string') el.textContent = text;
+}
+function encImgCardSyncUI() {
+encImgCardStatus(encImgCards().length ? ('共 ' + encImgCards().length + ' 张图片卡片，已设置图片 ' + encImgCards().filter(function (s) { return !!s.imageToken; }).length + ' 张') : '当前没有图片卡片');
+}
+// 一键清除所有图片卡片里的图片（保留卡片本身）
+async function encImgCardClearAll() {
+var cards = encImgCards().filter(function (s) { return !!s.imageToken; });
+if (!cards.length) { showToast('没有可清除的图片'); return; }
+var ok = await uiConfirm('将清除 ' + cards.length + ' 张图片卡片里的图片（卡片本身保留）。此操作不可撤销，确定继续？', { title: '一键清除图片', okText: '清除' });
+if (!ok) return;
+cards.forEach(function (s) {
+var old = _imgCardCache.map[s.id];
+if (old && old.url) { try { URL.revokeObjectURL(old.url); } catch (e) {} }
+delete _imgCardCache.map[s.id];
+s.imageToken = null;
+});
+saveData();
+renderSubjects();
+encImgCardSyncUI();
+showToast('已清除 ' + cards.length + ' 张图片');
+}
+// 一键把同一张图套用到所有图片卡片
+function encImgCardApplyAll() {
+var cards = encImgCards();
+if (!cards.length) { showToast('当前没有图片卡片，请先添加「图片」学科'); return; }
+var input = document.createElement('input');
+input.type = 'file';
+input.accept = 'image/*';
+input.onchange = async function () {
+var file = input.files && input.files[0];
+if (!file) return;
+if (!/^image\//.test(file.type)) { uiAlert('只能上传图片文件'); return; }
+try {
+var token = await imgStoreSave(file);
+cards.forEach(function (s) {
+var old = _imgCardCache.map[s.id];
+if (old && old.url) { try { URL.revokeObjectURL(old.url); } catch (e) {} }
+delete _imgCardCache.map[s.id];
+s.imageToken = token;
+});
+saveData();
+renderSubjects();
+encImgCardSyncUI();
+showToast('已套用到 ' + cards.length + ' 张图片卡片');
+} catch (e) {
+console.error('[图片卡片] 批量套图失败:', e);
+uiAlert('图片保存失败：' + (e && e.message ? e.message : e));
+}
+};
+input.click();
+}
+// 一键清除图片卡片：连卡片一起删（只删当前日期创建的图片卡片）
+async function encImgCardRemoveAll() {
+var cards = encImgCards().filter(function (s) { return !s.createdDate || s.createdDate === state.currentDate; });
+if (!cards.length) { showToast('当前日期没有图片卡片'); return; }
+var ok = await uiConfirm('将删除当前日期的 ' + cards.length + ' 张图片卡片（连卡片本身一起删除，不影响其他日期的图片卡片）。此操作不可撤销，确定继续？', { title: '一键清除图片卡片', okText: '删除' });
+if (!ok) return;
+cards.forEach(function (s) {
+var old = _imgCardCache.map[s.id];
+if (old && old.url) { try { URL.revokeObjectURL(old.url); } catch (e) {} }
+delete _imgCardCache.map[s.id];
+});
+var ids = cards.map(function (s) { return s.id; });
+state.subjects = state.subjects.filter(function (s) { return ids.indexOf(s.id) === -1; });
+saveData();
+renderSubjects();
+encImgCardSyncUI();
+showToast('已删除 ' + cards.length + ' 张图片卡片');
+}
+function encImgCardBind() {
+var t = document.getElementById('image-card-enabled-toggle');
+if (t) {
+t.checked = state.imageCardEnabled !== false;
+t.onchange = function () { state.imageCardEnabled = this.checked; saveData(); renderSubjects(); showToast(this.checked ? '图片卡片已启用' : '图片卡片已隐藏'); };
+}
+var c = document.getElementById('enc-imgcard-clear-all');
+if (c) c.onclick = encImgCardClearAll;
+var a = document.getElementById('enc-imgcard-apply-all');
+if (a) a.onclick = encImgCardApplyAll;
+var rm = document.getElementById('enc-imgcard-remove-all');
+if (rm) rm.onclick = encImgCardRemoveAll;
+encImgCardSyncUI();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', encImgCardBind);
+else encImgCardBind();
 // 清除图片缓存：删除 IndexedDB 中不再被任何作业/草稿引用的本地图片
 async function clearUnreferencedImages() {
 const all = await imgStoreAllIds();
@@ -12722,7 +12976,7 @@ const trimmedName = name.trim();
 if (trimmedName === '图片') {
 const id = 'sub-' + Date.now() + Math.random().toString(36).substr(2, 9);
 const color = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-state.subjects.push({ id, name: '图片', type: 'image', imageToken: null, color, icon: '🖼️', position: null, size: null });
+state.subjects.push({ id, name: '图片', type: 'image', imageToken: null, color, icon: '🖼️', position: null, size: null, createdDate: state.currentDate });
 added.push('图片卡片');
 return;
 }
@@ -15152,6 +15406,9 @@ applyTemp(contentScroll, { overflow: 'visible', height: 'auto', paddingBottom: '
 // 截图期间关闭虚拟滚动（content-visibility 会跳过视口外渲染，导致截图缺内容）
 const _vsAttr = htmlEl.getAttribute('data-virtual-scroll');
 htmlEl.removeAttribute('data-virtual-scroll');
+// 卡片延迟渲染同样要在截图期间关闭，否则视口外卡片会缺失
+const _lazyAttr = htmlEl.getAttribute('data-card-lazy');
+htmlEl.removeAttribute('data-card-lazy');
 // 图片卡片截图开关：关闭时截图前临时隐藏图片卡片（snapdom 直接截实时 DOM，不走 onclone）
 const _imgCardsOff = state.screenshotIncludeImageCards === false;
 const _imgCards = _imgCardsOff ? Array.from(document.querySelectorAll('.subject-card.image-card')) : [];
@@ -15556,6 +15813,7 @@ if (guardEl) guardEl.classList.remove('ecg-on');
 screenshotBusy = false;
 // 恢复虚拟滚动属性与图片卡片显示
 if (_vsAttr) htmlEl.setAttribute('data-virtual-scroll', _vsAttr);
+if (_lazyAttr) htmlEl.setAttribute('data-card-lazy', _lazyAttr);
 if (_imgCardsOff) _imgCards.forEach(el => { el.style.display = ''; });
 if (_memberArtOff) _memberArtEls.forEach(el => { el.style.display = ''; });
 // 恢复 snapdom 截图期间临时隐藏的元素
@@ -17536,6 +17794,132 @@ try { if (window.bindPerfAnalyzerSettings) window.bindPerfAnalyzerSettings(); } 
 collapseRosterList();
 }
 window.openSettingsModal = openSettingsModal;
+
+// ===== 普通设置 / 高级设置 分档 =====
+// 普通档只保留基础常用项，进阶项收进高级档；顶部切换按钮即时生效并记忆到 localStorage
+(function encInitTierSettings() {
+// 这些标题的面板归入「高级设置」
+var ENC_ADV_TITLES = {
+'卡片样式':1,'乐队切换':1,'组合切换':1,'卡面与立绘':1,'配色卡生成':1,'Markdown编辑器主题':1,
+'背景动态流光':1,'像素粒子':1,'背景图裁切位置':1,'GIF 背景':1,'视频背景':1,
+'快捷栏彩虹流光':1,'液态玻璃':1,'超华丽plus 快捷栏':1,
+'快捷栏自定义':1,'界面元素':1,'作业标签':1,'更多小组件':1,'通知与公告':1,
+'分组管理':1,'状态管理':1,
+'按需自定义导出':1,'卡面资源包管理':1,'自动备份':1,'危险操作':1,
+'作业量统计':1,'考勤报表':1,'性能分析器':1,'GPU 与性能自定义':1,'系统信息':1,'运行错误日志':1,
+'动态取色主题':1
+};
+var LS_KEY = 'enc.settings.tier';
+function panelTitle(p) {
+var h = p.querySelector('h3');
+if (!h) return '';
+// h3 里可能带 <span class="dv-tag">流光</span> 这类小标签，取标题正文时需要剔除
+var clone = h.cloneNode(true);
+var tags = clone.querySelectorAll('.dv-tag, .enc-tier-tag');
+for (var i = 0; i < tags.length; i++) { if (tags[i].parentNode) tags[i].parentNode.removeChild(tags[i]); }
+return (clone.textContent || '').replace(/\s+/g, '');
+}
+function applyTier(tier) {
+document.documentElement.setAttribute('data-enc-tier', tier);
+try { localStorage.setItem(LS_KEY, tier); } catch (e) {}
+var box = document.getElementById('enc-tier-switch');
+if (box) {
+Array.prototype.forEach.call(box.querySelectorAll('button'), function (b) {
+b.classList.toggle('on', b.getAttribute('data-tier') === tier);
+});
+}
+}
+function markPanels() {
+var panels = document.querySelectorAll('#settings-modal .settings-panel');
+Array.prototype.forEach.call(panels, function (p) {
+var t = panelTitle(p);
+var isAdv = !!ENC_ADV_TITLES[t];
+p.setAttribute('data-tier', isAdv ? 'advanced' : 'basic');
+// 标题后加档位标签，用户一眼能看出这属于哪一档
+var h = p.querySelector('h3');
+if (h && !h.querySelector('.enc-tier-tag')) {
+var tag = document.createElement('span');
+tag.className = 'enc-tier-tag';
+tag.setAttribute('data-tier', isAdv ? 'advanced' : 'basic');
+tag.textContent = isAdv ? '高级' : '常用';
+h.appendChild(tag);
+}
+});
+// 子页若整页都是高级项，普通档下连子页一起隐藏，避免出现空白页
+var subs = document.querySelectorAll('#settings-modal .settings-subsection');
+Array.prototype.forEach.call(subs, function (sub) {
+var own = sub.querySelectorAll(':scope > .settings-panel');
+if (!own.length) return;
+var anyBasic = false;
+Array.prototype.forEach.call(own, function (p) { if (p.getAttribute('data-tier') !== 'advanced') anyBasic = true; });
+sub.setAttribute('data-tier', anyBasic ? 'basic' : 'advanced');
+var id = sub.id || '';
+if (id.indexOf('section-') === 0) {
+var key = id.slice(8);
+Array.prototype.forEach.call(document.querySelectorAll('.settings-nav-sub-btn[data-sub="' + key + '"],.settings-mobile-subnav .settings-mobile-subnav-btn[data-sub="' + key + '"]'), function (b) {
+b.setAttribute('data-tier', anyBasic ? 'basic' : 'advanced');
+});
+}
+});
+}
+function bindSwitch() {
+var box = document.getElementById('enc-tier-switch');
+if (!box || box.getAttribute('data-bound') === '1') return;
+box.setAttribute('data-bound', '1');
+box.addEventListener('click', function (e) {
+var b = e.target && e.target.closest ? e.target.closest('button[data-tier]') : null;
+if (!b) return;
+applyTier(b.getAttribute('data-tier'));
+});
+}
+function init() {
+try { markPanels(); } catch (e) { console.warn('设置分档标记失败：', e); }
+bindSwitch();
+var saved = 'basic';
+try { saved = localStorage.getItem(LS_KEY) || 'basic'; } catch (e) {}
+if (saved !== 'advanced') saved = 'basic';
+applyTier(saved);
+}
+// ===== 炫彩模式：所有文字彩虹色流动 =====
+// 实现：给 <html> 打 data-rainbow="on"，body 内所有元素文字用 background-clip:text + 动画渐变；
+// 用 CSS 变量控制动画时长，滑杆实时改；关闭时整体还原，不影响原有字体颜色设置。
+(function encInitRainbowText() {
+function apply() {
+var on = state.rainbowText === true;
+var root = document.documentElement;
+if (on) {
+root.setAttribute('data-rainbow', 'on');
+root.style.setProperty('--enc-rainbow-speed', (Math.max(2, Math.min(20, state.rainbowSpeed || 8))) + 's');
+} else {
+root.removeAttribute('data-rainbow');
+}
+var t = document.getElementById('rainbow-text-toggle');
+if (t && document.activeElement !== t) t.checked = on;
+var r = document.getElementById('rainbow-speed-range');
+if (r && document.activeElement !== r) r.value = state.rainbowSpeed || 8;
+var v = document.getElementById('rainbow-speed-val');
+if (v) v.textContent = (state.rainbowSpeed || 8) + 's';
+var g = document.getElementById('rainbow-speed-group');
+if (g) g.style.display = on ? '' : 'none';
+}
+window.__encApplyRainbow = apply;
+function bind() {
+var t = document.getElementById('rainbow-text-toggle');
+if (t && !t.onchange) t.onchange = function () { state.rainbowText = this.checked; apply(); saveData(); showToast(this.checked ? '炫彩模式已开启' : '炫彩模式已关闭'); };
+var r = document.getElementById('rainbow-speed-range');
+if (r && !r.oninput) r.oninput = function () { state.rainbowSpeed = parseInt(this.value, 10) || 8; apply(); saveData(); };
+var r2 = document.getElementById('rainbow-speed-range');
+if (r2 && !r2.onchange) r2.onchange = function () { state.rainbowSpeed = parseInt(this.value, 10) || 8; apply(); saveData(); };
+apply();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+else setTimeout(bind, 0);
+})();
+window.__encApplyTier = applyTier;
+window.__encRefreshTierPanels = init;
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else setTimeout(init, 0);
+})();
 bindClick('settings-btn', openSettingsModal);
 
 // ===== 作业历史 / 作业量统计 / 考勤报表 =====
@@ -19065,7 +19449,9 @@ function spawn(n) {
 var w = window.innerWidth, h = window.innerHeight;
 ps = [];
 for (var i = 0; i < n; i++) {
-ps.push({ x: Math.random() * w, y: Math.random() * h, s: 1 + Math.random() * 2, v: .3 + Math.random() * .9, a: .25 + Math.random() * .6 });
+var _sz = Math.max(1, Math.min(10, state.bgPixelSize || 3));
+var _jitter = _sz > 1 ? _sz * 0.45 : 0;
+ps.push({ x: Math.random() * w, y: Math.random() * h, s: _sz + (Math.random() * _jitter), v: .3 + Math.random() * .9, a: .25 + Math.random() * .6 });
 }
 }
 function color() {
@@ -19109,6 +19495,8 @@ var sp = document.getElementById('bg-pixel-speed'); if (sp && document.activeEle
 var spv = document.getElementById('bg-pixel-speed-val'); if (spv) spv.textContent = (state.bgPixelSpeed || 100) + '%';
 var de = document.getElementById('bg-pixel-density'); if (de && document.activeElement !== de) de.value = state.bgPixelDensity || 60;
 var dev = document.getElementById('bg-pixel-density-val'); if (dev) dev.textContent = String(state.bgPixelDensity || 60);
+var si = document.getElementById('bg-pixel-size'); if (si && document.activeElement !== si) si.value = state.bgPixelSize || 3;
+var siv = document.getElementById('bg-pixel-size-val'); if (siv) siv.textContent = String(state.bgPixelSize || 3);
 var co = document.getElementById('bg-pixel-color'); if (co) co.value = state.bgPixelColor || '#4a8cff';
 };
 window.addEventListener('resize', function () { resize(); if (state.bgPixelOn) spawn(Math.round(state.bgPixelDensity || 60)); });
@@ -19118,6 +19506,8 @@ var sp2 = document.getElementById('bg-pixel-speed');
 if (sp2) sp2.addEventListener('input', function () { state.bgPixelSpeed = parseInt(this.value, 10) || 100; window.__encPixelApply(); saveData(); });
 var de2 = document.getElementById('bg-pixel-density');
 if (de2) de2.addEventListener('input', function () { state.bgPixelDensity = parseInt(this.value, 10) || 60; if (state.bgPixelOn) spawn(state.bgPixelDensity); window.__encPixelApply(); saveData(); });
+var si2 = document.getElementById('bg-pixel-size');
+if (si2) si2.addEventListener('input', function () { state.bgPixelSize = parseInt(this.value, 10) || 3; if (state.bgPixelOn) spawn(Math.round(state.bgPixelDensity || 60)); window.__encPixelApply(); saveData(); });
 var co2 = document.getElementById('bg-pixel-color');
 if (co2) co2.addEventListener('input', function () { state.bgPixelColor = this.value; saveData(); });
 setTimeout(function () { try { window.__encPixelApply(); } catch (e) {} }, 300);
