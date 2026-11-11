@@ -2851,7 +2851,6 @@ const VERSION_LOG = [
         { type: 'improve', text: '精简版同步八项新功能：学习热力图、粘贴解析增强、快照分层、数据体检、三个小组件、配色卡、首屏懒加载、内置自检' },
               { type: 'improve', text: '卡片延迟渲染改为按可视范围：不再以「超过 50 张」为门槛，任何时候都只渲染当前屏幕可视范围（上下各留 240px 余量）内的卡片，超出范围的卡片由浏览器跳过绘制与布局，滚动到该位置时才真正渲染' },
         { type: 'change', text: '智能识别改为完全被动：粘贴、输入、打开作业弹窗、切换开关都不再自动识别，必须由用户点击右侧「识别并预览」才会读取编辑框并列出预览；没点过时保存一律按一整条存' },
-,
         { type: 'fix', text: '修复「动效与特效」面板在个性化每个子页都显示：`#section-effects` 的 `display:grid !important` 盖掉了子页隐藏规则，现只在自己子页显示，并加全局兜底「未激活子页一律不显示」' },
         { type: 'fix', text: '图片卡片管理面板从布局分区根节点移进「卡片布局」子页，不再在布局每个子页重复出现' },
         { type: 'fix', text: '炫彩模式重写为真正的 12 色彩虹循环（color 关键帧，不再只看到两种颜色）；不再把按钮自身底色裁掉导致「按钮被染白」，也不再让关于页文字只剩遮罩、必须长按才看得见' },
@@ -2899,6 +2898,11 @@ items: [
 { type: 'fix', text: '从其它深色主题切到邦多利 / 世界计划暗色时不再闪白底' },
 { type: 'improve', text: '缩短首屏载入：CDN 脚本改为 defer 不阻塞解析，并预连接 CDN 域名' },
 { type: 'improve', text: '清理废弃样式：已删除的卡片特效规则与旧关于页卡片样式' },
+{ type: 'feature', text: '考试看板支持导入 / 导出 ExamSchedule 格式的 JSON：识别 examName / message / examInfos（含裸数组、exams、items 等多种写法），导入成功后直接填成可编辑的科目行，改完保存即生效' },
+{ type: 'fix', text: '修复考试看板毫秒时钟模式下每 60ms 重建整张科目表导致的卡顿：表格内容没变时跳过重建，只刷新时钟' },
+{ type: 'fix', text: '修复一批设置改完刷新就丢的问题：AI 接口 / 密钥 / 对话记录、背景粒子与极光参数、液态玻璃全部微调项、截图格式、配色卡、智能分割开关、打字机、全局字体、精简模式、动效开关，此前都不在保存白名单里' },
+{ type: 'fix', text: '修复老存档缺少上述新字段时的类型兜底：AI 对话记录过滤非法条目、截图格式限定 png/jpeg/clipboard、配色主色校验十六进制、色调限定四档，脏数据不再导致界面异常' },
+{ type: 'fix', text: '修复资源包版本号解析未捕获异常：JSON 损坏时不再抛错中断整段更新检查，直接显示「未知」' },
 ]
 },
 {
@@ -4089,7 +4093,43 @@ emptyCardMode: state.emptyCardMode,
 editorMode: state.editorMode,
 mdEditorTheme: state.mdEditorTheme,
 dynamicPalette: state.dynamicPalette,
-pluginOverrides: state.pluginOverrides || {}
+pluginOverrides: state.pluginOverrides || {},
+    // 用户可调、但此前漏进持久化白名单的字段（改完刷新就丢）
+    aiEndpoint: state.aiEndpoint,
+    aiModel: state.aiModel,
+    aiKey: state.aiKey,
+    aiHistory: Array.isArray(state.aiHistory) ? state.aiHistory.slice(-40) : [],
+    bgPixelOn: state.bgPixelOn,
+    bgPixelSpeed: state.bgPixelSpeed,
+    bgPixelDensity: state.bgPixelDensity,
+    bgPixelColor: state.bgPixelColor,
+    bgPixelSize: state.bgPixelSize,
+    bgAuroraOn: state.bgAuroraOn,
+    bgAuroraColors: Array.isArray(state.bgAuroraColors) ? state.bgAuroraColors.slice(0,3) : ['#6a5acd','#00c6ff','#ff6ec7'],
+    bgAuroraQuality: state.bgAuroraQuality,
+    bgAuroraOpacity: state.bgAuroraOpacity,
+    liquidGlass: state.liquidGlass,
+    liquidGlassAutoDegrade: state.liquidGlassAutoDegrade,
+    liquidGlassBorderOpacity: state.liquidGlassBorderOpacity,
+    liquidGlassBorderWidth: state.liquidGlassBorderWidth,
+    liquidGlassHighlight: state.liquidGlassHighlight,
+    liquidGlassInnerShadow: state.liquidGlassInnerShadow,
+    liquidGlassOuterShadow: state.liquidGlassOuterShadow,
+    liquidGlassRadius: state.liquidGlassRadius,
+    liquidGlassSheen: state.liquidGlassSheen,
+    liquidGlassSheenSpeed: state.liquidGlassSheenSpeed,
+    liquidGlassSheenAngle: state.liquidGlassSheenAngle,
+    liquidGlassBrightness: state.liquidGlassBrightness,
+    liquidGlassContrast: state.liquidGlassContrast,
+    screenshotFormat: state.screenshotFormat,
+    paletteOn: state.paletteOn,
+    paletteMain: state.paletteMain,
+    paletteTone: state.paletteTone,
+    hwAutoSplit: state.hwAutoSplit,
+    typewriterEnabled: state.typewriterEnabled,
+    fontGlobal: state.fontGlobal,
+    ultraPerfMode: state.ultraPerfMode,
+    animations: state.animations,
 };
 encLastSaveOK = true;
 encLastSaveAt = Date.now();
@@ -4146,6 +4186,23 @@ const saved = localStorage.getItem(STORAGE_KEY);
 if (saved) {
 Object.assign(state, JSON.parse(saved));
 }
+// 本轮补进持久化白名单的字段：类型与范围兜底（老存档没有这些键，走默认值）
+if (typeof state.aiEndpoint !== 'string') state.aiEndpoint = '';
+if (typeof state.aiModel !== 'string') state.aiModel = '';
+if (typeof state.aiKey !== 'string') state.aiKey = '';
+if (!Array.isArray(state.aiHistory)) state.aiHistory = [];
+state.aiHistory = state.aiHistory.filter(function (m) { return m && (m.role === 'user' || m.role === 'assistant') && typeof m.text === 'string'; }).slice(-40);
+if (typeof state.screenshotFormat !== 'string' || ['png','jpeg','clipboard'].indexOf(state.screenshotFormat) < 0) state.screenshotFormat = 'png';
+if (typeof state.hwAutoSplit !== 'boolean') state.hwAutoSplit = true;
+if (typeof state.typewriterEnabled !== 'boolean') state.typewriterEnabled = true;
+if (typeof state.fontGlobal !== 'boolean') state.fontGlobal = false;
+if (typeof state.ultraPerfMode !== 'boolean') state.ultraPerfMode = false;
+if (typeof state.animations !== 'boolean') state.animations = true;
+if (typeof state.paletteOn !== 'boolean') state.paletteOn = false;
+if (typeof state.paletteMain !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(state.paletteMain)) state.paletteMain = '#6750A4';
+if (['standard','vivid','pastel','deep'].indexOf(state.paletteTone) < 0) state.paletteTone = 'standard';
+if (typeof state.liquidGlassSheen !== 'boolean') state.liquidGlassSheen = true;
+
 if (typeof state.cardRadius !== 'number' || isNaN(state.cardRadius)) state.cardRadius = 14;
 else if (state.cardRadius <= 2) state.cardRadius = 14;
 if (state.bgMultiMode !== 'grid') state.bgMultiMode = 'rotate';
@@ -9993,6 +10050,7 @@ function encEbTab(name) {
   if (name === 'config') encEbRenderConfig();
   else encEbTick();
 }
+var _encEbLastSig = null;
 function encEbTick() {
   const modal = document.getElementById('exam-board-modal');
   if (!modal || !modal.classList.contains('active')) {
@@ -10046,6 +10104,10 @@ function encEbTick() {
     else if (list.length) { staEl.textContent = '已全部结束'; staEl.setAttribute('data-tone', 'done'); }
     else { staEl.textContent = '空闲'; staEl.setAttribute('data-tone', 'idle'); }
   }
+    // 毫秒模式下 tick 每 60ms 触发一次：表格数据没变就跳过重建，避免整表重排导致卡顿
+  const _ebSig = list.map(function (it) { return it.id + '|' + it.name + '|' + it.date + '|' + (it.start||'') + '|' + (it.end||''); }).join(';');
+  if (_ebSig === _encEbLastSig) return;
+  _encEbLastSig = _ebSig;
   const tb = document.getElementById('enc-eb-tbody');
   const emptyEl = document.getElementById('enc-eb-empty');
   if (emptyEl) emptyEl.hidden = list.length > 0;
@@ -10118,9 +10180,106 @@ function encEbSyncHeadUI() {
   const add = document.getElementById('enc-eb-add');
   const imp = document.getElementById('enc-eb-import');
   const clear = document.getElementById('enc-eb-clear');
-  [add, clear].forEach(function (b) { if (b) b.style.display = isCustom ? '' : 'none'; });
+  const jimp = document.getElementById('enc-eb-json-import');
+  const jexp = document.getElementById('enc-eb-json-export');
+  [add, clear, jimp, jexp].forEach(function (b) { if (b) b.style.display = isCustom ? '' : 'none'; });
   if (imp) imp.style.display = isCustom ? '' : 'none';
 }
+// ===== 考试看板：ExamSchedule 格式 JSON 导入 / 导出 =====
+// 兼容格式：{ examName, message, room, examInfos:[{ name, start:'YYYY/MM/DD HH:mm', end, alertTime }] }
+// 同时兼容相对宽松的写法：日期可为 YYYY-MM-DD / YYYY/MM/DD / YYYY.MM.DD，时间可为 HH:mm / HH:mm:ss，缺 end 时按 90 分钟算。
+function encEbParseDateTime(v) {
+  const raw = String(v == null ? '' : v).trim();
+  if (!raw) return null;
+  const m = raw.match(/^(\d{4})\s*[-/.年]\s*(\d{1,2})\s*[-/.月]\s*(\d{1,2})日?(?:[\sT]+(\d{1,2})\s*[:：]\s*(\d{2})(?:\s*[:：]\s*(\d{2}))?)?/);
+  if (!m) return null;
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  if (!y || mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  const hh = m[4] == null ? 0 : Number(m[4]);
+  const mi = m[5] == null ? 0 : Number(m[5]);
+  if (hh < 0 || hh > 23 || mi < 0 || mi > 59) return null;
+  return {
+    date: String(y) + '-' + encEbPad(mo) + '-' + encEbPad(d),
+    time: encEbPad(hh) + ':' + encEbPad(mi)
+  };
+}
+function encEbJsonToItems(text) {
+  let obj = null;
+  try { obj = JSON.parse(String(text || '')); } catch (e) { return { ok: false, error: 'JSON 解析失败：' + (e && e.message ? e.message : '格式不正确') }; }
+  if (!obj || typeof obj !== 'object') return { ok: false, error: '顶层不是一个 JSON 对象' };
+  let raw = null;
+  if (Array.isArray(obj.examInfos)) raw = obj.examInfos;
+  else if (Array.isArray(obj.exams)) raw = obj.exams;
+  else if (Array.isArray(obj.items)) raw = obj.items;
+  else if (Array.isArray(obj)) raw = obj;
+  if (!raw) return { ok: false, error: '没找到考试列表：需要 examInfos（或 exams / items）数组' };
+  const items = [];
+  let skipped = 0;
+  raw.forEach(function (row) {
+    if (!row || typeof row !== 'object') { skipped++; return; }
+    const name = String(row.name || row.subject || row.title || '').trim();
+    const sd = encEbParseDateTime(row.start || row.startTime || row.date);
+    if (!name || !sd) { skipped++; return; }
+    const ed = encEbParseDateTime(row.end || row.endTime);
+    let endTime = '';
+    if (ed) {
+      // 结束时间若只给了时间没给日期，采用开始那天；跨零点（结束早于开始）视为次日
+      if (ed.date < sd.date) endTime = ed.time;
+      else if (ed.date > sd.date) endTime = ed.time;
+      else endTime = ed.time;
+      if (ed.time < sd.time && ed.date === sd.date) endTime = ed.time;
+    } else {
+      const st = new Date(sd.date + 'T' + sd.time + ':00');
+      endTime = encEbPad(st.getHours()) + ':' + encEbPad(st.getMinutes());
+    }
+    items.push({ name: name, date: sd.date, start: sd.time, end: endTime });
+  });
+  if (!items.length) return { ok: false, error: '没能识别出任何一场考试（共 ' + raw.length + ' 条）' };
+  const alert = Number(obj.alertTime);
+  return {
+    ok: true,
+    items: items,
+    skipped: skipped,
+    examName: typeof obj.examName === 'string' ? obj.examName : (typeof obj.name === 'string' ? obj.name : ''),
+    message: typeof obj.message === 'string' ? obj.message : (typeof obj.tip === 'string' ? obj.tip : ''),
+    alertTime: isFinite(alert) && alert > 0 ? alert : 15
+  };
+}
+function encEbApplyJson(result) {
+  if (!Array.isArray(state.examBoardItems)) state.examBoardItems = [];
+  const stamp = Date.now();
+  result.items.forEach(function (it, i) {
+    state.examBoardItems.push({ id: 'eb-' + stamp + '-' + i, name: it.name, date: it.date, start: it.start, end: it.end });
+  });
+  if (result.examName) state.examBoardName = result.examName;
+  if (result.message) state.examBoardMessage = result.message;
+  state.examBoardSource = 'custom';
+  saveData();
+  encEbSyncHeadUI();
+  encEbRenderRows();
+  encEbTick();
+}
+function encEbBuildJson() {
+  const list = (state.examBoardSource === 'custom'
+    ? (Array.isArray(state.examBoardItems) ? state.examBoardItems : [])
+    : (Array.isArray(state.exams) ? state.exams : [])).map(encEbNorm).filter(Boolean)
+      .sort(function (a, b) { return (a.date + ' ' + a.start).localeCompare(b.date + ' ' + b.start); });
+  const infos = list.map(function (it) {
+    const start = it.date.replace(/-/g, '/') + ' ' + (it.start || '00:00');
+    const end = it.date.replace(/-/g, '/') + ' ' + (it.end || it.start || '00:00');
+    return { name: it.name, start: start, end: end, alertTime: 15 };
+  });
+  return {
+    examName: state.examBoardName || '考试安排',
+    message: state.examBoardMessage || '',
+    room: '',
+    examInfos: infos
+  };
+}
+  // 供内置自检与自动化测试调用（不参与界面逻辑）
+  window.encEbJsonToItems = encEbJsonToItems;
+  window.encEbApplyJson = encEbApplyJson;
+  window.encEbBuildJson = encEbBuildJson;
 function encEbRenderRows() {
   const box = document.getElementById('enc-eb-rows');
   if (!box) return;
@@ -10340,6 +10499,36 @@ function encEbBind() {
       encEbRenderRows();
       encEbTick();
       showToast('已导入 ' + src.length + ' 场考试');
+    };
+  }
+  const jsonImp = document.getElementById('enc-eb-json-import');
+  const jsonFile = document.getElementById('enc-eb-json-file');
+  if (jsonImp && jsonFile) {
+    jsonImp.onclick = function () { try { jsonFile.value = ''; jsonFile.click(); } catch (e) { showToast('当前环境不支持选择文件'); } };
+    jsonFile.onchange = function () {
+      const f = jsonFile.files && jsonFile.files[0];
+      if (!f) return;
+      const fr = new FileReader();
+      fr.onerror = function () { showToast('读取文件失败'); };
+      fr.onload = function () {
+        const res = encEbJsonToItems(fr.result);
+        if (!res.ok) { showToast('导入失败：' + res.error); return; }
+        encEbApplyJson(res);
+        showToast('已导入 ' + res.items.length + ' 场考试' + (res.skipped ? '（跳过 ' + res.skipped + ' 条无法识别的记录）' : '') + '，可直接在下方修改');
+      };
+      fr.readAsText(f, 'utf-8');
+    };
+  }
+  const jsonExp = document.getElementById('enc-eb-json-export');
+  if (jsonExp) {
+    jsonExp.onclick = function () {
+      try {
+        const data = encEbBuildJson();
+        if (!data.examInfos.length) { showToast('当前没有可导出的考试'); return; }
+        const text = JSON.stringify(data, null, 2);
+        encDownloadFile('考试安排-' + (state.examBoardName || 'ENC') + '.json', text, 'application/json;charset=utf-8');
+        showToast('已导出 ' + data.examInfos.length + ' 场考试');
+      } catch (e) { showToast('导出失败：' + (e && e.message ? e.message : '未知错误')); }
     };
   }
   const clear = document.getElementById('enc-eb-clear');
@@ -18610,7 +18799,7 @@ if (resEl) resEl.innerHTML = '<p style="color:var(--warn-color,#E8961E);font-siz
 return;
 }
 const vm = fullSrc.match(/const APP_VERSION\s*=\s*'([^']+)'/);
-const newVer = vm ? vm[1] : (pkgMatch ? pkgMatch[1] && JSON.parse(pkgMatch[1]).ver : '未知');
+const newVer = vm ? vm[1] : (function(){try{return pkgMatch && pkgMatch[1] ? (JSON.parse(pkgMatch[1]).ver || '未知') : '未知';}catch(e){return '未知';}})();
 const ok = await uiConfirm(
 '检测到更新数据包：v' + newVer + '（当前 v' + APP_VERSION + '，' + pkgFmt + (logoRestored ? '，已回填图标' : '') + '）。\n\n应用后将升级当前应用功能代码，你的作业、考勤与设置数据不会丢失（均保存在本地浏览器中）。\n\n是否立即应用更新？',
 { okText: '应用更新', danger: false, title: '应用更新数据包' }
@@ -20854,14 +21043,18 @@ setTimeout(bindPerfAnalyzerSettings, 3000);
             <div class="enc-eb-card-f">
               <button type="button" class="btn btn-primary" id="enc-eb-add">添加科目</button>
               <button type="button" class="btn" id="enc-eb-import">从 ENC 导入当前考试</button>
+              <button type="button" class="btn" id="enc-eb-json-import">导入 JSON</button>
+              <button type="button" class="btn" id="enc-eb-json-export">导出 JSON</button>
               <button type="button" class="btn" id="enc-eb-clear">清空</button>
             </div>
+            <input type="file" id="enc-eb-json-file" accept=".json,application/json" hidden>
           </div>
           <div class="enc-eb-card">
             <div class="enc-eb-card-h"><span>说明</span></div>
             <div class="enc-eb-card-b">
               <div class="enc-eb-tip" style="grid-column:1 / -1">
                 选择「使用 ENC 现有数据」时，看板直接读取 设置 → 布局与内容 → 考试时间表卡片 里的考试，改那边即可；选择「自定义科目表」时，读下面这张表，不会改动 ENC 的考试卡片。
+                支持导入 / 导出 ExamSchedule 格式的 JSON（examName / message / examInfos），导入识别成功后会直接填成可编辑的科目行。
               </div>
             </div>
           </div>
