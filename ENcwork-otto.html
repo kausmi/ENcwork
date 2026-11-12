@@ -3578,6 +3578,7 @@ items: [
 { type: 'fix', text: '修复一批设置改完刷新就丢的问题：AI 接口 / 密钥 / 对话记录、背景粒子与极光参数、液态玻璃全部微调项、截图格式、配色卡、智能分割开关、打字机、全局字体、精简模式、动效开关、主界面小组件的位置与开关，此前都不在保存白名单里' },
 { type: 'fix', text: '修复老存档缺少上述新字段时的类型兜底：AI 对话记录过滤非法条目、截图格式限定 png/jpeg/clipboard、配色主色校验十六进制、色调限定四档，脏数据不再导致界面异常' },
 { type: 'fix', text: '修复资源包版本号解析未捕获异常：JSON 损坏时不再抛错中断整段更新检查，直接显示「未知」' },
+{ type: 'fix', text: '考试看板导入 JSON 失败时写入运行错误日志：以前导入失败只在屏幕上闪一条提示，事后在「设置 → 其他 → 运行错误日志」里查不到任何东西，无法判断是格式不对、编码不对还是选错了文件。现在打开文件选择器失败、FileReader 读取失败、JSON 解析异常、结构识别失败、写入数据异常这五条路径都会记一条 exam-board 类型日志，包含失败阶段、原因、文件名 / 大小 / 类型、文件内容开头 240 字，以及期望的 JSON 格式；成功导入不写日志，日志上限仍是 100 条' },
 ]
 },
 {
@@ -15541,6 +15542,38 @@ window._errorLogMemory = log;
 } catch (e) { /* 日志本身失败绝不影响截图流程 */ }
 }
 
+// ===== 考试看板 JSON 导入错误日志 =====
+// 导入失败的每条路径都写进 __enc_error_log__（设置 → 其他 → 运行错误日志）：
+// 手机上 toast 一闪就没了，事后根本查不到是格式不对、编码不对，还是选了别的文件。
+function encLogEbImport(stage, detail, raw) {
+try {
+var KEY = '__enc_error_log__'; var MAX = 100;
+var log = [];
+try { log = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e2) { log = window._errorLogMemory || []; }
+var head = '';
+try {
+if (raw && typeof raw === 'string') head = raw.replace(/\s+/g, ' ').trim().slice(0, 240);
+} catch (e3) {}
+log.unshift({
+type: 'exam-board',
+msg: '考试看板导入失败 · 阶段=' + (stage || '-')
++ ' · 原因=' + String(detail || '未知')
++ (head ? ' · 文件内容开头=' + head : '')
++ ' · 期望格式={"examName":"…","message":"…","examInfos":[{"name":"科目","start":"2025/01/20 10:00","end":"2025/01/20 12:00"}]}',
+src: 'encEbImportJson',
+line: 0,
+col: 0,
+stack: '',
+time: new Date().toISOString(),
+device: ''
+});
+if (log.length > MAX) log = log.slice(0, MAX);
+try { localStorage.setItem(KEY, JSON.stringify(log)); } catch (e4) {}
+window._errorLogMemory = log;
+} catch (e) { /* 日志本身失败绝不影响导入流程 */ }
+}
+window.encLogEbImport = encLogEbImport;
+
 // takeScreenshot(keepEffects)：
 //   keepEffects=false 普通截图 —— 临时关闭实验性特效与全部动画，最稳妥
 //   keepEffects=true  特效截图 —— 保留液态玻璃/泛光/快捷栏等全部特效，仅临时关闭动画（避免动画停在中间帧）
@@ -17833,19 +17866,55 @@ showToast('已导入 ' + src.length + ' 场考试');
 const jsonImp = document.getElementById('enc-eb-json-import');
 const jsonFile = document.getElementById('enc-eb-json-file');
 if (jsonImp && jsonFile) {
-jsonImp.onclick = function () { try { jsonFile.value = ''; jsonFile.click(); } catch (e) { showToast('当前环境不支持选择文件'); } };
+jsonImp.onclick = function () {
+try { jsonFile.value = ''; jsonFile.click(); }
+catch (e) {
+showToast('当前环境不支持选择文件');
+encLogEbImport('打开文件选择器', (e && e.message) || e);
+}
+};
 jsonFile.onchange = function () {
 const f = jsonFile.files && jsonFile.files[0];
-if (!f) return;
+if (!f) {
+// 用户取消选择：不写日志，避免日志被误按取消淹没
+return;
+}
+const _fname = (f.name || '未命名') + '（' + (f.size || 0) + ' B，' + (f.type || '未知类型') + '）';
+// 后缀/类型不对也照读，读进来靠内容判断；这里只先记一笔，方便事后对上是哪个文件
 const fr = new FileReader();
-fr.onerror = function () { showToast('读取文件失败'); };
+fr.onerror = function () {
+showToast('读取文件失败');
+encLogEbImport('读取文件', 'FileReader 读取出错 · 文件=' + _fname, '');
+};
 fr.onload = function () {
-const res = encEbJsonToItems(fr.result);
-if (!res.ok) { showToast('导入失败：' + res.error); return; }
+var res;
+try {
+res = encEbJsonToItems(fr.result);
+} catch (e) {
+showToast('导入失败：解析过程异常');
+encLogEbImport('解析异常', ((e && e.name) ? e.name + ': ' : '') + ((e && e.message) || String(e)) + ' · 文件=' + _fname, fr.result);
+return;
+}
+if (!res || !res.ok) {
+const _why = (res && res.error) || '未知原因';
+showToast('导入失败：' + _why);
+encLogEbImport('识别失败', _why + ' · 文件=' + _fname, fr.result);
+return;
+}
+try {
 encEbApplyJson(res);
+} catch (e) {
+showToast('导入失败：写入数据时出错');
+encLogEbImport('写入数据', ((e && e.name) ? e.name + ': ' : '') + ((e && e.message) || String(e)) + ' · 文件=' + _fname, '');
+return;
+}
 showToast('已导入 ' + res.items.length + ' 场考试' + (res.skipped ? '（跳过 ' + res.skipped + ' 条无法识别的记录）' : '') + '，可直接在下方修改');
 };
-fr.readAsText(f, 'utf-8');
+try { fr.readAsText(f, 'utf-8'); }
+catch (e) {
+showToast('读取文件失败');
+encLogEbImport('启动读取', ((e && e.message) || String(e)) + ' · 文件=' + _fname, '');
+}
 };
 }
 const jsonExp = document.getElementById('enc-eb-json-export');
