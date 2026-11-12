@@ -3579,6 +3579,7 @@ items: [
 { type: 'fix', text: '修复老存档缺少上述新字段时的类型兜底：AI 对话记录过滤非法条目、截图格式限定 png/jpeg/clipboard、配色主色校验十六进制、色调限定四档，脏数据不再导致界面异常' },
 { type: 'fix', text: '修复资源包版本号解析未捕获异常：JSON 损坏时不再抛错中断整段更新检查，直接显示「未知」' },
 { type: 'fix', text: '考试看板导入 JSON 失败时写入运行错误日志：以前导入失败只在屏幕上闪一条提示，事后在「设置 → 其他 → 运行错误日志」里查不到任何东西，无法判断是格式不对、编码不对还是选错了文件。现在打开文件选择器失败、FileReader 读取失败、JSON 解析异常、结构识别失败、写入数据异常这五条路径都会记一条 exam-board 类型日志，包含失败阶段、原因、文件名 / 大小 / 类型、文件内容开头 240 字，以及期望的 JSON 格式；成功导入不写日志，日志上限仍是 100 条' },
+{ type: 'fix', text: '考试看板导入 JSON 支持自动识别文件编码：以前直接用 UTF-8 读文件，用记事本 / Excel 存成 GBK 或 UTF-16 的中文 JSON 读进来是乱码，解析必报 Expected colon after property name，看起来像是文件坏了。现在改成先读字节再按 BOM 与字节特征判断编码（UTF-8 / UTF-8 BOM / UTF-16 LE/BE / GBK / GB18030），并顺带清掉文件名首尾的 BOM 与零宽字符；导入失败的各条路径都会写进运行错误日志，附带文件名、大小、类型与文件内容开头' },
 ]
 },
 {
@@ -17565,9 +17566,59 @@ function encEbParseDateTime(v) {
     time: encEbPad(hh) + ':' + encEbPad(mi)
   };
 }
+// 把 FileReader 的读法改成「先读字节、再自己判编码」：
+// 直接 readAsText(f,'utf-8') 会把 GBK / UTF-16 存的中文读成乱码，JSON.parse 报
+// 「Expected ':' after property name」——用户看到的就是这个错。
+function encEbDecodeBytes(buf) {
+  try {
+    var u8 = new Uint8Array(buf || []);
+    if (!u8.length) return '';
+    // 1) UTF-16 BOM
+    if (u8.length >= 2 && u8[0] === 0xFF && u8[1] === 0xFE) return encUtf16(u8.subarray(2), true);
+    if (u8.length >= 2 && u8[0] === 0xFE && u8[1] === 0xFF) return encUtf16(u8.subarray(2), false);
+    // 2) UTF-8 BOM
+    var start = 0;
+    if (u8.length >= 3 && u8[0] === 0xEF && u8[1] === 0xBB && u8[2] === 0xBF) start = 3;
+    // 3) 无 BOM 的 UTF-16：ASCII 区的字节间隔出现 0x00
+    var zOdd = 0, zEven = 0, probe = Math.min(u8.length - start, 400);
+    for (var i = start; i < start + probe; i++) {
+      if (u8[i] === 0) { if ((i - start) % 2 === 0) zEven++; else zOdd++; }
+    }
+    if (zOdd > probe * 0.3) return encUtf16(u8.subarray(start), true);
+    if (zEven > probe * 0.3) return encUtf16(u8.subarray(start), false);
+    // 4) 先按 UTF-8 严格解码
+    var txt = '';
+    try {
+      txt = new TextDecoder('utf-8', { fatal: true }).decode(u8.subarray(start));
+      return txt;
+    } catch (e) { /* 不是合法 UTF-8，继续试 GBK */ }
+    // 5) GBK / GB18030（国内记事本、Excel 导出的 JSON 常见）
+    try { return new TextDecoder('gbk', { fatal: false }).decode(u8.subarray(start)); } catch (e2) {}
+    try { return new TextDecoder('gb18030', { fatal: false }).decode(u8.subarray(start)); } catch (e3) {}
+    // 6) 最后兜底：宽松 UTF-8
+    return new TextDecoder('utf-8', { fatal: false }).decode(u8.subarray(start));
+  } catch (e4) {
+    try { return new TextDecoder('utf-8').decode(buf); } catch (e5) { return ''; }
+  }
+}
+function encUtf16(u8, little) {
+  var s = '', n = u8.length - (u8.length % 2);
+  var CH = 8192;
+  for (var i = 0; i < n; i += CH) {
+    var end = Math.min(i + CH, n), arr = new Uint16Array((end - i) / 2);
+    for (var j = i; j < end; j += 2) arr[(j - i) / 2] = little ? (u8[j] | (u8[j + 1] << 8)) : ((u8[j] << 8) | u8[j + 1]);
+    s += String.fromCharCode.apply(null, arr);
+  }
+  return s;
+}
+window.encEbDecodeBytes = encEbDecodeBytes;
+
 function encEbJsonToItems(text) {
   let obj = null;
-  try { obj = JSON.parse(String(text || '')); } catch (e) { return { ok: false, error: 'JSON 解析失败：' + (e && e.message ? e.message : '格式不正确') }; }
+  // 去掉首尾 BOM 与零宽字符：有些编辑器保存时会额外塞一个 U+FEFF，JSON.parse 直接报错
+  let _src = String(text == null ? '' : text).replace(/^\uFEFF/, '').replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+  if (_src && _src.charCodeAt(0) === 0xFEFF) _src = _src.slice(1);
+  try { obj = JSON.parse(_src); } catch (e) { return { ok: false, error: 'JSON 解析失败：' + (e && e.message ? e.message : '格式不正确') }; }
   if (!obj || typeof obj !== 'object') return { ok: false, error: '顶层不是一个 JSON 对象' };
   let raw = null;
   if (Array.isArray(obj.examInfos)) raw = obj.examInfos;
@@ -17888,17 +17939,26 @@ encLogEbImport('读取文件', 'FileReader 读取出错 · 文件=' + _fname, ''
 };
 fr.onload = function () {
 var res;
+var _txt = '';
 try {
-res = encEbJsonToItems(fr.result);
+// 先拿字节再自己判编码：GBK / UTF-16 存的 JSON 直接按 utf-8 读会变乱码，解析必失败
+_txt = encEbDecodeBytes(fr.result);
+} catch (e0) {
+showToast('导入失败：解码文件出错');
+encLogEbImport('解码文件', ((e0 && e0.message) || String(e0)) + ' · 文件=' + _fname, '');
+return;
+}
+try {
+res = encEbJsonToItems(_txt);
 } catch (e) {
 showToast('导入失败：解析过程异常');
-encLogEbImport('解析异常', ((e && e.name) ? e.name + ': ' : '') + ((e && e.message) || String(e)) + ' · 文件=' + _fname, fr.result);
+encLogEbImport('解析异常', ((e && e.name) ? e.name + ': ' : '') + ((e && e.message) || String(e)) + ' · 文件=' + _fname, _txt);
 return;
 }
 if (!res || !res.ok) {
 const _why = (res && res.error) || '未知原因';
 showToast('导入失败：' + _why);
-encLogEbImport('识别失败', _why + ' · 文件=' + _fname, fr.result);
+encLogEbImport('识别失败', _why + ' · 文件=' + _fname, _txt);
 return;
 }
 try {
@@ -17910,7 +17970,7 @@ return;
 }
 showToast('已导入 ' + res.items.length + ' 场考试' + (res.skipped ? '（跳过 ' + res.skipped + ' 条无法识别的记录）' : '') + '，可直接在下方修改');
 };
-try { fr.readAsText(f, 'utf-8'); }
+try { fr.readAsArrayBuffer(f); }
 catch (e) {
 showToast('读取文件失败');
 encLogEbImport('启动读取', ((e && e.message) || String(e)) + ' · 文件=' + _fname, '');

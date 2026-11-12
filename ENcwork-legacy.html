@@ -2903,6 +2903,7 @@ items: [
 { type: 'fix', text: '修复一批设置改完刷新就丢的问题：AI 接口 / 密钥 / 对话记录、背景粒子与极光参数、液态玻璃全部微调项、截图格式、配色卡、智能分割开关、打字机、全局字体、精简模式、动效开关，此前都不在保存白名单里' },
 { type: 'fix', text: '修复老存档缺少上述新字段时的类型兜底：AI 对话记录过滤非法条目、截图格式限定 png/jpeg/clipboard、配色主色校验十六进制、色调限定四档，脏数据不再导致界面异常' },
 { type: 'fix', text: '修复资源包版本号解析未捕获异常：JSON 损坏时不再抛错中断整段更新检查，直接显示「未知」' },
+{ type: 'fix', text: '考试看板导入 JSON 支持自动识别文件编码：以前直接用 UTF-8 读文件，用记事本 / Excel 存成 GBK 或 UTF-16 的中文 JSON 读进来是乱码，解析必报 Expected colon after property name，看起来像是文件坏了。现在改成先读字节再按 BOM 与字节特征判断编码（UTF-8 / UTF-8 BOM / UTF-16 LE/BE / GBK / GB18030），并顺带清掉文件名首尾的 BOM 与零宽字符；导入失败的各条路径都会写进运行错误日志，附带文件名、大小、类型与文件内容开头' },
 ]
 },
 {
@@ -10203,9 +10204,66 @@ function encEbParseDateTime(v) {
     time: encEbPad(hh) + ':' + encEbPad(mi)
   };
 }
+// 考试看板 JSON 导入失败写入运行错误日志（设置 → 其他 → 运行错误日志）
+function encLogEbImport(stage, detail, raw) {
+  try {
+    var KEY = '__enc_error_log__', MAX = 100, log = [];
+    try { log = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e2) { log = window._errorLogMemory || []; }
+    var head = '';
+    try { if (raw && typeof raw === 'string') head = raw.replace(/\s+/g, ' ').trim().slice(0, 240); } catch (e3) {}
+    log.unshift({
+      type: 'exam-board',
+      msg: '考试看板导入失败 · 阶段=' + (stage || '-') + ' · 原因=' + String(detail || '未知')
+        + (head ? ' · 文件内容开头=' + head : '')
+        + ' · 期望格式={"examName":"…","message":"…","examInfos":[{"name":"科目","start":"2025/01/20 10:00","end":"2025/01/20 12:00"}]}',
+      src: 'encEbImportJson', line: 0, col: 0, stack: '',
+      time: new Date().toISOString(), device: ''
+    });
+    if (log.length > MAX) log = log.slice(0, MAX);
+    try { localStorage.setItem(KEY, JSON.stringify(log)); } catch (e4) {}
+    window._errorLogMemory = log;
+  } catch (e) {}
+}
+window.encLogEbImport = encLogEbImport;
+
+function encEbDecodeBytes(buf) {
+  try {
+    var u8 = new Uint8Array(buf || []);
+    if (!u8.length) return '';
+    if (u8.length >= 2 && u8[0] === 0xFF && u8[1] === 0xFE) return encUtf16(u8.subarray(2), true);
+    if (u8.length >= 2 && u8[0] === 0xFE && u8[1] === 0xFF) return encUtf16(u8.subarray(2), false);
+    var start = 0;
+    if (u8.length >= 3 && u8[0] === 0xEF && u8[1] === 0xBB && u8[2] === 0xBF) start = 3;
+    var zOdd = 0, zEven = 0, probe = Math.min(u8.length - start, 400);
+    for (var i = start; i < start + probe; i++) {
+      if (u8[i] === 0) { if ((i - start) % 2 === 0) zEven++; else zOdd++; }
+    }
+    if (zOdd > probe * 0.3) return encUtf16(u8.subarray(start), true);
+    if (zEven > probe * 0.3) return encUtf16(u8.subarray(start), false);
+    try { return new TextDecoder('utf-8', { fatal: true }).decode(u8.subarray(start)); } catch (e) {}
+    try { return new TextDecoder('gbk', { fatal: false }).decode(u8.subarray(start)); } catch (e2) {}
+    try { return new TextDecoder('gb18030', { fatal: false }).decode(u8.subarray(start)); } catch (e3) {}
+    return new TextDecoder('utf-8', { fatal: false }).decode(u8.subarray(start));
+  } catch (e4) {
+    try { return new TextDecoder('utf-8').decode(buf); } catch (e5) { return ''; }
+  }
+}
+function encUtf16(u8, little) {
+  var s = '', n = u8.length - (u8.length % 2), CH = 8192;
+  for (var i = 0; i < n; i += CH) {
+    var end = Math.min(i + CH, n), arr = new Uint16Array((end - i) / 2);
+    for (var j = i; j < end; j += 2) arr[(j - i) / 2] = little ? (u8[j] | (u8[j + 1] << 8)) : ((u8[j] << 8) | u8[j + 1]);
+    s += String.fromCharCode.apply(null, arr);
+  }
+  return s;
+}
+window.encEbDecodeBytes = encEbDecodeBytes;
+
 function encEbJsonToItems(text) {
   let obj = null;
-  try { obj = JSON.parse(String(text || '')); } catch (e) { return { ok: false, error: 'JSON 解析失败：' + (e && e.message ? e.message : '格式不正确') }; }
+  let _src = String(text == null ? '' : text).replace(/^\uFEFF/, '').replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+  if (_src && _src.charCodeAt(0) === 0xFEFF) _src = _src.slice(1);
+  try { obj = JSON.parse(_src); } catch (e) { return { ok: false, error: 'JSON 解析失败：' + (e && e.message ? e.message : '格式不正确') }; }
   if (!obj || typeof obj !== 'object') return { ok: false, error: '顶层不是一个 JSON 对象' };
   let raw = null;
   if (Array.isArray(obj.examInfos)) raw = obj.examInfos;
@@ -10508,15 +10566,49 @@ function encEbBind() {
     jsonFile.onchange = function () {
       const f = jsonFile.files && jsonFile.files[0];
       if (!f) return;
+      const _fname = (f.name || '未命名') + '（' + (f.size || 0) + ' B，' + (f.type || '未知类型') + '）';
       const fr = new FileReader();
-      fr.onerror = function () { showToast('读取文件失败'); };
+      fr.onerror = function () {
+        showToast('读取文件失败');
+        if (typeof encLogEbImport === 'function') encLogEbImport('读取文件', 'FileReader 读取出错 · 文件=' + _fname, '');
+      };
       fr.onload = function () {
-        const res = encEbJsonToItems(fr.result);
-        if (!res.ok) { showToast('导入失败：' + res.error); return; }
-        encEbApplyJson(res);
+        var _txt = '';
+        try {
+          _txt = encEbDecodeBytes(fr.result);
+        } catch (e0) {
+          showToast('导入失败：解码文件出错');
+          if (typeof encLogEbImport === 'function') encLogEbImport('解码文件', ((e0 && e0.message) || String(e0)) + ' · 文件=' + _fname, '');
+          return;
+        }
+        var res;
+        try {
+          res = encEbJsonToItems(_txt);
+        } catch (e1) {
+          showToast('导入失败：解析过程异常');
+          if (typeof encLogEbImport === 'function') encLogEbImport('解析异常', ((e1 && e1.name) ? e1.name + ': ' : '') + ((e1 && e1.message) || String(e1)) + ' · 文件=' + _fname, _txt);
+          return;
+        }
+        if (!res || !res.ok) {
+          const _why = (res && res.error) || '未知原因';
+          showToast('导入失败：' + _why);
+          if (typeof encLogEbImport === 'function') encLogEbImport('识别失败', _why + ' · 文件=' + _fname, _txt);
+          return;
+        }
+        try {
+          encEbApplyJson(res);
+        } catch (e2) {
+          showToast('导入失败：写入数据时出错');
+          if (typeof encLogEbImport === 'function') encLogEbImport('写入数据', ((e2 && e2.name) ? e2.name + ': ' : '') + ((e2 && e2.message) || String(e2)) + ' · 文件=' + _fname, '');
+          return;
+        }
         showToast('已导入 ' + res.items.length + ' 场考试' + (res.skipped ? '（跳过 ' + res.skipped + ' 条无法识别的记录）' : '') + '，可直接在下方修改');
       };
-      fr.readAsText(f, 'utf-8');
+      try { fr.readAsArrayBuffer(f); }
+      catch (e3) {
+        showToast('读取文件失败');
+        if (typeof encLogEbImport === 'function') encLogEbImport('启动读取', ((e3 && e3.message) || String(e3)) + ' · 文件=' + _fname, '');
+      }
     };
   }
   const jsonExp = document.getElementById('enc-eb-json-export');
