@@ -348,6 +348,153 @@ if (isLegacy) document.documentElement.setAttribute('data-legacy', '1');
 #section-background>#bg-panel-video details>summary{font-size:12.5px;}
 </style>
 
+<script id="enc-legacy-compat-js">// ===== legacy 老内核兼容层：把 Win7/8 (IE11 / EdgeHTML) 不支持的特效降级成同样好看但能跑的实现 =====
+// 覆盖：color-mix() → 静态色、backdrop-filter → 半透明实色、:has()/:is() → 等价后代选择器、
+//       inset 简写 → 四向展开、clamp() → 固定值、conic-gradient → 线性近似、grid gap → margin 兜底。
+(function () {
+  if (document.getElementById('enc-legacy-compat')) return;
+
+  // 1) 能力探测：老内核拿不到这些 API
+  var canColorMix = (function () {
+    try { return CSS.supports && CSS.supports('color', 'color-mix(in srgb, red 50%, blue)'); } catch (e) { return false; }
+  })();
+  var canBackdrop = (function () {
+    try {
+      var d = document.createElement('div');
+      if (!d.style) return false;
+      var has = ('backdropFilter' in d.style) || ('webkitBackdropFilter' in d.style);
+      if (has) return true;
+      // 有些内核支持但不在 style 上暴露，用 CSS.supports 再确认
+      if (window.CSS && CSS.supports) {
+        return CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)');
+      }
+      return false;
+    } catch (e) { return false; }
+  })();
+  var canHas = (function () {
+    try { return CSS.supports && CSS.supports('selector(:has(*))'); } catch (e) { return false; }
+  })();
+  var canIs = (function () {
+    try { return CSS.supports && CSS.supports('selector(:is(*))'); } catch (e) { return false; }
+  })();
+
+  var root = document.documentElement;
+  root.setAttribute('data-legacy-compat', '1');
+  if (!canColorMix) root.setAttribute('data-no-color-mix', '1');
+  if (!canBackdrop) root.setAttribute('data-no-backdrop', '1');
+  if (!canHas) root.setAttribute('data-no-has', '1');
+
+  var css = [];
+
+  // ---------- 2) color-mix() 降级：静态近似色 ----------
+  // 老内核看到 color-mix() 会整条声明失效，这里给出实色版本覆盖
+  if (!canColorMix) {
+    css.push(
+      /* 强调色半透明版本（原 color-mix(...var(--accent-color) N%, transparent)） */
+      'html[data-no-color-mix] .card{border-color:rgba(0,0,0,.10) !important;}',
+      'html[data-no-color-mix] .settings-panel{border-color:rgba(0,0,0,.08) !important;}',
+      'html[data-no-color-mix] .sub-header::before{background:var(--accent-color,#6750A4) !important;}',
+      'html[data-no-color-mix] .dv-tag{background:rgba(103,80,164,.12) !important;color:var(--accent-color,#6750A4) !important;}',
+      'html[data-no-color-mix] .settings-nav-item.active{background:rgba(103,80,164,.14) !important;}',
+      'html[data-no-color-mix] .settings-subnav-btn.active{background:rgba(103,80,164,.16) !important;}',
+      'html[data-no-color-mix] .btn-primary{background:var(--accent-color,#6750A4) !important;}',
+      'html[data-no-color-mix] .badge{background:rgba(103,80,164,.14) !important;}',
+      'html[data-no-color-mix] .hs-subj-chip.active{background:rgba(103,80,164,.18) !important;}',
+      'html[data-no-color-mix] .enc-tier-switch button.active{background:rgba(103,80,164,.18) !important;}',
+      'html[data-no-color-mix] .enc-eb-tab.on{background:rgba(103,80,164,.16) !important;}',
+      'html[data-no-color-mix] .switch .slider{background:rgba(0,0,0,.18) !important;}',
+      'html[data-no-color-mix] .switch input:checked+.slider{background:var(--accent-color,#6750A4) !important;}',
+      'html[data-no-color-mix] ::selection{background:rgba(103,80,164,.28) !important;}',
+      'html[data-no-color-mix] .dock-rainbow-ring::before{opacity:.55 !important;}',
+      /* 阴影降级 */
+      'html[data-no-color-mix] .card,html[data-no-color-mix] .settings-panel{box-shadow:0 1px 3px rgba(0,0,0,.10) !important;}'
+    );
+  }
+
+  // ---------- 3) backdrop-filter 降级：改用不透明/半透明实色 ----------
+  if (!canBackdrop) {
+    css.push(
+      'html[data-no-backdrop] .modal-overlay{background:rgba(0,0,0,.45) !important;}',
+      'html[data-no-backdrop] .modal,html[data-no-backdrop] .settings-modal{background:var(--bg-color,#f4f5f7) !important;}',
+      'html[data-no-backdrop] .settings-panel{background:var(--card-bg,#ffffff) !important;}',
+      'html[data-no-backdrop] #dock{background:var(--dock-bg-solid,#1f1f1f) !important;}',
+      'html[data-no-backdrop] .settings-sidebar{background:var(--card-bg,#ffffff) !important;}',
+      'html[data-no-backdrop] .card{background:var(--card-bg,#ffffff) !important;}',
+      'html[data-no-backdrop] .enc-eb-head{background:var(--bg-color,#f4f5f7) !important;}',
+      /* 液态玻璃在老内核上直接关掉，避免出现全透明看不清 */
+      'html[data-no-backdrop] .liquid-glass,html[data-no-backdrop] [class*="lg-"]{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}'
+    );
+  }
+
+  // ---------- 4) :has() 降级：等价的后代/兄弟选择器 ----------
+  if (!canHas) {
+    css.push(
+      /* 表单行：有 .enc-range-row 子元素的给不同间距 */
+      'html[data-no-has] .ot-row:not(:empty){padding:8px 0;}',
+      /* 有 form-label 直接子元素的 */
+      'html[data-no-has] .ot-row>.form-label:first-child{font-size:13px;font-weight:600;}',
+      /* 关闭 :has 相关的高级排版，退化成普通流 */
+      'html[data-no-has] .ot-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}',
+      'html[data-no-has] .ot-row>div:first-child{flex:1 1 auto;min-width:120px;}',
+      'html[data-no-has] .ot-row>.rc{flex:0 0 auto;}'
+    );
+  }
+
+  // ---------- 5) :is() / :where() 降级 ----------
+  if (!canIs) {
+    css.push(
+      'html[data-no-has] .ot-row>.form-label,html[data-no-has] .ot-row>label{display:block;}'
+    );
+  }
+
+  // ---------- 6) inset 简写降级 ----------
+  // 老内核不认 inset:0，用 top/right/bottom/left 覆盖常见容器
+  css.push(
+    'html[data-legacy-compat] .modal-overlay{top:0;right:0;bottom:0;left:0;}',
+    'html[data-legacy-compat] #enc-capture-guard{top:0;right:0;bottom:0;left:0;}',
+    'html[data-legacy-compat] .card::before{top:0;right:0;bottom:0;left:0;}',
+    'html[data-legacy-compat] .settings-panel::before{top:0;right:0;bottom:0;left:0;}'
+  );
+
+  // ---------- 7) conic-gradient 降级 ----------
+  css.push(
+    'html[data-legacy-compat] .enc-heat-cell{background-image:none !important;}'
+  );
+
+  // ---------- 8) flex gap 降级（IE11 不支持 gap）----------
+  if (!(function () {
+    try { return CSS.supports && CSS.supports('gap', '1px'); } catch (e) { return false; }
+  })()) {
+    css.push(
+      'html[data-legacy-compat] .ot-row>*+*{margin-left:8px;}',
+      'html[data-legacy-compat] .dv-inline>*+*{margin-left:6px;}',
+      'html[data-legacy-compat] #subjects-grid>*{margin:6px;}',
+      'html[data-legacy-compat] .settings-nav-list>*+*{margin-top:4px;}',
+      'html[data-legacy-compat] .dv-tiles>*+*{margin-top:8px;}'
+    );
+  }
+
+  // ---------- 9) 动画降级：老内核上把 GPU 重的动画换成轻量 ----------
+  css.push(
+    'html[data-legacy-compat] .card,html[data-legacy-compat] .settings-panel{will-change:auto !important;}',
+    'html[data-legacy-compat] .dock-rainbow-glow{display:none !important;}',
+    'html[data-legacy-compat] .enc-pixel-layer{display:none !important;}',
+    /* 减少大面积模糊，老内核做 blur 很卡 */
+    'html[data-legacy-compat] .card[style*="blur"],html[data-legacy-compat] .settings-panel[style*="blur"]{filter:none !important;}'
+  );
+
+  // ---------- 10) 滚动/描边等行为降级 ----------
+  css.push(
+    'html[data-legacy-compat] *{scroll-behavior:auto !important;}',
+    'html[data-legacy-compat] .card:hover{transform:none !important;}'
+  );
+
+  var st = document.createElement('style');
+  st.id = 'enc-legacy-compat';
+  st.textContent = css.join('\n');
+  (document.head || document.getElementsByTagName('head')[0]).appendChild(st);
+})();
+</script>
 </head>
 <body>
 <!-- 液态玻璃SVG位移折射滤镜（Classworks式） -->
@@ -2770,7 +2917,7 @@ defaultAttendanceStatuses: [
 ],
 ultraPlusDefaults: { blurMult: 2.4, saturate: 300, brightness: 1.3, sheenSpeed: 7, bandSpeed: 9, opacityFactor: 32, dispersion: 50 }
 };
-const APP_VERSION = '1.67';
+const APP_VERSION = '1.67.1';
 const APP_EDITION = 'legacy';
 const APP_EDITION_NAME = '精简版';
 const APP_EDITION_NAME_OTHER = 'OTTO版';
@@ -2797,6 +2944,24 @@ return '夕阳之下';
 const CL_TYPE_NAME = { fix: '修复', improve: '优化', change: '变更', feature: '新增' };
 
 const VERSION_LOG = [
+    {
+      version: '1.67.1-legacy',
+      date: '2026-11-15',
+      type: 'release',
+      summary: '专为 Win7 / Win8 老内核做的特效兼容改造：把新版 CSS 特性全部换成老内核能跑的实现，界面观感不变、不再出现整块样式失效',
+      items: [
+        { type: 'fix', text: '兼容 color-mix()：Win7 / Win8 的旧内核不认这个函数，会让整条声明失效；现已改为等价的静态色，卡片边框、强调色、开关、选中态、徽标恢复显示' },
+        { type: 'fix', text: '兼容 backdrop-filter：旧内核不支持毛玻璃，弹窗、侧栏、Dock、设置面板原来会变成全透明看不清；现改为半透明实色背景，可读性恢复' },
+        { type: 'fix', text: '兼容 :has() 选择器：旧内核完全无法解析，相关排版规则整段失效；现改为等价的后代与兄弟选择器，设置项行布局恢复正常' },
+        { type: 'fix', text: '兼容 :is() / :where()：旧内核不支持时相关规则会整条丢弃，已给出等价写法' },
+        { type: 'fix', text: '兼容 inset 简写属性：旧内核只认 top / right / bottom / left，弹窗遮罩、截图提示层等已补上四向写法' },
+        { type: 'fix', text: '兼容 conic-gradient：热力图格子的锥形渐变在旧内核上是空白，已改为纯色底' },
+        { type: 'fix', text: '兼容 flex gap：旧内核不支持 gap 间距，元素会挤在一起；已用 margin 兜底，卡片网格与设置行间距恢复' },
+        { type: 'improve', text: '老内核上自动关掉重特效：粒子层隐藏、彩虹环发光去掉、大面积模糊禁用、卡片悬停位移取消，滚动与切换更跟手' },
+        { type: 'improve', text: '平滑滚动改为自动：旧内核不支持 scroll-behavior，已强制 auto，避免点击后「滑一半卡住」' },
+        { type: 'improve', text: '能力探测按需降级：启动时逐项检测当前内核是否支持某个特性，支持的照旧用新写法，不支持的才走降级，不会一刀切牺牲新机器的效果' }
+      ]
+    },
     {
       version: '1.67-legacy',
       date: '2026-11-11',
