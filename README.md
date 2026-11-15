@@ -5,7 +5,7 @@
 > 从 1.68.1 开始，更新流程变得更省事：应用内直接下载 `.ENC` 更新包，自动校验、自动应用，不用再手动替换文件。
 > 老版本（1.68 及更早）还没有这套流程，建议先升级到 1.68.1，之后每次更新都只需要点几下。
 >
-> 👉 [去下载 1.68.1](https://github.com/kausmi/ENcwork/releases/latest)
+> 👉 [去下载 1.68.1](https://github.com/kausmi/ENcwork/releases/tag/ENC-V1.68.1)
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## 下载
 
-去 [Releases](https://github.com/kausmi/ENcwork/releases/latest) 拿最新版。
+去 [Releases](https://github.com/kausmi/ENcwork/releases/tag/ENC-V1.68.1) 拿最新版。
 
 |  | 完整版（OTTO） | 精简版（legacy） |
 |---|---|---|
