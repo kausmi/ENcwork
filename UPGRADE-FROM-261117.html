@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>如果你还在 1.68.261117 · ENcwork 升级指引</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  background:#f2f2f0;color:#1c1b1f;padding:20px;line-height:1.7;font-size:15px}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin-bottom:6px}
+.sub{font-size:13px;opacity:.6;margin-bottom:24px}
+
+.box{background:#fff;border-radius:14px;padding:20px;margin-bottom:16px;
+  border-left:4px solid #C0392B}
+.box.green{border-left-color:#2E9E5B}
+.box.blue{border-left-color:#4A90E2}
+h2{font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.num{width:26px;height:26px;border-radius:8px;font-size:13px;font-weight:800;
+  display:grid;place-items:center;flex:0 0 auto}
+.n1{background:rgba(192,57,43,.14);color:#C0392B}
+.n2{background:rgba(46,158,91,.14);color:#2E9E5B}
+.n3{background:rgba(74,144,226,.14);color:#2F6FB5}
+
+p{margin-bottom:10px;font-size:14px}
+p:last-child{margin-bottom:0}
+b{color:#2F6FB5}
+code{background:rgba(0,0,0,.055);padding:1px 6px;border-radius:4px;
+  font-family:ui-monospace,monospace;font-size:13px}
+
+ol,ul{margin-left:20px;margin-bottom:10px;font-size:14px}
+li{margin-bottom:6px}
+
+.warn{background:rgba(192,57,43,.06);padding:12px 16px;border-radius:10px;
+  font-size:13.5px;margin:12px 0}
+.warn b{color:#C0392B}
+
+.ok{background:rgba(46,158,91,.06);padding:12px 16px;border-radius:10px;
+  font-size:13.5px;margin:12px 0}
+.ok b{color:#2E9E5B}
+
+.btn{display:inline-block;padding:11px 22px;border-radius:10px;background:#4A90E2;
+  color:#fff;text-decoration:none;font-weight:600;font-size:14px;margin:6px 6px 0 0}
+.btn.ghost{background:rgba(0,0,0,.06);color:#333}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>如果你还在 1.68.261117</h1>
+<p class="sub">这个版本的更新按钮有缺陷，无法自动升级。下面是解决办法。</p>
+
+<div class="box">
+  <h2><span class="num n1">!</span>问题是什么</h2>
+  <p>1.68.261117 的「检查更新」能检测到新版本，但点「下载并应用更新」会报错：</p>
+  <p><code>没有可下载的更新包</code></p>
+  <p>原因是读取下载地址时字段名写错了，拿到的地址永远是空的。这个错误在已经发布出去的文件里，<b>无法远程修复</b>。</p>
+  <div class="warn">
+    <b>不是你的网络问题</b>，也不是你的操作问题。是代码本身的缺陷。
+  </div>
+</div>
+
+<div class="box green">
+  <h2><span class="num n2">1</span>解决办法：手动下载覆盖</h2>
+  <p>这是最快的方式，两分钟搞定：</p>
+  <ol>
+    <li>在浏览器打开本项目的 <b>Releases 页面</b></li>
+    <li>找到最新版本 <code>ENC-V1.68.261118</code>（正式版）</li>
+    <li>下载对应版本：
+      <ul>
+        <li><code>ENcwork-otto-1.68.261118.html</code> — 完整版（Win10+）</li>
+        <li><code>ENcwork-legacy-1.68.261118.html</code> — 精简版（Win7 也能用）</li>
+      </ul>
+    </li>
+    <li>用它<b>覆盖</b>你现在使用的 HTML 文件</li>
+    <li>重新打开即可</li>
+  </ol>
+  <div class="ok">
+    <b>好消息</b>：261118 之后，更新功能已经彻底重写，以后在应用内就能一键升级了。
+  </div>
+</div>
+
+<div class="box blue">
+  <h2><span class="num n3">2</span>261118 修了什么</h2>
+  <ul>
+    <li><b>更新系统全部重写</b> — HTML 单文件优先下载，5 条检测线路自动切换，下载后真正生效</li>
+    <li><b>新增远端公告</b> — 以后有重要消息会直接弹出来，就是你现在看到的这个功能</li>
+    <li><b>修复主界面网格</b> — 应用缩放时卡片被压扁的问题</li>
+  </ul>
+  <p style="margin-top:12px;font-size:13px;opacity:.7;">注意：261118 是补丁版，<b>不包含新功能</b>。新功能（作业编辑器全屏、设置页布局重构等）在 1.69-beta3 里，需要切到「预发行版」通道。</p>
+</div>
+
+<div class="box green">
+  <h2><span class="num n2">3</span>升级之后</h2>
+  <p>到 261118 或更新版本后，更新流程就正常了：</p>
+  <ol>
+    <li>设置 → 数据管理 → 检查更新</li>
+    <li>点「检查更新」</li>
+    <li>发现新版后点「下载并应用更新」</li>
+    <li>刷新页面即生效</li>
+  </ol>
+</div>
+
+<p style="text-align:center;margin-top:28px;">
+  <a class="btn" href="https://github.com/kausmi/ENcwork/releases">打开 Releases 页面</a>
+  <a class="btn ghost" href="https://github.com/kausmi/ENcwork/releases/tag/ENC-V1.68.261118">直接下载 261118</a>
+</p>
+
+<p style="text-align:center;font-size:12px;opacity:.45;margin-top:20px;">
+  给你带来不便，抱歉。
+</p>
+
+</div>
+</body>
+</html>
