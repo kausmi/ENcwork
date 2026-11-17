@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-17T00:00:00Z",
+  "items": [
+    {
+      "id": "20261117-update-v2",
+      "title": "更新系统已重做，请升级到 1.69-beta2",
+      "content": "旧版（1.68.x）的更新功能存在问题：下载更新包后只做了记录，并没有真正替换页面，所以「刷新后生效」是假的。\n\n1.69-beta2 已重写整个更新系统：\n\n· 下载后自动写入本地存储，刷新即是新版本\n· 优先下载 HTML 单文件（任何版本都能用）\n· 5 条检测线路自动切换，不怕 GitHub 连不上\n· 版本号比较修正（beta 版可正确识别）\n\n如果你在 1.68.x，请到「设置 → 数据管理 → 检查更新」手动点一次，或者直接从 Release 页面下载新的 HTML 文件覆盖旧的。",
+      "level": "warning",
+      "edition": "all",
+      "minVersion": null,
+      "maxVersion": "1.68.99999",
+      "enabled": true,
+      "once": true,
+      "createdAt": "2026-11-17"
+    },
+    {
+      "id": "20261117-welcome",
+      "title": "ENcwork 1.69-beta2 已发布",
+      "content": "本次更新重点：\n\n· 设置页布局彻底修复（数据管理页 7 个面板不再错乱）\n· 小键盘图标不再压在按钮上\n· 作业编辑器全屏化\n· 更新系统重做\n\n感谢你的使用。有任何问题可以在「反馈与帮助」里找到联系方式。",
+      "level": "normal",
+      "edition": "all",
+      "minVersion": "1.69",
+      "enabled": true,
+      "once": true,
+      "createdAt": "2026-11-17"
+    }
+  ]
+}
