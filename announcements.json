@@ -1,6 +1,6 @@
 {
-  "version": 6,
-  "updatedAt": "2026-11-19T05:53:42.964Z",
+  "version": 7,
+  "updatedAt": "2026-11-19T05:54:23.594Z",
   "items": [
     {
       "id": "20261117-urgent-261117-fix",
@@ -40,6 +40,18 @@
       "edition": "all",
       "enabled": true,
       "createdAt": "2026-11-18T18:12:00.724Z"
+    },
+    {
+      "id": "amwn4xcwg3nxy",
+      "title": "秋妈妈秋妈妈秋妈妈秋妈妈",
+      "body": "朋友的情义呀比天还高比地还辽阔\n💃🏻💃🏻💃🏻\n那些岁月我们一定会记得～～\n💃🏻💃🏻💃🏻\n朋友的情义呀我们今生最大的难得～\n💃🏻💃🏻💃🏻\n像一杯酒～～像一首老歌～\n💃🏻💃🏻💃🏻💃🏻💃🏻💃🏻💃🏻💃🏻💃🏻💃🏻\n![](https://imgchr.com/i/pnbKhfP)\n",
+      "level": "urgent",
+      "edition": "all",
+      "enabled": true,
+      "createdAt": "2026-11-19T05:54:01.744Z",
+      "deviceIds": [
+        "dev-mwn4oeij-4a2xvwah"
+      ]
     }
   ]
 }
